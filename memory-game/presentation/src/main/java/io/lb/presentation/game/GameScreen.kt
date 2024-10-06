@@ -41,7 +41,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 internal fun GameScreen(
     navController: NavController,
-    viewModel: GameViewModel = hiltViewModel<GameViewModel>()
+    viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
+    onCardFlipped: () -> Unit,
+    onCardMatched: () -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
     val lastSelectedCard = remember {
@@ -120,6 +122,8 @@ internal fun GameScreen(
                         if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size == 2)
                             return@MemoryGameCard
 
+                        onCardFlipped()
+
                         if (lastSelectedCard.value.isEmpty()) {
                             lastSelectedCard.value = state.cards[index].pokemonCard.name
                             viewModel.onEvent(GameEvent.CardFlipped(index))
@@ -131,19 +135,11 @@ internal fun GameScreen(
                             viewModel.onEvent(GameEvent.CardFlipped(index))
                             viewModel.onEvent(GameEvent.CardMatched(id = state.cards[index].pokemonCard.id))
                             lastSelectedCard.value = ""
+                            onCardMatched()
                         }
                     }
                 }
             }
         }
     }
-}
-
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-internal fun GameScreenPreview() {
-    GameScreen(
-        navController = NavController(LocalContext.current),
-    )
 }

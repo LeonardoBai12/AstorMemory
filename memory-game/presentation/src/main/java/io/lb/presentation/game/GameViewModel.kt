@@ -104,7 +104,7 @@ internal class GameViewModel @Inject constructor(
             GameEvent.GameFinished -> {
                 viewModelScope.launch {
                     useCases.saveScoreUseCase(state.value.score)
-                    delay(500)
+                    delay(2000)
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
             }
