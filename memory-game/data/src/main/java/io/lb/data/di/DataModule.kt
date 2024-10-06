@@ -5,6 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.lb.common.data.service.ClientService
+import io.lb.common.data.service.DatabaseService
+import io.lb.data.data_source.MemoryGameDataSource
 import io.lb.data.repository.MemoryGameRepositoryImpl
 import io.lb.domain.repository.MemoryGameRepository
 
@@ -12,9 +14,20 @@ import io.lb.domain.repository.MemoryGameRepository
 @InstallIn(ViewModelComponent::class)
 internal object DataModule {
     @Provides
+    fun providesDataSource(
+        databaseService: DatabaseService,
+        clientService: ClientService
+    ): MemoryGameDataSource {
+        return MemoryGameDataSource(
+            databaseService,
+            clientService,
+        )
+    }
+
+    @Provides
     fun providesRepository(
-        service: ClientService
+        dataSource: MemoryGameDataSource
     ): MemoryGameRepository {
-        return MemoryGameRepositoryImpl(service)
+        return MemoryGameRepositoryImpl(dataSource)
     }
 }

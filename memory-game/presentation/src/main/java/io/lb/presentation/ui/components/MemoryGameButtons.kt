@@ -1,0 +1,65 @@
+package io.lb.presentation.ui.components
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.lb.presentation.ui.theme.DarkerBlue
+import io.lb.presentation.ui.theme.PrimaryRed
+
+@Composable
+internal fun MemoryGameRedButton(
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PrimaryRed,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(4.dp, DarkerBlue),
+        onClick = {
+            onClick()
+        }
+    ) {
+        Text(
+            text = text,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+internal fun MemoryGameWhiteButton(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = PrimaryRed
+        ),
+        border = BorderStroke(4.dp, DarkerBlue),
+        onClick = {
+            onClick()
+        }
+    ) {
+        Text(
+            text = text,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}

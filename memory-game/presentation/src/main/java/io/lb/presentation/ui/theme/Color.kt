@@ -2,10 +2,10 @@ package io.lb.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PrimaryRed = Color(0xFFEE1A25)
+val DarkerRed = Color(0xFFA90D14)
+val GrayRed = Color(0xFF793D41)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val PrimaryBlue = Color(0xFF2C4593)
+val DarkerBlue = Color(0xFF2D2C5F)
+val GrayBlue = Color(0xFF3D5A79)

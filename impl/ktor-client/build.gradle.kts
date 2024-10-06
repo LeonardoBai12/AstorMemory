@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":common:shared"))
     implementation(project(":common:data"))
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
@@ -21,4 +20,5 @@ dependencies {
     implementation(libs.logback.classic)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter.api)
+    kapt(libs.hilt.compiler)
 }

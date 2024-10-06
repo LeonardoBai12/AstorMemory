@@ -18,5 +18,7 @@ android {
 dependencies {
     implementation(project(":memory-game:domain"))
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.compiler)
 }
