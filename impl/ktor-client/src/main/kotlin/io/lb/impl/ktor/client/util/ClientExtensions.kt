@@ -27,11 +27,12 @@ internal suspend fun HttpClient.requestPokemonList(
     repeat(amount) {
         val randomId = (1..500).random()
         val response = get {
-            url("https://pokeapi.co/api/v2/pokemon/$randomId")
-        }.body<PokemonAPIResponse?>() ?: throw MemoryGameException(500, "Failed to get Pokemon")
+            url("https://pokeapi.co/api/v2/pokemon/$randomId/")
+        }
+        val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(500, "Failed to get Pokemon")
 
-        pokemon.add(response.toPokemon())
-        pokemon.add(response.toPokemon())
+        pokemon.add(body.toPokemon())
+        pokemon.add(body.toPokemon())
     }
 
     return@withContext pokemon.shuffled()

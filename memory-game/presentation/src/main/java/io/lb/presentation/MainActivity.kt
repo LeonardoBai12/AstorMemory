@@ -27,8 +27,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokemonMemoryChallengeTheme {
                 val navController = rememberNavController()
-                val gameViewModel = hiltViewModel<GameViewModel>()
-                val gameState = gameViewModel.state.collectAsState().value
 
                 NavHost(
                     navController = navController,
@@ -50,11 +48,8 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
-                        val amount = backStackEntry.arguments?.getInt("amount") ?: 5
-                        gameViewModel.onEvent(GameEvent.GetCards(amount))
                         GameScreen(
                             navController = navController,
-                            state = gameState
                         )
                     }
                 }

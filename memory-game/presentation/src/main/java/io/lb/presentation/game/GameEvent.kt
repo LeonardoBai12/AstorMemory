@@ -5,13 +5,6 @@ package io.lb.presentation.game
  */
 sealed interface GameEvent {
     /**
-     * Represents the game being started.
-     *
-     * @property amount The amount of cards to get.
-     */
-    data class GetCards(val amount: Int) : GameEvent
-
-    /**
      * Represents a card being flipped.
      *
      * @property index The index of the card that was flipped.

@@ -21,7 +21,7 @@ class GetPokemonPairsUseCase @Inject constructor(
      * @param amount The amount of Pokemon pairs to fetch.
      * @return A [Flow] of [Resource] of a list of [PokemonCard] objects.
      */
-    suspend operator fun invoke(amount: Int): Flow<Resource<List<PokemonCard>>> = flow {
+    operator fun invoke(amount: Int): Flow<Resource<List<PokemonCard>>> = flow {
         emit(Resource.Loading())
         runCatching {
             val response = repository.getPokemonPairs(amount)
