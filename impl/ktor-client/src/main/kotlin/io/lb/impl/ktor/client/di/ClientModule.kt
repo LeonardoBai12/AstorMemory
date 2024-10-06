@@ -10,9 +10,9 @@ import io.lb.impl.ktor.client.service.ClientServiceImpl
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object ClientModule {
+internal object ClientModule {
     @Provides
-    fun providesQuoteService(): ClientService {
+    fun providesClientService(): ClientService {
         return ClientServiceImpl(client = PokemonGameClient.client)
     }
 }

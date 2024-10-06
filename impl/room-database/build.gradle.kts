@@ -5,13 +5,16 @@ plugins {
 }
 
 android {
-    namespace = "io.lb.data"
+    namespace = "io.lb.impl.room.database"
 }
 
 dependencies {
-    implementation(project(":common:data"))
     implementation(project(":common:shared"))
-    implementation(project(":memory-game:domain"))
+    implementation(project(":common:data"))
     implementation(libs.hilt.android)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
     kapt(libs.hilt.compiler)
+    kapt(libs.room.compiler)
 }
