@@ -1,4 +1,9 @@
 package io.lb.presentation.scores
 
-class ScoreState {
-}
+import io.lb.common.data.model.Score
+
+internal data class ScoreState(
+    val scores: List<Score> = emptyList(),
+    val message: String? = null,
+    val isLoading: Boolean = true,
+)

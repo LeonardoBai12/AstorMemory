@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.navigation.MemoryGameScreens
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterial3Api
 @Composable
@@ -44,6 +46,16 @@ internal fun GameScreen(
     val state = viewModel.state.collectAsState().value
     val lastSelectedCard = remember {
         mutableStateOf("")
+    }
+
+    LaunchedEffect(key1 = "GameScreen") {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is GameViewModel.UiEvent.Finish -> {
+                    navController.navigate(MemoryGameScreens.GameOver.name + "/${event.score}")
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -66,10 +78,6 @@ internal fun GameScreen(
             )
         }
     ) { padding ->
-        if (state.isFinished) {
-            navController.navigate("${MemoryGameScreens.GameOver.name}/${state.score}")
-        }
-
         if (state.isLoading) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -107,6 +115,9 @@ internal fun GameScreen(
                 items(state.cards.size) { index ->
                     MemoryGameCard(state.cards[index]) {
                         if (state.cards[index].isFlipped || state.cards[index].isMatched)
+                            return@MemoryGameCard
+
+                        if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size == 2)
                             return@MemoryGameCard
 
                         if (lastSelectedCard.value.isEmpty()) {

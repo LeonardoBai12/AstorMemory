@@ -17,6 +17,7 @@ import io.lb.presentation.game.GameScreen
 import io.lb.presentation.game.GameViewModel
 import io.lb.presentation.game_over.GameOverScreen
 import io.lb.presentation.menu.MenuScreen
+import io.lb.presentation.scores.ScoreScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
 
@@ -54,6 +55,11 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(
+                        route = MemoryGameScreens.HighScores.name,
+                    ) {
+                        ScoreScreen(navController = navController)
+                    }
+                    composable(
                         route = MemoryGameScreens.GameOver.name + "/{score}",
                         arguments = listOf(
                             navArgument(name = "score") {
@@ -61,9 +67,10 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
-
+                        val score = backStackEntry.arguments?.getInt("score")
                         GameOverScreen(
                             navController = navController,
+                            score = score ?: 0
                         )
                     }
                 }

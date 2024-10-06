@@ -10,5 +10,4 @@ internal data class GameState(
     val message: String? = null,
     val isLoading: Boolean = true,
     val score: Int = 0,
-    val isFinished: Boolean = false
 )

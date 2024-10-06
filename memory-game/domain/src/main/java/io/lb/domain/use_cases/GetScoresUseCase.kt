@@ -20,7 +20,7 @@ class GetScoresUseCase @Inject constructor(
      *
      * @return A [Flow] of [Resource] of a list of [Score] objects.
      */
-    suspend operator fun invoke(): Flow<Resource<List<Score>>> = flow {
+    operator fun invoke(): Flow<Resource<List<Score>>> = flow {
         emit(Resource.Loading())
         runCatching {
             val scores = repository.getScores()

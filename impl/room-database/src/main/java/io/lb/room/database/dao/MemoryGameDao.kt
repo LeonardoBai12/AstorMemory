@@ -24,6 +24,6 @@ internal interface MemoryGameDao {
      *
      * @return A list of all scores in the database.
      */
-    @Query("SELECT * FROM scores")
+    @Query("SELECT * FROM scores ORDER BY score DESC LIMIT 10")
     suspend fun getScores(): List<ScoreEntity>
 }

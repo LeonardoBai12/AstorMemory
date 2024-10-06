@@ -12,8 +12,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -30,6 +32,13 @@ internal class GameViewModel @Inject constructor(
 
     private var getCardsJob: Job? = null
     private val games = mutableListOf<PokemonCard>()
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    sealed class UiEvent {
+        data class Finish(val score: Int) : UiEvent()
+    }
 
     private var mismatches = 0
     private val amount = savedStateHandle["amount"] ?: 5
@@ -58,10 +67,7 @@ internal class GameViewModel @Inject constructor(
             is GameEvent.CardMatched -> {
                 viewModelScope.launch {
                     _state.update {
-                        if (it.cards.all { gameCard -> gameCard.isMatched }) {
-                            onEvent(GameEvent.GameFinished)
-                        }
-                        it.copy(
+                        val currentState = it.copy(
                             cards = it.cards.map { gameCard ->
                                 if (gameCard.pokemonCard.id == event.id) {
                                     gameCard.copy(isMatched = true)
@@ -70,13 +76,17 @@ internal class GameViewModel @Inject constructor(
                                 }
                             }
                         )
+                        currentState
+                    }
+                    if (_state.value.cards.all { gameCard -> gameCard.isMatched }) {
+                        onEvent(GameEvent.GameFinished)
                     }
                 }
             }
             GameEvent.CardMismatched -> {
                 viewModelScope.launch {
                     mismatches++
-                    delay(800)
+                    delay(750)
                     _state.update {
                         it.copy(
                             cards = it.cards.map { gameCard ->
@@ -94,11 +104,8 @@ internal class GameViewModel @Inject constructor(
             GameEvent.GameFinished -> {
                 viewModelScope.launch {
                     useCases.saveScoreUseCase(state.value.score)
-                    _state.update {
-                        it.copy(
-                            isFinished = true
-                        )
-                    }
+                    delay(500)
+                    _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
             }
         }
