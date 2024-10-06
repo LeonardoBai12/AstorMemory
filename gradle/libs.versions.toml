@@ -3,20 +3,17 @@
 ktor = "2.3.4"
 kotlin = "1.9.23"
 logback = "1.4.11"
-postgres = "42.5.4"
-h2 = "2.1.214"
 coroutines = "1.7.2"
 detekt = "1.23.1"
-jacoco = "0.8.10"
+jacoco = "0.8.11"
 dokka = "1.9.20"
 serialization = "1.5.21"
 serialization-json = "1.5.1"
-mongo-db = "5.1.2"
 slf4j = "1.7.9"
-shadow = "8.3.1"
 minSdk = "24"
 targetSdk = "34"
 compileSdk = "34"
+hilt = "2.47"
 
 # Android
 agp = "8.3.1"
@@ -25,18 +22,15 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.9.0"
 composeBom = "2023.08.00"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+appcompat = "1.6.1"
+material = "1.10.0"
 
 [libraries]
-# Kotlin - Ktor ktor-server
-ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor" }
-ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktor" }
-ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation-jvm", version.ref = "ktor" }
-ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets-jvm", version.ref = "ktor" }
-ktor-server-call-logging = { group = "io.ktor", name = "ktor-server-call-logging-jvm", version.ref = "ktor" }
-ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth-jvm", version.ref = "ktor" }
-ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
-ktor-server-sessions = { group = "io.ktor", name = "ktor-server-sessions", version.ref = "ktor" }
-ktor-server-tests = { group = "io.ktor", name = "ktor-server-tests-jvm", version.ref = "ktor" }
+# Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 
 # Kotlin - Ktor Client
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core-jvm", version.ref = "ktor" }
@@ -57,11 +51,6 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 # Kotlin - Logging
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
-
-# Kotlin - Database
-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
-h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
-hikariCP = { group = "com.zaxxer", name = "HikariCP", version = "4.0.3" }
 
 # Kotlin - Security
 jbcrypt = { group = "org.mindrot", name = "jbcrypt", version = "0.4" }
@@ -103,13 +92,14 @@ jacoco-gradlePlugin = { group = "org.jacoco", name = "org.jacoco.core", version.
 
 # Dokka
 dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
-
-# MongoDB
-mongo-db-kt = { group = "org.mongodb", name = "mongodb-driver-kotlin-coroutine", version.ref = "mongo-db" }
-mongo-db-bson = { group = "org.mongodb", name = "bson-kotlin", version.ref = "mongo-db" }
 slf4-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j"}
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 application = { id = "com.android.application", version.ref = "agp" }

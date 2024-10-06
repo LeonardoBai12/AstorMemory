@@ -1,13 +1,18 @@
-import extensions.implementation
-import extensions.testImplementation
-
 plugins {
-    id("io.lb.jvm.library")
+    id("com.google.dagger.hilt.android")
+    id("io.lb.android.library")
+    kotlin("kapt")
+}
+
+android {
+    namespace = "io.lb.impl.ktor.client"
 }
 
 dependencies {
     implementation(project(":common:shared"))
     implementation(project(":common:data"))
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)

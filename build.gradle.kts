@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor.plugin)
     alias(libs.plugins.serialization)
-    id("com.gradleup.shadow") version "8.3.1"
+    alias(libs.plugins.hilt.android) apply false
     id("io.lb.dokka") apply true
     id("io.lb.jacoco.multi-module")
 }
