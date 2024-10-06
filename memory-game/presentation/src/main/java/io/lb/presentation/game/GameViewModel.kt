@@ -11,9 +11,9 @@ import io.lb.presentation.game.model.GameCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -31,17 +31,76 @@ internal class GameViewModel @Inject constructor(
     private var getCardsJob: Job? = null
     private val games = mutableListOf<PokemonCard>()
 
+    private var mismatches = 0
+    private val amount = savedStateHandle["amount"] ?: 5
+
     init {
-        val amount = savedStateHandle["amount"] ?: 5
         getGames(amount)
     }
 
     fun onEvent(event: GameEvent) {
         when (event) {
-            is GameEvent.CardFlipped -> TODO()
-            is GameEvent.CardMatched -> TODO()
-            is GameEvent.CardMismatched -> TODO()
-            GameEvent.GameFinished -> TODO()
+            is GameEvent.CardFlipped -> {
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(
+                            cards = it.cards.mapIndexed { index, gameCard ->
+                                if (index == event.index) {
+                                    gameCard.copy(isFlipped = !gameCard.isFlipped)
+                                } else {
+                                    gameCard
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+            is GameEvent.CardMatched -> {
+                viewModelScope.launch {
+                    _state.update {
+                        if (it.cards.all { gameCard -> gameCard.isMatched }) {
+                            onEvent(GameEvent.GameFinished)
+                        }
+                        it.copy(
+                            cards = it.cards.map { gameCard ->
+                                if (gameCard.pokemonCard.id == event.id) {
+                                    gameCard.copy(isMatched = true)
+                                } else {
+                                    gameCard
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+            GameEvent.CardMismatched -> {
+                viewModelScope.launch {
+                    mismatches++
+                    delay(800)
+                    _state.update {
+                        it.copy(
+                            cards = it.cards.map { gameCard ->
+                                if (gameCard.isMatched.not()) {
+                                    gameCard.copy(isFlipped = false)
+                                } else {
+                                    gameCard
+                                }
+                            },
+                            score = useCases.calculateScoreUseCase(amount, mismatches)
+                        )
+                    }
+                }
+            }
+            GameEvent.GameFinished -> {
+                viewModelScope.launch {
+                    useCases.saveScoreUseCase(state.value.score)
+                    _state.update {
+                        it.copy(
+                            isFinished = true
+                        )
+                    }
+                }
+            }
         }
     }
 

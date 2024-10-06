@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import io.lb.presentation.R
+import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
@@ -105,6 +106,13 @@ internal fun MenuScreen(
                     text = "START GAME",
                     onClick = {
                         navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                MemoryGameBlueButton(
+                    text = "HIGHSCORES",
+                    onClick = {
+                        navController.navigate(MemoryGameScreens.HighScores.name)
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

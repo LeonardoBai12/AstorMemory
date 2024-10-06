@@ -20,13 +20,7 @@ class SaveScoreUseCase @Inject constructor(
      * @param score The score to save.
      * @return A [Flow] of [Resource] of a [Unit] object.
      */
-    suspend operator fun invoke(score: Int): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading())
-        runCatching {
-            repository.insertScore(score)
-            emit(Resource.Success(Unit))
-        }.getOrElse {
-            emit(Resource.Error(it.message.toString()))
-        }
+    suspend operator fun invoke(score: Int) {
+        repository.insertScore(score)
     }
 }

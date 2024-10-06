@@ -14,16 +14,14 @@ sealed interface GameEvent {
     /**
      * Represents a card being matched.
      *
-     * @property index The index of the card that was matched.
+     * @property id The id of the card that was matched.
      */
-    data class CardMatched(val index: Int) : GameEvent
+    data class CardMatched(val id: Int) : GameEvent
 
     /**
      * Represents a card being mismatched.
-     *
-     * @property index The index of the card that was mismatched.
      */
-    data class CardMismatched(val index: Int) : GameEvent
+    data object CardMismatched : GameEvent
 
     /**
      * Represents the game being finished.

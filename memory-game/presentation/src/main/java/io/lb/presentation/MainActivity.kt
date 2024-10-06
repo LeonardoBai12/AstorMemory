@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.lb.presentation.game.GameEvent
 import io.lb.presentation.game.GameScreen
 import io.lb.presentation.game.GameViewModel
+import io.lb.presentation.game_over.GameOverScreen
 import io.lb.presentation.menu.MenuScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
@@ -47,8 +48,21 @@ class MainActivity : ComponentActivity() {
                                 type = NavType.IntType
                             }
                         )
-                    ) { backStackEntry ->
+                    ) {
                         GameScreen(
+                            navController = navController,
+                        )
+                    }
+                    composable(
+                        route = MemoryGameScreens.GameOver.name + "/{score}",
+                        arguments = listOf(
+                            navArgument(name = "score") {
+                                type = NavType.IntType
+                            }
+                        )
+                    ) { backStackEntry ->
+
+                        GameOverScreen(
                             navController = navController,
                         )
                     }

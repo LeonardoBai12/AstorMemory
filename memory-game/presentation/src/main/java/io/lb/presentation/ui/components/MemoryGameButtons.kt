@@ -12,6 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.lb.presentation.ui.theme.DarkerBlue
+import io.lb.presentation.ui.theme.DarkerRed
+import io.lb.presentation.ui.theme.PrimaryBlue
 import io.lb.presentation.ui.theme.PrimaryRed
 
 @Composable
@@ -26,6 +28,30 @@ internal fun MemoryGameRedButton(
             contentColor = Color.White
         ),
         border = BorderStroke(4.dp, DarkerBlue),
+        onClick = {
+            onClick()
+        }
+    ) {
+        Text(
+            text = text,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+internal fun MemoryGameBlueButton(
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PrimaryBlue,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(4.dp, DarkerRed),
         onClick = {
             onClick()
         }

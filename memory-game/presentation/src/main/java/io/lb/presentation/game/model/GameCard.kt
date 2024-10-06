@@ -10,7 +10,7 @@ import io.lb.common.data.model.PokemonCard
  * @property pokemonCard The [PokemonCard] associated with the card.
  */
 data class GameCard(
-    val isFlipped: Boolean = false,
-    val isMatched: Boolean = false,
+    var isFlipped: Boolean = false,
+    var isMatched: Boolean = false,
     val pokemonCard: PokemonCard
 )

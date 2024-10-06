@@ -28,6 +28,7 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 appcompat = "1.6.1"
 material = "1.10.0"
+coil = "2.0.0-rc01"
 
 [libraries]
 # Room
@@ -103,6 +104,9 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Coil
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 [plugins]
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
