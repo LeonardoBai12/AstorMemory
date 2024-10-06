@@ -1,6 +1,6 @@
 package io.lb.domain.repository
 
-import io.lb.common.data.model.Pokemon
+import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.model.Score
 import io.lb.common.shared.error.MemoryGameException
 
@@ -15,7 +15,7 @@ interface MemoryGameRepository {
      *
      * @return a list of Pokemon pairs.
      */
-    suspend fun getPokemonPairs(amount: Int): List<Pokemon>
+    suspend fun getPokemonPairs(amount: Int): List<PokemonCard>
 
     /**
      * Get a list of scores.

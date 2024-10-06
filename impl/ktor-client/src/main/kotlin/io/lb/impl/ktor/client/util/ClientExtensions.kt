@@ -3,7 +3,9 @@ package io.lb.impl.ktor.client.util
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.lb.common.data.model.Pokemon
+import io.ktor.client.request.url
+import io.lb.common.data.model.PokemonCard
+import io.lb.common.shared.error.MemoryGameException
 import io.lb.impl.ktor.client.model.PokemonAPIResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +21,15 @@ import kotlinx.coroutines.withContext
 internal suspend fun HttpClient.requestPokemonList(
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
     amount: Int
-): List<Pokemon> = withContext(coroutineDispatcher) {
-    val pokemon = mutableListOf<Pokemon>()
+): List<PokemonCard> = withContext(coroutineDispatcher) {
+    val pokemon = mutableListOf<PokemonCard>()
 
     repeat(amount) {
-        val response = get("https://pokeapi.co/api/v2/pokemon/")
-            .body<PokemonAPIResponse>()
+        val randomId = (1..500).random()
+        val response = get {
+            url("https://pokeapi.co/api/v2/pokemon/$randomId")
+        }.body<PokemonAPIResponse?>() ?: throw MemoryGameException(500, "Failed to get Pokemon")
+
         pokemon.add(response.toPokemon())
         pokemon.add(response.toPokemon())
     }

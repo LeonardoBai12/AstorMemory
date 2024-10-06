@@ -104,8 +104,7 @@ internal fun MenuScreen(
                 MemoryGameRedButton(
                     text = "START GAME",
                     onClick = {
-                        navController.currentBackStackEntry?.arguments?.putInt("amount", amount.intValue)
-                        navController.navigate(MemoryGameScreens.Game.name)
+                        navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))

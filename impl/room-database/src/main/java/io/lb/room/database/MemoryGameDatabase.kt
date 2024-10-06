@@ -12,7 +12,8 @@ import io.lb.room.database.model.ScoreEntity
     version = 1,
     entities = [
         ScoreEntity::class,
-    ]
+    ],
+    exportSchema = false
 )
 internal abstract class MemoryGameDatabase : RoomDatabase() {
     abstract val memoryGameDao: MemoryGameDao

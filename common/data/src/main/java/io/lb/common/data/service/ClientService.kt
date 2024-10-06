@@ -1,6 +1,6 @@
 package io.lb.common.data.service
 
-import io.lb.common.data.model.Pokemon
+import io.lb.common.data.model.PokemonCard
 
 /**
  * Interface for the client service.
@@ -13,5 +13,5 @@ interface ClientService {
      */
     suspend fun getPokemonPairs(
         amount: Int,
-    ): List<Pokemon>
+    ): List<PokemonCard>
 }

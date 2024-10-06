@@ -16,6 +16,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":common:shared"))
+    implementation(project(":common:data"))
     implementation(project(":memory-game:domain"))
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

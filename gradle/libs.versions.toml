@@ -2,7 +2,6 @@
 # Kotlin
 ktor = "2.3.4"
 kotlin = "1.9.23"
-logback = "1.4.11"
 coroutines = "1.7.2"
 detekt = "1.23.1"
 jacoco = "0.8.11"
@@ -57,9 +56,6 @@ ktor-http = { group = "io.ktor", name = "ktor-http", version.ref = "ktor" }
 # Kotlin - Coroutines
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-
-# Kotlin - Logging
-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 
 # Kotlin - Security
 jbcrypt = { group = "org.mindrot", name = "jbcrypt", version = "0.4" }

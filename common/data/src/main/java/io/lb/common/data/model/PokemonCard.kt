@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property name The name of the Pokemon.
  */
 @Serializable
-data class Pokemon(
+data class PokemonCard(
     val id: Int,
     val imageUrl: String,
     val name: String

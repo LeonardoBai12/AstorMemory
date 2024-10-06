@@ -1,6 +1,7 @@
 package io.lb.room.database.model
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import io.lb.common.data.model.Score
 import java.util.UUID
 
@@ -13,6 +14,7 @@ import java.util.UUID
  */
 @Entity(tableName = "scores")
 internal data class ScoreEntity(
+    @PrimaryKey
     val id: UUID = UUID.randomUUID(),
     val score: Int,
     val timeMillis: Long = System.currentTimeMillis()

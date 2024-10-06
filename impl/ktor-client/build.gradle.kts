@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.logback.classic)
+    implementation(libs.slf4.simple)
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.junit.jupiter.api)
     kapt(libs.hilt.compiler)

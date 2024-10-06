@@ -1,8 +1,7 @@
 package io.lb.data.repository
 
-import io.lb.common.data.model.Pokemon
+import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.model.Score
-import io.lb.common.data.service.ClientService
 import io.lb.data.data_source.MemoryGameDataSource
 import io.lb.domain.repository.MemoryGameRepository
 import javax.inject.Inject
@@ -15,7 +14,7 @@ import javax.inject.Inject
 internal class MemoryGameRepositoryImpl @Inject constructor(
     private val dataSource: MemoryGameDataSource
 ) : MemoryGameRepository {
-    override suspend fun getPokemonPairs(amount: Int): List<Pokemon> {
+    override suspend fun getPokemonPairs(amount: Int): List<PokemonCard> {
         return dataSource.getPokemonPairs(amount)
     }
 

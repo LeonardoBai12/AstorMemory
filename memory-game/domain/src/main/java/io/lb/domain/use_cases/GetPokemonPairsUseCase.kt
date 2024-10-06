@@ -1,6 +1,6 @@
 package io.lb.domain.use_cases
 
-import io.lb.common.data.model.Pokemon
+import io.lb.common.data.model.PokemonCard
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.repository.MemoryGameRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +19,9 @@ class GetPokemonPairsUseCase @Inject constructor(
      * Fetches a list of Pokemon pairs.
      *
      * @param amount The amount of Pokemon pairs to fetch.
-     * @return A [Flow] of [Resource] of a list of [Pokemon] objects.
+     * @return A [Flow] of [Resource] of a list of [PokemonCard] objects.
      */
-    suspend operator fun invoke(amount: Int): Flow<Resource<List<Pokemon>>> = flow {
+    suspend operator fun invoke(amount: Int): Flow<Resource<List<PokemonCard>>> = flow {
         emit(Resource.Loading())
         runCatching {
             val response = repository.getPokemonPairs(amount)
