@@ -37,9 +37,13 @@ gradlePlugin {
             id = "io.lb.dokka"
             implementationClass = "DokkaModuleConventionPlugin"
         }
-        register("JacocoModuleConventionPlugin") {
-            id = "io.lb.jacoco.module"
-            implementationClass = "JacocoModuleConventionPlugin"
+        register("JacocoJvmConventionPlugin") {
+            id = "io.lb.jacoco.jvm.module"
+            implementationClass = "JacocoJvmConventionPlugin"
+        }
+        register("JacocoAndroidConventionPlugin") {
+            id = "io.lb.jacoco.android.module"
+            implementationClass = "JacocoAndroidConventionPlugin"
         }
         register("JacocoMultiModuleConventionPlugin") {
             id = "io.lb.jacoco.multi-module"
