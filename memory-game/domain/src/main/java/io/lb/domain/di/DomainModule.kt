@@ -5,11 +5,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.lb.domain.repository.MemoryGameRepository
-import io.lb.domain.use_cases.CalculateScoreUseCase
-import io.lb.domain.use_cases.GetPokemonPairsUseCase
-import io.lb.domain.use_cases.GetScoresUseCase
-import io.lb.domain.use_cases.MemoryGameUseCases
-import io.lb.domain.use_cases.SaveScoreUseCase
+import io.lb.domain.usecases.CalculateScoreUseCase
+import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetScoresUseCase
+import io.lb.domain.usecases.MemoryGameUseCases
+import io.lb.domain.usecases.SaveScoreUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)

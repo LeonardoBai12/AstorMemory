@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -95,41 +96,50 @@ internal fun MenuScreen(
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                MemoryGameRedButton(
-                    text = "START GAME",
-                    onClick = {
-                        navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                MemoryGameBlueButton(
-                    text = "HIGHSCORES",
-                    onClick = {
-                        navController.navigate(MemoryGameScreens.HighScores.name)
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                MemoryGameWhiteButton(
-                    text = "QUIT",
-                    onClick = {
-                        onClickQuit()
-                    }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(id = R.drawable.pokeball),
-                    contentDescription = "PokeBall",
-                )
-            }
+            ButtonsColumn(navController, amount, onClickQuit)
         }
+    }
+}
+
+@Composable
+private fun ButtonsColumn(
+    navController: NavController,
+    amount: MutableIntState,
+    onClickQuit: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        MemoryGameRedButton(
+            text = "START GAME",
+            onClick = {
+                navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MemoryGameBlueButton(
+            text = "HIGHSCORES",
+            onClick = {
+                navController.navigate(MemoryGameScreens.HighScores.name)
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MemoryGameWhiteButton(
+            text = "QUIT",
+            onClick = {
+                onClickQuit()
+            }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Image(
+            modifier = Modifier.size(48.dp),
+            painter = painterResource(id = R.drawable.pokeball),
+            contentDescription = "PokeBall",
+        )
     }
 }
 

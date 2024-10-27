@@ -3,11 +3,11 @@ package io.lb.presentation.scores
 import app.cash.turbine.test
 import io.lb.common.data.model.Score
 import io.lb.domain.repository.MemoryGameRepository
-import io.lb.domain.use_cases.CalculateScoreUseCase
-import io.lb.domain.use_cases.GetPokemonPairsUseCase
-import io.lb.domain.use_cases.GetScoresUseCase
-import io.lb.domain.use_cases.MemoryGameUseCases
-import io.lb.domain.use_cases.SaveScoreUseCase
+import io.lb.domain.usecases.CalculateScoreUseCase
+import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetScoresUseCase
+import io.lb.domain.usecases.MemoryGameUseCases
+import io.lb.domain.usecases.SaveScoreUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -56,7 +56,7 @@ class ScoreViewModelTest {
             val emission = awaitItem()
             assertFalse(emission.isLoading)
             assertNull(emission.message)
-            assertEquals(2, emission.  scores.size)
+            assertEquals(2, emission.scores.size)
             assertEquals(listOf(Score(1, 100), Score(2, 200)), emission.scores)
         }
     }

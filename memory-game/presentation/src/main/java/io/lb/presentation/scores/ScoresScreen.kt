@@ -72,41 +72,7 @@ internal fun ScoreScreen(
                     fontWeight = FontWeight.Bold
                 )
             } else {
-                LazyColumn(
-                    userScrollEnabled = true
-                ) {
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-                    items(state.scores.size) { index ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "${index + 1}.",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = state.scores[index].score.toString(),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = state.scores[index].timeMillis.toDateFormat(),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-                }
+                ScoresColumn(state)
             }
 
             Column(
@@ -129,6 +95,45 @@ internal fun ScoreScreen(
                     contentDescription = "PokeBall",
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ScoresColumn(state: ScoreState) {
+    LazyColumn(
+        userScrollEnabled = true
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+        items(state.scores.size) { index ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "${index + 1}.",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = state.scores[index].score.toString(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = state.scores[index].timeMillis.toDateFormat(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.url
+import io.ktor.http.HttpStatusCode
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.shared.error.MemoryGameException
 import io.lb.impl.ktor.model.PokemonAPIResponse
@@ -25,11 +26,14 @@ internal suspend fun HttpClient.requestPokemonList(
     val pokemon = mutableListOf<PokemonCard>()
 
     repeat(amount) {
-        val randomId = (1..500).random()
+        val randomId = (MIN_ID..MAX_ID).random()
         val response = get {
             url("https://pokeapi.co/api/v2/pokemon/$randomId/")
         }
-        val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(500, "Failed to get Pokemon")
+        val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(
+            HttpStatusCode.BadRequest.value,
+            "Failed to get Pokemon"
+        )
 
         pokemon.add(body.toPokemon())
         pokemon.add(body.toPokemon())
@@ -37,3 +41,6 @@ internal suspend fun HttpClient.requestPokemonList(
 
     return@withContext pokemon.shuffled()
 }
+
+private const val MIN_ID = 1
+private const val MAX_ID = 999

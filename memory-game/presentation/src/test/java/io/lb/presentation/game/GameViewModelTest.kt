@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import io.lb.common.data.model.PokemonCard
 import io.lb.domain.repository.MemoryGameRepository
-import io.lb.domain.use_cases.CalculateScoreUseCase
-import io.lb.domain.use_cases.GetPokemonPairsUseCase
-import io.lb.domain.use_cases.GetScoresUseCase
-import io.lb.domain.use_cases.MemoryGameUseCases
-import io.lb.domain.use_cases.SaveScoreUseCase
+import io.lb.domain.usecases.CalculateScoreUseCase
+import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetScoresUseCase
+import io.lb.domain.usecases.MemoryGameUseCases
+import io.lb.domain.usecases.SaveScoreUseCase
 import io.lb.presentation.game.model.GameCard
 import io.mockk.coEvery
 import io.mockk.every
@@ -51,12 +51,13 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `When the view model is created, expect cards to be fetched`() =  runTest {
+    fun `When the view model is created, expect cards to be fetched`() = runTest {
         coEvery { repository.getPokemonPairs(5) } returns pokemonCards()
 
         val savedStateHandle = mockk<SavedStateHandle>()
         every { savedStateHandle["amount"] ?: 0 } returns 5
         viewModel = GameViewModel(useCases, savedStateHandle)
+
         assert(viewModel.state.value.isLoading)
         delay(200)
 
@@ -90,8 +91,11 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 1)
-                        it.copy(isFlipped = true) else it
+                    if (it.pokemonCard.id == 1) {
+                        it.copy(isFlipped = true)
+                    } else {
+                        it
+                    }
                 },
                 emission2.cards
             )
@@ -120,8 +124,11 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 1)
-                        it.copy(isMatched = true) else it
+                    if (it.pokemonCard.id == 1) {
+                        it.copy(isMatched = true)
+                    } else {
+                        it
+                    }
                 },
                 emission2.cards
             )
@@ -150,8 +157,11 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 3)
-                        it.copy(isFlipped = true) else it
+                    if (it.pokemonCard.id == 3) {
+                        it.copy(isFlipped = true)
+                    } else {
+                        it
+                    }
                 },
                 emission2.cards
             )
@@ -162,8 +172,11 @@ class GameViewModelTest {
             val emission3 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 4 || it.pokemonCard.id == 3)
-                        it.copy(isFlipped = true) else it
+                    if (it.pokemonCard.id == 4 || it.pokemonCard.id == 3) {
+                        it.copy(isFlipped = true)
+                    } else {
+                        it
+                    }
                 },
                 emission3.cards
             )

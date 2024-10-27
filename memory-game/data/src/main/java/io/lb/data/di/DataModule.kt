@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.lb.common.data.service.ClientService
 import io.lb.common.data.service.DatabaseService
-import io.lb.data.data_source.MemoryGameDataSource
+import io.lb.data.datasource.MemoryGameDataSource
 import io.lb.data.repository.MemoryGameRepositoryImpl
 import io.lb.domain.repository.MemoryGameRepository
 

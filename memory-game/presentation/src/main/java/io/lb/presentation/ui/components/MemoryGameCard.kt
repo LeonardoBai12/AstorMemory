@@ -35,61 +35,77 @@ fun MemoryGameCard(
             BorderStroke(2.dp, PrimaryRed)
         }
 
-        Card(
-            modifier = Modifier
-                .size(120.dp)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
-            border = border,
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp,
-                pressedElevation = 16.dp
-            ),
-            onClick = {
-                onClick()
-            },
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = rememberAsyncImagePainter(
-                        model = card.pokemonCard.imageUrl,
-                    ),
-                    contentDescription = "Pokemon Flipped Card"
-                )
-            }
-        }
+        FlippedCard(border, onClick, card)
     } else {
-        Card(
-            modifier = Modifier
-                .size(120.dp)
-                .padding(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = PrimaryBlue
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp,
-                pressedElevation = 16.dp
-            ),
-            onClick = {
-                onClick()
-            },
+        NotFlippedCard(onClick)
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun NotFlippedCard(onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .size(120.dp)
+            .padding(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = PrimaryBlue
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp,
+            pressedElevation = 16.dp
+        ),
+        onClick = {
+            onClick()
+        },
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = R.drawable.pokeball),
-                    contentDescription = "Pokeball"
-                )
-            }
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.pokeball),
+                contentDescription = "Pokeball"
+            )
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun FlippedCard(
+    border: BorderStroke,
+    onClick: () -> Unit,
+    card: GameCard
+) {
+    Card(
+        modifier = Modifier
+            .size(120.dp)
+            .padding(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        border = border,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp,
+            pressedElevation = 16.dp
+        ),
+        onClick = {
+            onClick()
+        },
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = rememberAsyncImagePainter(
+                    model = card.pokemonCard.imageUrl,
+                ),
+                contentDescription = "Pokemon Flipped Card"
+            )
         }
     }
 }

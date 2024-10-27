@@ -1,4 +1,4 @@
-package io.lb.domain.use_cases
+package io.lb.domain.usecases
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

@@ -13,6 +13,8 @@ import kotlinx.serialization.json.Json
  * Object containing the middleware client.
  */
 internal object PokemonGameClient {
+    private const val TIMEOUT = 10000L
+
     /**
      * The middleware client.
      */
@@ -21,9 +23,9 @@ internal object PokemonGameClient {
             level = LogLevel.ALL
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 10000
-            connectTimeoutMillis = 10000
-            socketTimeoutMillis = 10000
+            requestTimeoutMillis = TIMEOUT
+            connectTimeoutMillis = TIMEOUT
+            socketTimeoutMillis = TIMEOUT
         }
         install(ContentNegotiation) {
             json(

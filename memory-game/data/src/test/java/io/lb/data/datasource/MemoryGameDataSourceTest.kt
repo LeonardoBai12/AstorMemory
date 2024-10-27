@@ -1,4 +1,4 @@
-package io.lb.data.data_source
+package io.lb.data.datasource
 
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.model.Score

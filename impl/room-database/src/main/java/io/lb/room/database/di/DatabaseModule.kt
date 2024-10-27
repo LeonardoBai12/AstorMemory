@@ -9,7 +9,6 @@ import dagger.hilt.android.components.ViewModelComponent
 import io.lb.common.data.service.DatabaseService
 import io.lb.room.database.MemoryGameDatabase
 import io.lb.room.database.service.DatabaseServiceImpl
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)

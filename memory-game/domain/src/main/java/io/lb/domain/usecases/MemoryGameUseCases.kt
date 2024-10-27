@@ -1,4 +1,4 @@
-package io.lb.domain.use_cases
+package io.lb.domain.usecases
 
 /**
  * Use cases for the memory game.

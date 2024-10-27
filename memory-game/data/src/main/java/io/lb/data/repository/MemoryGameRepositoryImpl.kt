@@ -2,7 +2,7 @@ package io.lb.data.repository
 
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.model.Score
-import io.lb.data.data_source.MemoryGameDataSource
+import io.lb.data.datasource.MemoryGameDataSource
 import io.lb.domain.repository.MemoryGameRepository
 import javax.inject.Inject
 

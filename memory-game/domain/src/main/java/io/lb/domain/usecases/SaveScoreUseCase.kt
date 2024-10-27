@@ -1,9 +1,8 @@
-package io.lb.domain.use_cases
+package io.lb.domain.usecases
 
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.repository.MemoryGameRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**

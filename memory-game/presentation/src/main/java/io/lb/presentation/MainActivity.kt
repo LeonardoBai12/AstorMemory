@@ -6,6 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -54,16 +57,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = MemoryGameScreens.Menu.name
                 ) {
                     composable(MemoryGameScreens.Menu.name) {
-                        titleMediaPlayer.playMusic()
-                        gameOverMediaPlayer.pauseMusic()
-                        gameMediaPlayer.pauseMusic()
-                        highScoresMediaPlayer.pauseMusic()
-                        MenuScreen(
-                            navController = navController,
-                            onClickQuit = {
-                                finish()
-                            }
-                        )
+                        startMenuScreen(navController)
                     }
                     composable(
                         route = MemoryGameScreens.Game.name + "/{amount}",
@@ -73,28 +67,12 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) {
-                        gameMediaPlayer.playMusic()
-                        gameOverMediaPlayer.pauseMusic()
-                        titleMediaPlayer.pauseMusic()
-                        highScoresMediaPlayer.pauseMusic()
-                        GameScreen(
-                            navController = navController,
-                            onCardFlipped = {
-                                soundPool.playFlipEffect()
-                            },
-                            onCardMatched = {
-                                soundPool.playMatchEffect()
-                            }
-                        )
+                        startGameScreen(navController)
                     }
                     composable(
                         route = MemoryGameScreens.HighScores.name,
                     ) {
-                        highScoresMediaPlayer.playMusic()
-                        gameOverMediaPlayer.pauseMusic()
-                        titleMediaPlayer.pauseMusic()
-                        gameMediaPlayer.pauseMusic()
-                        ScoreScreen(navController = navController)
+                        startScoreScreen(navController)
                     }
                     composable(
                         route = MemoryGameScreens.GameOver.name + "/{score}",
@@ -104,19 +82,67 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
-                        gameOverMediaPlayer.playMusic()
-                        titleMediaPlayer.pauseMusic()
-                        gameMediaPlayer.pauseMusic()
-                        highScoresMediaPlayer.pauseMusic()
-                        val score = backStackEntry.arguments?.getInt("score")
-                        GameOverScreen(
-                            navController = navController,
-                            score = score ?: 0
-                        )
+                        startGameOverScreen(backStackEntry, navController)
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun startMenuScreen(navController: NavHostController) {
+        titleMediaPlayer.playMusic()
+        gameOverMediaPlayer.pauseMusic()
+        gameMediaPlayer.pauseMusic()
+        highScoresMediaPlayer.pauseMusic()
+        MenuScreen(
+            navController = navController,
+            onClickQuit = {
+                finish()
+            }
+        )
+    }
+
+    @Composable
+    private fun startGameScreen(navController: NavHostController) {
+        gameMediaPlayer.playMusic()
+        gameOverMediaPlayer.pauseMusic()
+        titleMediaPlayer.pauseMusic()
+        highScoresMediaPlayer.pauseMusic()
+        GameScreen(
+            navController = navController,
+            onCardFlipped = {
+                soundPool.playFlipEffect()
+            },
+            onCardMatched = {
+                soundPool.playMatchEffect()
+            }
+        )
+    }
+
+    @Composable
+    private fun startScoreScreen(navController: NavHostController) {
+        highScoresMediaPlayer.playMusic()
+        gameOverMediaPlayer.pauseMusic()
+        titleMediaPlayer.pauseMusic()
+        gameMediaPlayer.pauseMusic()
+        ScoreScreen(navController = navController)
+    }
+
+    @Composable
+    private fun startGameOverScreen(
+        backStackEntry: NavBackStackEntry,
+        navController: NavHostController
+    ) {
+        gameOverMediaPlayer.playMusic()
+        titleMediaPlayer.pauseMusic()
+        gameMediaPlayer.pauseMusic()
+        highScoresMediaPlayer.pauseMusic()
+        val score = backStackEntry.arguments?.getInt("score")
+        GameOverScreen(
+            navController = navController,
+            score = score ?: 0
+        )
     }
 
     override fun onResume() {

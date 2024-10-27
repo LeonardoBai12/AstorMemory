@@ -1,4 +1,4 @@
-package io.lb.domain.use_cases
+package io.lb.domain.usecases
 
 import io.lb.common.data.model.Score
 import io.lb.common.shared.flow.Resource

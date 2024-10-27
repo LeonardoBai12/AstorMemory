@@ -35,7 +35,7 @@ fun MediaPlayer.stopMusic() {
     }
 }
 
-private fun SoundPool.playEffect(soundId: Int, volume: Float = 1f) {
+private fun SoundPool.playEffect(soundId: Int, volume: Float = STARTING_VOLUME) {
     play(
         soundId,
         volume,
@@ -65,5 +65,7 @@ fun SoundPool.playFlipEffect() {
 }
 
 fun SoundPool.playMatchEffect() {
-    playEffect(matchEffectId, 0.75f)
+    playEffect(matchEffectId, STARTING_VOLUME)
 }
+
+private const val STARTING_VOLUME = 0.75f

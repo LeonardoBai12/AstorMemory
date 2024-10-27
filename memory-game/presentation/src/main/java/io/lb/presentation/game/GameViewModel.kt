@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.shared.flow.Resource
-import io.lb.domain.use_cases.MemoryGameUseCases
+import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.presentation.game.model.GameCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ internal class GameViewModel @Inject constructor(
     }
 
     private var mismatches = 0
-    private val amount = savedStateHandle["amount"] ?: 5
+    private val amount = savedStateHandle["amount"] ?: DEFAULT_CARD_AMOUNT
 
     init {
         getGames(amount)
@@ -65,49 +65,57 @@ internal class GameViewModel @Inject constructor(
                 }
             }
             is GameEvent.CardMatched -> {
-                viewModelScope.launch {
-                    _state.update {
-                        val currentState = it.copy(
-                            cards = it.cards.map { gameCard ->
-                                if (gameCard.pokemonCard.id == event.id) {
-                                    gameCard.copy(isMatched = true)
-                                } else {
-                                    gameCard
-                                }
-                            }
-                        )
-                        currentState
-                    }
-                    if (_state.value.cards.all { gameCard -> gameCard.isMatched }) {
-                        onEvent(GameEvent.GameFinished)
-                    }
-                }
+                onMatched(event)
             }
             GameEvent.CardMismatched -> {
                 viewModelScope.launch {
-                    mismatches++
-                    delay(750)
-                    _state.update {
-                        it.copy(
-                            cards = it.cards.map { gameCard ->
-                                if (gameCard.isMatched.not()) {
-                                    gameCard.copy(isFlipped = false)
-                                } else {
-                                    gameCard
-                                }
-                            },
-                            score = useCases.calculateScoreUseCase(amount, mismatches)
-                        )
-                    }
+                    onMismatched()
                 }
             }
             GameEvent.GameFinished -> {
                 viewModelScope.launch {
                     useCases.saveScoreUseCase(state.value.score)
-                    delay(2000)
+                    delay(GET_SCORES_DELAY)
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
             }
+        }
+    }
+
+    private fun onMatched(event: GameEvent.CardMatched) {
+        viewModelScope.launch {
+            _state.update {
+                val currentState = it.copy(
+                    cards = it.cards.map { gameCard ->
+                        if (gameCard.pokemonCard.id == event.id) {
+                            gameCard.copy(isMatched = true)
+                        } else {
+                            gameCard
+                        }
+                    }
+                )
+                currentState
+            }
+            if (_state.value.cards.all { gameCard -> gameCard.isMatched }) {
+                onEvent(GameEvent.GameFinished)
+            }
+        }
+    }
+
+    private suspend fun onMismatched() {
+        mismatches++
+        delay(MISMATCH_DELAY)
+        _state.update {
+            it.copy(
+                cards = it.cards.map { gameCard ->
+                    if (gameCard.isMatched.not()) {
+                        gameCard.copy(isFlipped = false)
+                    } else {
+                        gameCard
+                    }
+                },
+                score = useCases.calculateScoreUseCase(amount, mismatches)
+            )
         }
     }
 
@@ -148,5 +156,10 @@ internal class GameViewModel @Inject constructor(
                 }
             }
         }.launchIn(CoroutineScope(Dispatchers.IO))
+    }
+    companion object {
+        private const val DEFAULT_CARD_AMOUNT = 5
+        private const val MISMATCH_DELAY = 750L
+        private const val GET_SCORES_DELAY = 2000L
     }
 }

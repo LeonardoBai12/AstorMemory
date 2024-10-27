@@ -39,11 +39,14 @@ class DatabaseServiceImplTest {
         val response = service.getScores()
 
         assertEquals(3, response.size)
-        assertEquals(listOf(
-            Score(1, 1L),
-            Score(2, 2L),
-            Score(3, 3L)
-        ), response)
+        assertEquals(
+            listOf(
+                Score(1, 1L),
+                Score(2, 2L),
+                Score(3, 3L)
+            ),
+            response
+        )
     }
 
     @org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package io.lb.domain.use_cases
+package io.lb.domain.usecases
 
 /**
  * Use case to calculate the score.
@@ -12,8 +12,13 @@ class CalculateScoreUseCase {
      * @return The calculated score.
      */
     operator fun invoke(amount: Int, mismatches: Int): Int {
-        val maxScore = 100 * amount
-        val penalty = mismatches * 10
+        val maxScore = MAX_SCORE * amount
+        val penalty = mismatches * PENALTY
         return (maxScore - penalty).coerceAtLeast(0)
+    }
+
+    companion object {
+        private const val PENALTY = 10
+        private const val MAX_SCORE = 100
     }
 }
