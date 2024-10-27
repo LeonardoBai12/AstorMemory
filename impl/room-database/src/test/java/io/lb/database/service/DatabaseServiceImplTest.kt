@@ -47,15 +47,6 @@ class DatabaseServiceImplTest {
     }
 
     @org.junit.jupiter.api.Test
-    fun `When gets scores, expect an empty list`() = runTest {
-        coEvery { dao.getScores() } throws Exception()
-
-        val response = service.getScores()
-
-        assertEquals(0, response.size)
-    }
-
-    @org.junit.jupiter.api.Test
     fun `When inserts a score, expect the score to be inserted`() = runTest {
         coEvery { dao.insertScore(any()) } returns Unit
         var error = false

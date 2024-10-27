@@ -16,9 +16,7 @@ internal class DatabaseServiceImpl @Inject constructor(
     private val dao: MemoryGameDao
 ) : DatabaseService {
     override suspend fun getScores(): List<Score> {
-        return runCatching {
-            dao.getScores().map { it.toPokemon() }
-        }.getOrElse { emptyList() }
+        return dao.getScores().map { it.toPokemon() }
     }
 
     @Throws(MemoryGameException::class)

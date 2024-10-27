@@ -7,9 +7,9 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
-import io.lb.impl.ktor.client.model.PokemonAPIResponse
-import io.lb.impl.ktor.client.model.PokemonSprite
-import io.lb.impl.ktor.client.service.ClientServiceImpl
+import io.lb.impl.ktor.model.PokemonAPIResponse
+import io.lb.impl.ktor.model.PokemonSprite
+import io.lb.impl.ktor.service.ClientServiceImpl
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.encodeToString

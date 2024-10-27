@@ -23,5 +23,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
+    testImplementation("app.cash.turbine:turbine:1.0.0")
     kapt(libs.hilt.compiler)
 }

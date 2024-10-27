@@ -1,4 +1,4 @@
-package io.lb.impl.ktor.client.model
+package io.lb.impl.ktor.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

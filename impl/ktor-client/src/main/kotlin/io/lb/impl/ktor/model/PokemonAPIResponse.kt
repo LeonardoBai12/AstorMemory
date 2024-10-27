@@ -1,4 +1,4 @@
-package io.lb.impl.ktor.client.model
+package io.lb.impl.ktor.model
 
 import io.lb.common.data.model.PokemonCard
 import kotlinx.serialization.Serializable
