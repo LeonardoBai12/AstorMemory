@@ -1,12 +1,10 @@
 package io.lb.presentation.scores
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.lb.common.data.model.Score
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.use_cases.MemoryGameUseCases
-import io.lb.presentation.game.model.GameCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

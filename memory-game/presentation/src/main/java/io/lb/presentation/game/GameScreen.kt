@@ -116,8 +116,9 @@ internal fun GameScreen(
             ) {
                 items(state.cards.size) { index ->
                     MemoryGameCard(state.cards[index]) {
-                        if (state.cards[index].isFlipped || state.cards[index].isMatched)
+                        if (state.cards[index].isFlipped || state.cards[index].isMatched) {
                             return@MemoryGameCard
+                        }
 
                         if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size == 2)
                             return@MemoryGameCard

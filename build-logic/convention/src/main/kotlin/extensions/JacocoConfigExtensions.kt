@@ -125,7 +125,6 @@ private val EXCLUSION_LIST = listOf(
     "**/**Database_Impl**.*",
     "**/**ScreenKt**.*",
     "**/**Application.*",
-    "**/*Test*.*",
     "android/**/*.*",
     "androidx/**/*.*",
     "**/*\$ViewInjector*.*",

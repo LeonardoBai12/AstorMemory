@@ -13,7 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import io.lb.presentation.game.GameScreen
-import io.lb.presentation.game_over.GameOverScreen
+import io.lb.presentation.gameover.GameOverScreen
 import io.lb.presentation.menu.MenuScreen
 import io.lb.presentation.scores.ScoreScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
@@ -24,7 +24,6 @@ import io.lb.presentation.util.playFlipEffect
 import io.lb.presentation.util.playMatchEffect
 import io.lb.presentation.util.playMusic
 import io.lb.presentation.util.playPausedMusic
-import io.lb.presentation.util.stopMusic
 
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
