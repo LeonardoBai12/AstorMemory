@@ -24,6 +24,7 @@ import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
 import io.lb.presentation.util.buildSoundPool
 import io.lb.presentation.util.pauseMusic
 import io.lb.presentation.util.playFlipEffect
+import io.lb.presentation.util.playInitialMatchEffect
 import io.lb.presentation.util.playMatchEffect
 import io.lb.presentation.util.playMusic
 import io.lb.presentation.util.playPausedMusic
@@ -32,7 +33,10 @@ import io.lb.presentation.util.playPausedMusic
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var titleMediaPlayer: MediaPlayer
-    private lateinit var gameMediaPlayer: MediaPlayer
+    private lateinit var wildMediaPlayer: MediaPlayer
+    private lateinit var trainerBattleMediaPlayer: MediaPlayer
+    private lateinit var gymLeaderBattleMediaPlayer: MediaPlayer
+    private lateinit var eliteFourBattleMediaPlayer: MediaPlayer
     private lateinit var highScoresMediaPlayer: MediaPlayer
     private lateinit var gameOverMediaPlayer: MediaPlayer
 
@@ -44,7 +48,10 @@ class MainActivity : ComponentActivity() {
         soundPool = buildSoundPool(this)
 
         titleMediaPlayer = MediaPlayer.create(this, R.raw.title_screen)
-        gameMediaPlayer = MediaPlayer.create(this, R.raw.game_screen)
+        wildMediaPlayer = MediaPlayer.create(this, R.raw.wild)
+        trainerBattleMediaPlayer = MediaPlayer.create(this, R.raw.trainer)
+        gymLeaderBattleMediaPlayer = MediaPlayer.create(this, R.raw.gym_leader)
+        eliteFourBattleMediaPlayer = MediaPlayer.create(this, R.raw.final_battle)
         highScoresMediaPlayer = MediaPlayer.create(this, R.raw.highscores_screen)
         gameOverMediaPlayer = MediaPlayer.create(this, R.raw.gameover_screen)
 
@@ -57,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = MemoryGameScreens.Menu.name
                 ) {
                     composable(MemoryGameScreens.Menu.name) {
-                        startMenuScreen(navController)
+                        StartMenuScreen(navController)
                     }
                     composable(
                         route = MemoryGameScreens.Game.name + "/{amount}",
@@ -66,13 +73,13 @@ class MainActivity : ComponentActivity() {
                                 type = NavType.IntType
                             }
                         )
-                    ) {
-                        startGameScreen(navController)
+                    ) { backStackEntry ->
+                        StartGameScreen(backStackEntry, navController)
                     }
                     composable(
                         route = MemoryGameScreens.HighScores.name,
                     ) {
-                        startScoreScreen(navController)
+                        StartScoreScreen(navController)
                     }
                     composable(
                         route = MemoryGameScreens.GameOver.name + "/{score}",
@@ -82,7 +89,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
-                        startGameOverScreen(backStackEntry, navController)
+                        StartGameOverScreen(backStackEntry, navController)
                     }
                 }
             }
@@ -90,11 +97,14 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun startMenuScreen(navController: NavHostController) {
+    private fun StartMenuScreen(navController: NavHostController) {
         titleMediaPlayer.playMusic()
         gameOverMediaPlayer.pauseMusic()
-        gameMediaPlayer.pauseMusic()
+        wildMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
+        trainerBattleMediaPlayer.pauseMusic()
+        gymLeaderBattleMediaPlayer.pauseMusic()
+        eliteFourBattleMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
             onClickQuit = {
@@ -104,8 +114,34 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun startGameScreen(navController: NavHostController) {
-        gameMediaPlayer.playMusic()
+    private fun StartGameScreen(
+        backStackEntry: NavBackStackEntry,
+        navController: NavHostController
+    ) {
+        val amount = backStackEntry.arguments?.getInt("amount") ?: 6
+
+        if (amount < 8) {
+            wildMediaPlayer.playMusic()
+            trainerBattleMediaPlayer.pauseMusic()
+            gymLeaderBattleMediaPlayer.pauseMusic()
+            eliteFourBattleMediaPlayer.pauseMusic()
+        } else if (amount == 20) {
+            wildMediaPlayer.pauseMusic()
+            trainerBattleMediaPlayer.pauseMusic()
+            gymLeaderBattleMediaPlayer.pauseMusic()
+            eliteFourBattleMediaPlayer.playMusic()
+        } else if (amount >= 12) {
+            wildMediaPlayer.pauseMusic()
+            trainerBattleMediaPlayer.pauseMusic()
+            gymLeaderBattleMediaPlayer.playMusic()
+            eliteFourBattleMediaPlayer.pauseMusic()
+        } else {
+            wildMediaPlayer.pauseMusic()
+            trainerBattleMediaPlayer.playMusic()
+            gymLeaderBattleMediaPlayer.pauseMusic()
+            eliteFourBattleMediaPlayer.pauseMusic()
+        }
+
         gameOverMediaPlayer.pauseMusic()
         titleMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
@@ -114,30 +150,40 @@ class MainActivity : ComponentActivity() {
             onCardFlipped = {
                 soundPool.playFlipEffect()
             },
-            onCardMatched = {
-                soundPool.playMatchEffect()
+            onCardMatched = { matches ->
+                if (matches > amount * 3 / 4) {
+                    soundPool.playMatchEffect()
+                } else {
+                    soundPool.playInitialMatchEffect()
+                }
             }
         )
     }
 
     @Composable
-    private fun startScoreScreen(navController: NavHostController) {
+    private fun StartScoreScreen(navController: NavHostController) {
         highScoresMediaPlayer.playMusic()
         gameOverMediaPlayer.pauseMusic()
         titleMediaPlayer.pauseMusic()
-        gameMediaPlayer.pauseMusic()
+        wildMediaPlayer.pauseMusic()
+        trainerBattleMediaPlayer.pauseMusic()
+        gymLeaderBattleMediaPlayer.pauseMusic()
+        eliteFourBattleMediaPlayer.pauseMusic()
         ScoreScreen(navController = navController)
     }
 
     @Composable
-    private fun startGameOverScreen(
+    private fun StartGameOverScreen(
         backStackEntry: NavBackStackEntry,
         navController: NavHostController
     ) {
         gameOverMediaPlayer.playMusic()
         titleMediaPlayer.pauseMusic()
-        gameMediaPlayer.pauseMusic()
+        wildMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
+        trainerBattleMediaPlayer.pauseMusic()
+        gymLeaderBattleMediaPlayer.pauseMusic()
+        eliteFourBattleMediaPlayer.pauseMusic()
         val score = backStackEntry.arguments?.getInt("score")
         GameOverScreen(
             navController = navController,
@@ -148,7 +194,10 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         titleMediaPlayer.playPausedMusic()
-        gameMediaPlayer.playPausedMusic()
+        wildMediaPlayer.playPausedMusic()
+        trainerBattleMediaPlayer.playPausedMusic()
+        gymLeaderBattleMediaPlayer.playPausedMusic()
+        eliteFourBattleMediaPlayer.playPausedMusic()
         highScoresMediaPlayer.playPausedMusic()
         gameOverMediaPlayer.playPausedMusic()
     }
@@ -156,7 +205,10 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         titleMediaPlayer.pauseMusic()
-        gameMediaPlayer.pauseMusic()
+        wildMediaPlayer.pauseMusic()
+        trainerBattleMediaPlayer.pauseMusic()
+        gymLeaderBattleMediaPlayer.pauseMusic()
+        eliteFourBattleMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
     }
@@ -164,7 +216,10 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         titleMediaPlayer.release()
-        gameMediaPlayer.release()
+        wildMediaPlayer.release()
+        trainerBattleMediaPlayer.release()
+        gymLeaderBattleMediaPlayer.release()
+        eliteFourBattleMediaPlayer.release()
         highScoresMediaPlayer.release()
         gameOverMediaPlayer.release()
         soundPool.release()

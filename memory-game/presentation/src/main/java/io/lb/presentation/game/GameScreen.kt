@@ -43,7 +43,7 @@ internal fun GameScreen(
     navController: NavController,
     viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
     onCardFlipped: () -> Unit,
-    onCardMatched: () -> Unit,
+    onCardMatched: (Int) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
     val lastSelectedCard = remember {
@@ -92,7 +92,16 @@ internal fun GameScreen(
                 }
             }
         } else {
-            CardGrid(padding, state, onCardFlipped, lastSelectedCard, viewModel, onCardMatched)
+            CardGrid(
+                padding = padding,
+                state = state,
+                onCardFlipped = onCardFlipped,
+                lastSelectedCard = lastSelectedCard,
+                viewModel = viewModel,
+                onCardMatched = {
+                    onCardMatched(state.cards.filter { it.isMatched }.size)
+                }
+            )
         }
     }
 }
@@ -124,7 +133,7 @@ private fun CardGrid(
     onCardFlipped: () -> Unit,
     lastSelectedCard: MutableState<String>,
     viewModel: GameViewModel,
-    onCardMatched: () -> Unit
+    onCardMatched: () -> Unit,
 ) {
     LazyVerticalGrid(
         modifier = Modifier
