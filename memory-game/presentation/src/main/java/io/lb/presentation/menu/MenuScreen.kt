@@ -40,7 +40,7 @@ internal fun MenuScreen(
     onClickQuit: () -> Unit = {}
 ) {
     val amount = remember {
-        mutableIntStateOf(5)
+        mutableIntStateOf(6)
     }
 
     Scaffold(
@@ -76,7 +76,7 @@ internal fun MenuScreen(
                     modifier = Modifier,
                     text = "-"
                 ) {
-                    if (amount.intValue > 4) {
+                    if (amount.intValue > 1) {
                         amount.intValue--
                     }
                 }
@@ -90,7 +90,7 @@ internal fun MenuScreen(
                     modifier = Modifier,
                     text = "+"
                 ) {
-                    if (amount.intValue < 12) {
+                    if (amount.intValue < 20) {
                         amount.intValue++
                     }
                 }
