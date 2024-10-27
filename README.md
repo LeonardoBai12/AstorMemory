@@ -31,6 +31,4 @@ The game includes the original Pokémon music from the **Game Boy Color** versio
 
 Watch the game in action:
 
-<video src="pokemon.mp4" controls="controls" style="max-width: 100%; height: auto;">
-    Your browser does not support the video tag.
-</video>
+https://www.youtube.com/watch?v=TeZc2GrbFWw
