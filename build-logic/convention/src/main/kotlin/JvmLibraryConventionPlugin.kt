@@ -22,7 +22,7 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.jvm")
                 apply("org.jetbrains.kotlin.plugin.serialization")
-                apply("io.lb.jacoco.module")
+                apply("io.lb.jacoco.jvm.module")
                 apply("io.lb.detekt")
                 apply("io.lb.dokka")
             }

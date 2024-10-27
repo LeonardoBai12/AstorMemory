@@ -29,11 +29,21 @@ internal fun Project.configureKotlinAndroid(
 
         defaultConfig {
             minSdk = libs.findVersion("minSdk").get().toString().toInt()
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
 
         compileOptions {
             sourceCompatibility = COMPILE_VERSION
             targetCompatibility = COMPILE_VERSION
+        }
+
+        buildTypes {
+            getByName("debug") {
+                enableUnitTestCoverage = true
+            }
+            getByName("release") {
+                enableUnitTestCoverage = true
+            }
         }
     }
 
@@ -78,142 +88,6 @@ private fun Project.configureKotlin() {
         testLogging {
             events("passed", "skipped", "failed")
         }
-    }
-}
-
-/**
- * Configures the Jacoco settings for the project.
- *
- * @receiver The JacocoCoverageVerification to configure the settings for.
- * @param minimumCoverage The minimum coverage percentage to enforce.
- */
-internal fun JacocoCoverageVerification.setupCoverageVerification(
-    minimumCoverage: Double = 0.80
-) {
-    violationRules {
-        rule {
-            limit {
-                minimum = minimumCoverage.toBigDecimal()
-            }
-        }
-    }
-}
-
-/**
- * Configures the Jacoco settings for the project.
- *
- * @receiver The JacocoReport to configure the settings for.
- */
-internal fun JacocoReport.setupCoverageReport() {
-    reports {
-        xml.apply {
-            isEnabled = false
-        }
-        csv.apply {
-            isEnabled = false
-        }
-        html.apply {
-            isEnabled = true
-        }
-    }
-}
-
-/**
- * Sets up the Jacoco plugin for the project.
- *
- * @receiver The project to set up the Jacoco plugin for.
- */
-internal fun Project.setupJacoco() {
-    pluginManager.apply("jacoco")
-    extensions.configure<JacocoPluginExtension> {
-        toolVersion = libs.findVersion("jacoco").get().toString()
-    }
-    tasks.withType<Test> {
-        extensions.configure<JacocoTaskExtension> {
-            isIncludeNoLocationClasses = true
-            excludes = listOf("jdk.internal.*")
-        }
-    }
-}
-
-/**
- * Sets up the Jacoco directories for the project.
- *
- * @receiver The project to set up the Jacoco directories for.
- * @param jacocoReport The JacocoReport to set up the directories for.
- */
-internal fun Project.setJacocoJvmDirectories(
-    jacocoReport: JacocoReportBase
-) {
-    jacocoReport.apply {
-        executionData.from(fileTree("${layout.buildDirectory}/jacoco/test.exec"))
-        setJacocoDirectories(this)
-    }
-}
-
-/**
- * Sets up the Jacoco directories for the project.
- *
- * @receiver The project to set up the Jacoco directories for.
- * @param jacocoReport The JacocoReport to set up the directories for.
- */
-internal fun Project.setJacocoAndroidDirectories(
-    jacocoReport: JacocoReportBase
-) {
-    jacocoReport.apply {
-        executionData.from(fileTree("${layout.buildDirectory}/jacoco/testDebugUnitTest.exec"))
-        setJacocoDirectories(this)
-    }
-}
-
-/**
- * Sets up the Jacoco directories for the project.
- *
- * @receiver The project to set up the Jacoco directories for.
- * @param jacocoReport The JacocoReport to set up the directories for.
- */
-internal fun Project.setJacocoDirectories(
-    jacocoReport: JacocoReportBase
-) {
-    val fileFilter = listOf(
-        "**/build/generated/**",
-        "**/Application.kt",
-        "**/*Configuration.kt",
-        "**/*Kt$*",
-        "**/internal/**",
-        "**/R.class",
-        "**/BuildConfig.*",
-        "**/session/**",
-        "**/model/**",
-        "**/plugins/**",
-        "**/di/**",
-        "**/security/**",
-    )
-
-    jacocoReport.apply {
-        val javaTree = fileTree(
-            mapOf(
-                "dir" to "${layout.buildDirectory}/intermediates/javac/debug/classes",
-                "excludes" to fileFilter
-            )
-        )
-        val kotlinTree = fileTree(
-            mapOf(
-                "dir" to "${layout.buildDirectory}/tmp/kotlin-classes/debug",
-                "excludes" to fileFilter
-            )
-        )
-
-        classDirectories.setFrom(files(javaTree, kotlinTree))
-
-        val sourceDirs = listOf(
-            "src/main/kotlin",
-            "src/main/java",
-            "src/debug/kotlin",
-            "src/debug/java"
-        )
-        sourceDirectories.setFrom(files(sourceDirs))
-        additionalSourceDirs.setFrom(files(sourceDirs))
     }
 }
 
