@@ -7,9 +7,9 @@ import io.lb.presentation.R
 
 private var pausedMediaPlayer: String? = null
 
-fun MediaPlayer.playMusic() {
+fun MediaPlayer.playMusic(volume: Float = MATCH_VOLUME) {
     isLooping = true
-    setVolume(0.7f, 0.7f)
+    setVolume(volume, volume)
 
     if (isPlaying.not()) {
         seekTo(0)

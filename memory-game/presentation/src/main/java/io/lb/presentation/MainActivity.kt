@@ -144,7 +144,7 @@ class MainActivity : ComponentActivity() {
         } else if (amount >= 12) {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.pauseMusic()
-            gymLeaderBattleMediaPlayer.playMusic()
+            gymLeaderBattleMediaPlayer.playMusic(0.95f)
             eliteFourBattleMediaPlayer.pauseMusic()
             victoryRoadMediaPlayer.pauseMusic()
         } else {
