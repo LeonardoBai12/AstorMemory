@@ -44,6 +44,13 @@ internal class GameViewModel @Inject constructor(
     private val amount = savedStateHandle["amount"] ?: DEFAULT_CARD_AMOUNT
 
     init {
+        _state.update {
+            if (amount > 1) {
+                it.copy(score = amount * 100)
+            } else {
+                it
+            }
+        }
         getGames(amount)
     }
 
