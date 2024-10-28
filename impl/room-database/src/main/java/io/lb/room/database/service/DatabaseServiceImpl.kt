@@ -21,6 +21,9 @@ internal class DatabaseServiceImpl @Inject constructor(
 
     @Throws(MemoryGameException::class)
     override suspend fun insertScore(score: Int) {
-        dao.insertScore(ScoreEntity(score = score))
+        val scores = dao.getScores().sortedByDescending { it.score }
+        if (scores.size < 10 || score > scores.last().score) {
+            dao.insertScore(ScoreEntity(score = score))
+        }
     }
 }
