@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var eliteFourBattleMediaPlayer: MediaPlayer
     private lateinit var highScoresMediaPlayer: MediaPlayer
     private lateinit var gameOverMediaPlayer: MediaPlayer
+    private lateinit var victoryRoadMediaPlayer: MediaPlayer
 
     private lateinit var soundPool: SoundPool
 
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer = MediaPlayer.create(this, R.raw.final_battle)
         highScoresMediaPlayer = MediaPlayer.create(this, R.raw.highscores_screen)
         gameOverMediaPlayer = MediaPlayer.create(this, R.raw.gameover_screen)
+        victoryRoadMediaPlayer = MediaPlayer.create(this, R.raw.victory_road)
 
         setContent {
             PokemonMemoryChallengeTheme {
@@ -105,6 +107,7 @@ class MainActivity : ComponentActivity() {
         trainerBattleMediaPlayer.pauseMusic()
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
+        victoryRoadMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
             onClickQuit = {
@@ -120,25 +123,35 @@ class MainActivity : ComponentActivity() {
     ) {
         val amount = backStackEntry.arguments?.getInt("amount") ?: 6
 
-        if (amount < 8) {
+        if (amount == 1) {
+            wildMediaPlayer.pauseMusic()
+            trainerBattleMediaPlayer.pauseMusic()
+            gymLeaderBattleMediaPlayer.pauseMusic()
+            victoryRoadMediaPlayer.playMusic()
+            eliteFourBattleMediaPlayer.pauseMusic()
+        } else if (amount < 8) {
             wildMediaPlayer.playMusic()
             trainerBattleMediaPlayer.pauseMusic()
             gymLeaderBattleMediaPlayer.pauseMusic()
+            victoryRoadMediaPlayer.pauseMusic()
             eliteFourBattleMediaPlayer.pauseMusic()
         } else if (amount == 20) {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.pauseMusic()
             gymLeaderBattleMediaPlayer.pauseMusic()
+            victoryRoadMediaPlayer.pauseMusic()
             eliteFourBattleMediaPlayer.playMusic()
         } else if (amount >= 12) {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.pauseMusic()
             gymLeaderBattleMediaPlayer.playMusic()
             eliteFourBattleMediaPlayer.pauseMusic()
+            victoryRoadMediaPlayer.pauseMusic()
         } else {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.playMusic()
             gymLeaderBattleMediaPlayer.pauseMusic()
+            victoryRoadMediaPlayer.pauseMusic()
             eliteFourBattleMediaPlayer.pauseMusic()
         }
 
@@ -169,6 +182,7 @@ class MainActivity : ComponentActivity() {
         trainerBattleMediaPlayer.pauseMusic()
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
+        victoryRoadMediaPlayer.pauseMusic()
         ScoreScreen(navController = navController)
     }
 
@@ -184,6 +198,7 @@ class MainActivity : ComponentActivity() {
         trainerBattleMediaPlayer.pauseMusic()
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
+        victoryRoadMediaPlayer.pauseMusic()
         val score = backStackEntry.arguments?.getInt("score")
         GameOverScreen(
             navController = navController,
@@ -199,6 +214,7 @@ class MainActivity : ComponentActivity() {
         gymLeaderBattleMediaPlayer.playPausedMusic()
         eliteFourBattleMediaPlayer.playPausedMusic()
         highScoresMediaPlayer.playPausedMusic()
+        victoryRoadMediaPlayer.playPausedMusic()
         gameOverMediaPlayer.playPausedMusic()
     }
 
@@ -210,6 +226,7 @@ class MainActivity : ComponentActivity() {
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
+        victoryRoadMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
     }
 
@@ -219,6 +236,7 @@ class MainActivity : ComponentActivity() {
         wildMediaPlayer.release()
         trainerBattleMediaPlayer.release()
         gymLeaderBattleMediaPlayer.release()
+        victoryRoadMediaPlayer.release()
         eliteFourBattleMediaPlayer.release()
         highScoresMediaPlayer.release()
         gameOverMediaPlayer.release()
