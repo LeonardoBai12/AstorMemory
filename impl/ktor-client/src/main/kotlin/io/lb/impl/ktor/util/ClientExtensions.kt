@@ -24,9 +24,13 @@ internal suspend fun HttpClient.requestPokemonList(
     amount: Int
 ): List<PokemonCard> = withContext(coroutineDispatcher) {
     val pokemon = mutableListOf<PokemonCard>()
+    val usedIds = mutableSetOf<Int>()
 
     repeat(amount) {
-        val randomId = (MIN_ID..MAX_ID).random()
+        var randomId: Int
+        do {
+            randomId = (MIN_ID..MAX_ID).random()
+        } while (!usedIds.add(randomId))
         val response = get {
             url("https://pokeapi.co/api/v2/pokemon/$randomId/")
         }
