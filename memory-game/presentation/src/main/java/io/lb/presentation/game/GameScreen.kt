@@ -106,7 +106,9 @@ internal fun GameScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = state.message.orEmpty(),
+                        text = state.message.takeIf {
+                            it.isNullOrEmpty().not() || it == "null"
+                        } ?: "Ops! Something went wrong",
                         fontWeight = FontWeight.W600,
                         fontSize = 24.sp
                     )
