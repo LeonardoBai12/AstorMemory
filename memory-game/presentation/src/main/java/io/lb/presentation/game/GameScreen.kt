@@ -59,7 +59,7 @@ internal fun GameScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is GameViewModel.UiEvent.Finish -> {
-                    navController.navigate(MemoryGameScreens.GameOver.name + "/${event.score}")
+                    navController.navigate(MemoryGameScreens.GameOver.name + "/${event.score}/${state.amount}")
                 }
             }
         }

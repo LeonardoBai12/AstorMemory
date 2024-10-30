@@ -46,7 +46,7 @@ internal class GameViewModel @Inject constructor(
     init {
         _state.update {
             if (amount > 1) {
-                it.copy(score = amount * 100)
+                it.copy(score = amount * 100, amount = amount)
             } else {
                 it
             }

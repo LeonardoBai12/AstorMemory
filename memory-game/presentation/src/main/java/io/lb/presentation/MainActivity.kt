@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var gameOverMediaPlayer: MediaPlayer
     private lateinit var victoryRoadMediaPlayer: MediaPlayer
     private lateinit var lavenderMediaPlayer: MediaPlayer
+    private lateinit var finalVictoryMediaPlayer: MediaPlayer
 
     private lateinit var soundPool: SoundPool
 
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
         gameOverMediaPlayer = MediaPlayer.create(this, R.raw.gameover_screen)
         victoryRoadMediaPlayer = MediaPlayer.create(this, R.raw.victory_road)
         lavenderMediaPlayer = MediaPlayer.create(this, R.raw.lavender)
+        finalVictoryMediaPlayer = MediaPlayer.create(this, R.raw.victory_final)
 
         setContent {
             PokemonMemoryChallengeTheme {
@@ -86,9 +88,12 @@ class MainActivity : ComponentActivity() {
                         StartScoreScreen(navController)
                     }
                     composable(
-                        route = MemoryGameScreens.GameOver.name + "/{score}",
+                        route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
                         arguments = listOf(
                             navArgument(name = "score") {
+                                type = NavType.IntType
+                            },
+                            navArgument(name = "amount") {
                                 type = NavType.IntType
                             }
                         )
@@ -111,6 +116,7 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         lavenderMediaPlayer.pauseMusic()
+        finalVictoryMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
             onClickQuit = {
@@ -162,6 +168,7 @@ class MainActivity : ComponentActivity() {
         lavenderMediaPlayer.pauseMusic()
         titleMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
+        finalVictoryMediaPlayer.pauseMusic()
         GameScreen(
             navController = navController,
             onCardFlipped = {
@@ -188,6 +195,7 @@ class MainActivity : ComponentActivity() {
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
+        finalVictoryMediaPlayer.pauseMusic()
         ScoreScreen(navController = navController)
     }
 
@@ -204,11 +212,18 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         val score = backStackEntry.arguments?.getInt("score")
+        val amount = backStackEntry.arguments?.getInt("amount")
         if (score == 0) {
-            lavenderMediaPlayer.playMusic(0.85f)
+            lavenderMediaPlayer.playMusic(0.95f)
             gameOverMediaPlayer.pauseMusic()
+            finalVictoryMediaPlayer.pauseMusic()
+        } else if (amount == 20) {
+            lavenderMediaPlayer.pauseMusic()
+            gameOverMediaPlayer.pauseMusic()
+            finalVictoryMediaPlayer.playMusic()
         } else {
             lavenderMediaPlayer.pauseMusic()
+            finalVictoryMediaPlayer.pauseMusic()
             gameOverMediaPlayer.playMusic()
         }
         GameOverScreen(
@@ -228,6 +243,7 @@ class MainActivity : ComponentActivity() {
         victoryRoadMediaPlayer.playPausedMusic()
         gameOverMediaPlayer.playPausedMusic()
         lavenderMediaPlayer.playPausedMusic()
+        finalVictoryMediaPlayer.playPausedMusic()
     }
 
     override fun onPause() {
@@ -241,6 +257,7 @@ class MainActivity : ComponentActivity() {
         victoryRoadMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
         lavenderMediaPlayer.pauseMusic()
+        finalVictoryMediaPlayer.pauseMusic()
     }
 
     override fun onDestroy() {
@@ -254,6 +271,7 @@ class MainActivity : ComponentActivity() {
         highScoresMediaPlayer.release()
         gameOverMediaPlayer.release()
         lavenderMediaPlayer.release()
+        finalVictoryMediaPlayer.release()
         soundPool.release()
     }
 }
