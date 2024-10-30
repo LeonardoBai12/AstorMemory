@@ -75,5 +75,5 @@ fun SoundPool.playMatchEffect() {
     playEffect(matchEffectId, MATCH_VOLUME)
 }
 
-private const val MATCH_VOLUME = 0.75f
+private const val MATCH_VOLUME = 0.7f
 private const val FLIP_VOLUME = 0.95f

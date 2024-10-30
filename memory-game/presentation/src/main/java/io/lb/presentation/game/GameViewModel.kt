@@ -86,6 +86,10 @@ internal class GameViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
             }
+
+            GameEvent.OnRequestGames -> {
+                getGames(amount)
+            }
         }
     }
 

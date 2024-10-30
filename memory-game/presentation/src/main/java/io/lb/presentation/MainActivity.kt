@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var highScoresMediaPlayer: MediaPlayer
     private lateinit var gameOverMediaPlayer: MediaPlayer
     private lateinit var victoryRoadMediaPlayer: MediaPlayer
+    private lateinit var lavenderMediaPlayer: MediaPlayer
 
     private lateinit var soundPool: SoundPool
 
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity() {
         highScoresMediaPlayer = MediaPlayer.create(this, R.raw.highscores_screen)
         gameOverMediaPlayer = MediaPlayer.create(this, R.raw.gameover_screen)
         victoryRoadMediaPlayer = MediaPlayer.create(this, R.raw.victory_road)
+        lavenderMediaPlayer = MediaPlayer.create(this, R.raw.lavender)
 
         setContent {
             PokemonMemoryChallengeTheme {
@@ -108,6 +110,7 @@ class MainActivity : ComponentActivity() {
         gymLeaderBattleMediaPlayer.pauseMusic()
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
+        lavenderMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
             onClickQuit = {
@@ -140,22 +143,23 @@ class MainActivity : ComponentActivity() {
             trainerBattleMediaPlayer.pauseMusic()
             gymLeaderBattleMediaPlayer.pauseMusic()
             victoryRoadMediaPlayer.pauseMusic()
-            eliteFourBattleMediaPlayer.playMusic()
+            eliteFourBattleMediaPlayer.playMusic(0.85f)
         } else if (amount >= 12) {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.pauseMusic()
-            gymLeaderBattleMediaPlayer.playMusic(0.95f)
+            gymLeaderBattleMediaPlayer.playMusic(0.85f)
             eliteFourBattleMediaPlayer.pauseMusic()
             victoryRoadMediaPlayer.pauseMusic()
         } else {
             wildMediaPlayer.pauseMusic()
-            trainerBattleMediaPlayer.playMusic()
+            trainerBattleMediaPlayer.playMusic(0.95f)
             gymLeaderBattleMediaPlayer.pauseMusic()
             victoryRoadMediaPlayer.pauseMusic()
             eliteFourBattleMediaPlayer.pauseMusic()
         }
 
         gameOverMediaPlayer.pauseMusic()
+        lavenderMediaPlayer.pauseMusic()
         titleMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
         GameScreen(
@@ -176,6 +180,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun StartScoreScreen(navController: NavHostController) {
         highScoresMediaPlayer.playMusic()
+        lavenderMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
         titleMediaPlayer.pauseMusic()
         wildMediaPlayer.pauseMusic()
@@ -191,7 +196,6 @@ class MainActivity : ComponentActivity() {
         backStackEntry: NavBackStackEntry,
         navController: NavHostController
     ) {
-        gameOverMediaPlayer.playMusic()
         titleMediaPlayer.pauseMusic()
         wildMediaPlayer.pauseMusic()
         highScoresMediaPlayer.pauseMusic()
@@ -200,6 +204,13 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         val score = backStackEntry.arguments?.getInt("score")
+        if (score == 0) {
+            lavenderMediaPlayer.playMusic(0.85f)
+            gameOverMediaPlayer.pauseMusic()
+        } else {
+            lavenderMediaPlayer.pauseMusic()
+            gameOverMediaPlayer.playMusic()
+        }
         GameOverScreen(
             navController = navController,
             score = score ?: 0
@@ -216,6 +227,7 @@ class MainActivity : ComponentActivity() {
         highScoresMediaPlayer.playPausedMusic()
         victoryRoadMediaPlayer.playPausedMusic()
         gameOverMediaPlayer.playPausedMusic()
+        lavenderMediaPlayer.playPausedMusic()
     }
 
     override fun onPause() {
@@ -228,6 +240,7 @@ class MainActivity : ComponentActivity() {
         highScoresMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
+        lavenderMediaPlayer.pauseMusic()
     }
 
     override fun onDestroy() {
@@ -240,6 +253,7 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.release()
         highScoresMediaPlayer.release()
         gameOverMediaPlayer.release()
+        lavenderMediaPlayer.release()
         soundPool.release()
     }
 }

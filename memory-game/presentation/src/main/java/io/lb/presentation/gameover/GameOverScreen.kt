@@ -59,12 +59,27 @@ fun GameOverScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            Text(
-                text = "Score: $score",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            if (score == 0) {
+                Text(
+                    text = "Score:",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Image(
+                    modifier = Modifier.size(200.dp),
+                    painter = painterResource(id = R.drawable.missingno),
+                    contentDescription = "Missing Number reference",
+                )
+            } else {
+                Text(
+                    text = "Score: $score",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
 
             Column(
                 modifier = Modifier

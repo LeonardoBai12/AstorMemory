@@ -5,6 +5,11 @@ package io.lb.presentation.game
  */
 sealed interface GameEvent {
     /**
+     * Represents the request for games.
+     */
+    data object OnRequestGames : GameEvent
+
+    /**
      * Represents a card being flipped.
      *
      * @property index The index of the card that was flipped.

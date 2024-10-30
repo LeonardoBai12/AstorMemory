@@ -20,6 +20,8 @@ class SaveScoreUseCase @Inject constructor(
      * @return A [Flow] of [Resource] of a [Unit] object.
      */
     suspend operator fun invoke(score: Int) {
-        repository.insertScore(score)
+        if (score > 0) {
+            repository.insertScore(score)
+        }
     }
 }
