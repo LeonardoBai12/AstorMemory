@@ -110,7 +110,7 @@ internal fun GameScreen(
                 ) {
                     Text(
                         text = state.message.takeIf {
-                            it.isNullOrEmpty().not() || it == "null"
+                            it.isNullOrEmpty().not() && it != "null"
                         } ?: "Ops! Something went wrong",
                         fontWeight = FontWeight.W600,
                         fontSize = 24.sp
