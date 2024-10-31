@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,6 +55,8 @@ internal fun GameScreen(
     val lastSelectedCard = remember {
         mutableStateOf("")
     }
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenWidthDp.dp
 
     LaunchedEffect(key1 = "GameScreen") {
         viewModel.eventFlow.collectLatest { event ->
@@ -80,12 +83,12 @@ internal fun GameScreen(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(64.dp),
+                        .size(screenHeight / 6),
                     color = Color.Red,
-                    strokeWidth = 4.dp,
+                    strokeWidth = 5.dp,
                 )
                 Image(
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(screenHeight / 8),
                     painter = painterResource(id = R.drawable.pokeball),
                     contentDescription = "PokeBall",
                 )
@@ -181,7 +184,7 @@ private fun CardGrid(
         modifier = Modifier
             .padding(padding)
             .padding(16.dp),
-        columns = GridCells.Adaptive(88.dp),
+        columns = GridCells.Fixed(4),
         userScrollEnabled = true,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
