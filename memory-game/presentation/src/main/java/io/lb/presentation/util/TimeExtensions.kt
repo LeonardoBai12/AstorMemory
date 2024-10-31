@@ -7,7 +7,6 @@ import java.util.TimeZone
 
 fun Long.toDateFormat(): String {
     val date = Date(this)
-    val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-    formatter.timeZone = TimeZone.getTimeZone("UTC")
+    val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
     return formatter.format(date)
 }
