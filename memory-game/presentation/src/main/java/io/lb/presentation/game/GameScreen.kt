@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -76,51 +77,12 @@ internal fun GameScreen(
         }
     ) { padding ->
         if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(screenHeight / 6),
-                    color = Color.Red,
-                    strokeWidth = 5.dp,
-                )
-                Image(
-                    modifier = Modifier.size(screenHeight / 8),
-                    painter = painterResource(id = R.drawable.pokeball),
-                    contentDescription = "PokeBall",
-                )
-            }
+            LoadingIndicator(screenHeight)
         } else if (state.message.isNullOrEmpty().not() ||
             state.cards.isEmpty() ||
-            state.message == "null") {
-            Surface(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = state.message.takeIf {
-                            it.isNullOrEmpty().not() && it != "null"
-                        } ?: "Ops! Something went wrong",
-                        fontWeight = FontWeight.W600,
-                        fontSize = 24.sp
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    MemoryGameRedButton("Try again") {
-                        viewModel.onEvent(GameEvent.OnRequestGames)
-                    }
-                }
-            }
+            state.message == "null"
+        ) {
+            ErrorMessage(padding, state, viewModel)
         } else {
             CardGrid(
                 padding = padding,
@@ -132,6 +94,60 @@ internal fun GameScreen(
                     onCardMatched(state.cards.filter { it.isMatched }.size)
                 }
             )
+        }
+    }
+}
+
+@Composable
+private fun LoadingIndicator(screenHeight: Dp) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(screenHeight / 6),
+            color = Color.Red,
+            strokeWidth = 5.dp,
+        )
+        Image(
+            modifier = Modifier.size(screenHeight / 8),
+            painter = painterResource(id = R.drawable.pokeball),
+            contentDescription = "PokeBall",
+        )
+    }
+}
+
+@Composable
+private fun ErrorMessage(
+    padding: PaddingValues,
+    state: GameState,
+    viewModel: GameViewModel
+) {
+    Surface(
+        modifier = Modifier
+            .padding(padding)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = state.message.takeIf {
+                    it.isNullOrEmpty().not() && it != "null"
+                } ?: "Ops! Something went wrong",
+                fontWeight = FontWeight.W600,
+                fontSize = 24.sp
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            MemoryGameRedButton("Try again") {
+                viewModel.onEvent(GameEvent.OnRequestGames)
+            }
         }
     }
 }

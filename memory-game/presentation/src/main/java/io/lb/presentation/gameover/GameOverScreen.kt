@@ -81,30 +81,35 @@ fun GameOverScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                MemoryGameWhiteButton(
-                    text = "BACK",
-                    onClick = {
-                        navController.navigate(MemoryGameScreens.Menu.name) {
-                            popUpTo(MemoryGameScreens.Menu.name) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(id = R.drawable.pokeball),
-                    contentDescription = "PokeBall",
-                )
-            }
+            GameOverButtons(navController)
         }
+    }
+}
+
+@Composable
+private fun GameOverButtons(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        MemoryGameWhiteButton(
+            text = "BACK",
+            onClick = {
+                navController.navigate(MemoryGameScreens.Menu.name) {
+                    popUpTo(MemoryGameScreens.Menu.name) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Image(
+            modifier = Modifier.size(48.dp),
+            painter = painterResource(id = R.drawable.pokeball),
+            contentDescription = "PokeBall",
+        )
     }
 }

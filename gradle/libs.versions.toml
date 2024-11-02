@@ -3,7 +3,7 @@
 ktor = "2.3.4"
 kotlin = "1.9.23"
 coroutines = "1.7.2"
-detekt = "1.23.1"
+detekt = "1.23.7"
 jacoco = "0.8.11"
 dokka = "1.9.20"
 serialization = "1.5.21"
