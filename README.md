@@ -29,9 +29,9 @@ The game includes the original Pokémon music from the **Game Boy Color** versio
 
 ## Demonstration (PT-BR)
 
-Watch the game in action:
+Watch the author playing the game:
 
-https://www.youtube.com/watch?v=TeZc2GrbFWw
+https://www.youtube.com/watch?v=MGe6Ya4dN-8
 
 ## Technical Explanation (PT-BR)
 
