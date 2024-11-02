@@ -27,8 +27,14 @@ This Android app is built as a **multi-module project** with the following key c
 
 The game includes the original Pokémon music from the **Game Boy Color** version, played in the background to enhance the retro gaming experience.
 
-## Demonstration
+## Demonstration (PT-BR)
 
 Watch the game in action:
 
 https://www.youtube.com/watch?v=TeZc2GrbFWw
+
+## Technical Explanation (PT-BR)
+
+Watch the author explaining each technical layer of the project:
+
+https://www.youtube.com/watch?v=7TpLs7FteHQ
