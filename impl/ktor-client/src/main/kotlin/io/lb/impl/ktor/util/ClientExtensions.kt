@@ -19,32 +19,16 @@ import kotlinx.coroutines.withContext
  *
  * @return The response from the API.
  */
-internal suspend fun HttpClient.requestPokemonList(
+internal suspend fun HttpClient.requestPokemon(
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    amount: Int
-): List<PokemonCard> = withContext(coroutineDispatcher) {
-    val pokemon = mutableListOf<PokemonCard>()
-    val usedIds = mutableSetOf<Int>()
-
-    repeat(amount) {
-        var randomId: Int
-        do {
-            randomId = (MIN_ID..MAX_ID).random()
-        } while (!usedIds.add(randomId))
-        val response = get {
-            url("https://pokeapi.co/api/v2/pokemon/$randomId/")
-        }
-        val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(
-            HttpStatusCode.BadRequest.value,
-            "Failed to get Pokemon"
-        )
-
-        pokemon.add(body.toPokemon())
-        pokemon.add(body.toPokemon())
+    id: Int
+): PokemonCard = withContext(coroutineDispatcher) {
+    val response = get {
+        url("https://pokeapi.co/api/v2/pokemon/$id/")
     }
-
-    return@withContext pokemon.shuffled()
+    val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(
+        HttpStatusCode.BadRequest.value,
+        "Failed to get Pokemon"
+    )
+    return@withContext body.toPokemon()
 }
-
-private const val MIN_ID = 1
-private const val MAX_ID = 999

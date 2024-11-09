@@ -17,9 +17,10 @@ internal data class ScoreEntity(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
     val score: Int,
+    val amount: Int,
     val timeMillis: Long = System.currentTimeMillis()
 ) {
-    fun toPokemon() = Score(
+    fun toScore() = Score(
         score = score,
         timeMillis = timeMillis
     )

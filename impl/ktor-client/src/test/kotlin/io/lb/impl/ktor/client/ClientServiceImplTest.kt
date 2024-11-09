@@ -67,7 +67,7 @@ class ClientServiceImplTest {
 
     @Test
     fun `When requests 5 Pokemon, expect a list with 10 Pokemon - repeating twice the five`() = runTest {
-        val response = service.getPokemonPairs(5)
+        val response = service.getPokemon(5)
 
         Assertions.assertEquals(5, response.distinct().size)
         Assertions.assertEquals(10, response.size)

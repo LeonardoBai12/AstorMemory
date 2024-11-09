@@ -7,11 +7,9 @@ import io.lb.common.data.model.PokemonCard
  */
 interface ClientService {
     /**
-     * Gets a list of Pokemon pais.
+     * Get a Pokemon.
      *
-     * @param amount The amount of Pokemon pairs to get.
+     * @param id The ID of the Pokemon.
      */
-    suspend fun getPokemonPairs(
-        amount: Int,
-    ): List<PokemonCard>
+    suspend fun getPokemon(id: Int): PokemonCard
 }

@@ -3,7 +3,7 @@ package io.lb.impl.ktor.service
 import io.ktor.client.HttpClient
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.service.ClientService
-import io.lb.impl.ktor.util.requestPokemonList
+import io.lb.impl.ktor.util.requestPokemon
 
 /**
  * Implementation of the [ClientService] interface.
@@ -13,7 +13,7 @@ import io.lb.impl.ktor.util.requestPokemonList
 internal class ClientServiceImpl(
     private val client: HttpClient
 ) : ClientService {
-    override suspend fun getPokemonPairs(amount: Int): List<PokemonCard> {
-        return client.requestPokemonList(amount = amount)
+    override suspend fun getPokemon(id: Int): PokemonCard {
+        return client.requestPokemon(id = id)
     }
 }

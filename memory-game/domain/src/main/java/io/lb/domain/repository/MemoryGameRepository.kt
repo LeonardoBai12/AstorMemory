@@ -25,10 +25,17 @@ interface MemoryGameRepository {
     suspend fun getScores(): List<Score>
 
     /**
+     * Get a list of scores by amount of cards.
+     *
+     * @param amount the amount of cards in the game.
+     */
+    suspend fun getScoresByAmount(amount: Int): List<Score>
+
+    /**
      * Insert a score into the database.
      *
      * @param score the score to insert.
      */
     @Throws(MemoryGameException::class)
-    suspend fun insertScore(score: Int)
+    suspend fun insertScore(score: Int, amount: Int)
 }

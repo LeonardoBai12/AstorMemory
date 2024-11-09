@@ -1,5 +1,6 @@
 package io.lb.data.datasource
 
+import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.service.ClientService
 import io.lb.common.data.service.DatabaseService
 import javax.inject.Inject
@@ -22,18 +23,46 @@ internal class MemoryGameDataSource @Inject constructor(
     suspend fun getScores() = databaseService.getScores()
 
     /**
+     * Get the scores from the database by amount of cards.
+     *
+     * @param amount The amount of cards in the game.
+     *
+     * @return The scores.
+     */
+    suspend fun getScoresByAmount(amount: Int) = databaseService.getScoresByAmount(amount)
+
+    /**
      * Insert a score into the database.
      *
      * @param score The score to insert.
+     * @param amount The amount of cards in the game.
      */
-    suspend fun insertScore(score: Int) = databaseService.insertScore(score)
+    suspend fun insertScore(score: Int, amount: Int) = databaseService.insertScore(score, amount)
 
     /**
-     * Get a list of Pokemon pairs.
+     * Get a Pokemon from the API.
      *
-     * @param amount The amount of Pokemon pairs to get.
+     * @param id The ID of the Pokemon to get.
      *
-     * @return A list of Pokemon pairs.
+     * @return The Pokemon.
      */
-    suspend fun getPokemonPairs(amount: Int) = clientService.getPokemonPairs(amount)
+    suspend fun getPokemonFromRemote(id: Int) = clientService.getPokemon(id)
+
+    /**
+     * Get a Pokemon from the database.
+     *
+     * @param id The ID of the Pokemon to get.
+     *
+     * @return The Pokemon.
+     */
+    suspend fun getPokemonFromLocal(id: Int) = databaseService.getPokemonById(id)
+
+    /**
+     * Insert a Pokemon into the database.
+     *
+     * @param pokemonCard The Pokemon to insert.
+     */
+    suspend fun insertPokemon(pokemonCard: PokemonCard) {
+        databaseService.insertPokemon(pokemonCard)
+    }
 }

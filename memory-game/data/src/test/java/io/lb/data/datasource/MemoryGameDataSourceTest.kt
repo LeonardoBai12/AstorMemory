@@ -55,7 +55,7 @@ class MemoryGameDataSourceTest {
 
     @Test
     fun `When get pokemon pairs, expect a list of pokemon pairs`() = runTest {
-        coEvery { clientService.getPokemonPairs(2) } returns listOf(
+        coEvery { clientService.getPokemon(2) } returns listOf(
             PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
             PokemonCard(2, "Ivysaur.png", "Ivysaur")
         )
