@@ -31,11 +31,11 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
 //            localList.addAll(localList.shuffled())
 //            return localList.shuffled()
 //        }
-        remotePokemon.forEach {
-            if (dataSource.getPokemonFromLocal(it.pokemonId) == null) {
-                dataSource.insertPokemon(it)
-            }
-        }
+//        remotePokemon.forEach {
+//            if (dataSource.getPokemonFromLocal(it.pokemonId) == null) {
+//                dataSource.insertPokemon(it)
+//            }
+//        }
         val remoteList = remotePokemon.take(amount).shuffled().toMutableList()
         remoteList.addAll(remoteList.shuffled())
         return remoteList.shuffled()
