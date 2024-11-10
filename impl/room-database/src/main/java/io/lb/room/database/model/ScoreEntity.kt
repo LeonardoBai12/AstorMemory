@@ -22,6 +22,7 @@ internal data class ScoreEntity(
 ) {
     fun toScore() = Score(
         score = score,
+        amount = amount,
         timeMillis = timeMillis
     )
 }

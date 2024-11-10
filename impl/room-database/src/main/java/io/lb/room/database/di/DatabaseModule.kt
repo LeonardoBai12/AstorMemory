@@ -18,8 +18,9 @@ internal object DatabaseModule {
         return Room.databaseBuilder(
             app,
             MemoryGameDatabase::class.java,
-            "lbmeals.db"
-        ).build()
+            "pokeman.db"
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
