@@ -53,4 +53,14 @@ internal interface MemoryGameDao {
      */
     @Query("SELECT * FROM pokemon_cards WHERE pokemonId = :id LIMIT 1")
     suspend fun getPokemonById(id: Int): PokemonCardEntity?
+
+    /**
+     * Retrieves a list of Pokemon from the database.
+     *
+     * @param amount The amount of Pokemon to get.
+     *
+     * @return A list of Pokemon.
+     */
+    @Query("SELECT * FROM pokemon_cards ORDER BY RANDOM()")
+    suspend fun getPokemonList(): List<PokemonCardEntity>
 }

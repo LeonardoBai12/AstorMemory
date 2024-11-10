@@ -98,7 +98,7 @@ internal class GameViewModel @Inject constructor(
             _state.update {
                 val currentState = it.copy(
                     cards = it.cards.map { gameCard ->
-                        if (gameCard.pokemonCard.id == event.id) {
+                        if (gameCard.pokemonCard.pokemonId == event.id) {
                             gameCard.copy(isMatched = true)
                         } else {
                             gameCard

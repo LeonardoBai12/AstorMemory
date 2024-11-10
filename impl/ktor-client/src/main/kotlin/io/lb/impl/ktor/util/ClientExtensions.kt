@@ -2,12 +2,16 @@ package io.lb.impl.ktor.util
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.accept
+import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
+import io.ktor.client.request.head
+import io.ktor.client.request.header
 import io.ktor.client.request.url
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.shared.error.MemoryGameException
-import io.lb.impl.ktor.model.PokemonAPIResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,14 +25,17 @@ import kotlinx.coroutines.withContext
  */
 internal suspend fun HttpClient.requestPokemon(
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    id: Int
-): PokemonCard = withContext(coroutineDispatcher) {
+    amount: Int
+): List<PokemonCard> = withContext(coroutineDispatcher) {
     val response = get {
-        url("https://pokeapi.co/api/v2/pokemon/$id/")
+        accept(ContentType.Any)
+        header("Content-Type", "application/json")
+        bearerAuth("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6Imh0dHA6Ly8wLjAuMC4wOjgwODAiLCJleHAiOjE3NjI3NDIyMDIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4ifQ.bXQnXi51Bp3KFFSUmIKUkvVqlexOOB0mOXbmUsHZTzc")
+        url("https://pokeman-summer-bush-3988.fly.dev/api/pokemon?amount=$amount")
     }
-    val body = response.body<PokemonAPIResponse?>() ?: throw MemoryGameException(
+    val body = response.body<List<PokemonCard>?>() ?: throw MemoryGameException(
         HttpStatusCode.BadRequest.value,
         "Failed to get Pokemon"
     )
-    return@withContext body.toPokemon()
+    return@withContext body
 }

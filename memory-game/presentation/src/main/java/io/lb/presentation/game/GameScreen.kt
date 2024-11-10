@@ -1,5 +1,7 @@
 package io.lb.presentation.game
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.R
@@ -226,7 +229,9 @@ private fun CardGrid(
                     lastSelectedCard.value = ""
                 } else {
                     viewModel.onEvent(GameEvent.CardFlipped(index))
-                    viewModel.onEvent(GameEvent.CardMatched(id = state.cards[index].pokemonCard.id))
+                    viewModel.onEvent(
+                        GameEvent.CardMatched(id = state.cards[index].pokemonCard.pokemonId)
+                    )
                     lastSelectedCard.value = ""
                     onCardMatched()
                 }

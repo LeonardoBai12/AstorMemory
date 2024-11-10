@@ -39,7 +39,7 @@ internal class DatabaseServiceImpl @Inject constructor(
     override suspend fun insertPokemon(pokemonCard: PokemonCard) {
         dao.insertPokemon(
             PokemonCardEntity(
-                pokemonId = pokemonCard.id,
+                pokemonId = pokemonCard.pokemonId,
                 name = pokemonCard.name,
                 imageUrl = pokemonCard.imageUrl
             )
@@ -48,6 +48,10 @@ internal class DatabaseServiceImpl @Inject constructor(
 
     override suspend fun getPokemonById(id: Int): PokemonCard? {
         return dao.getPokemonById(id)?.toPokemonCard()
+    }
+
+    override suspend fun getPokemonList(): List<PokemonCard> {
+        return dao.getPokemonList().map { it.toPokemonCard() }
     }
 
     companion object {

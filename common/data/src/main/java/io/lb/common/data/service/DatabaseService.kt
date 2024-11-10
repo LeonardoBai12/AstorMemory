@@ -9,4 +9,5 @@ interface DatabaseService {
     suspend fun insertScore(score: Int, amount: Int)
     suspend fun insertPokemon(pokemonCard: PokemonCard)
     suspend fun getPokemonById(id: Int): PokemonCard?
+    suspend fun getPokemonList(): List<PokemonCard>
 }

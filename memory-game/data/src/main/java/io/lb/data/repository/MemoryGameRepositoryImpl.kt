@@ -15,22 +15,30 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
     private val dataSource: MemoryGameDataSource
 ) : MemoryGameRepository {
     override suspend fun getPokemonPairs(amount: Int): List<PokemonCard> {
-        val pokemonList = mutableListOf<PokemonCard>()
-        val usedIds = mutableSetOf<Int>()
-        repeat(amount) {
-            var randomId: Int
-            do {
-                randomId = (MIN_ID..MAX_ID).random()
-            } while (!usedIds.add(randomId))
-            val pokemon = dataSource.getPokemonFromLocal(randomId) ?: run {
-                val remotePokemon = dataSource.getPokemonFromRemote(randomId)
-                dataSource.insertPokemon(remotePokemon)
-                remotePokemon
+//        val localPokemon = dataSource.getPokemonListFromLocal()
+//        if (localPokemon.size >= 999) {
+//            val localList = localPokemon.take(amount).shuffled().toMutableList()
+//            localList.addAll(localList.shuffled())
+//            return localList.shuffled()
+//        }
+        val remotePokemon = // kotlin.runCatching {
+            dataSource.getPokemonListFromRemote(amount)
+//        }.getOrElse {
+//            if (localPokemon.size < amount) {
+//                throw it
+//            }
+//            val localList = localPokemon.take(amount).shuffled().toMutableList()
+//            localList.addAll(localList.shuffled())
+//            return localList.shuffled()
+//        }
+        remotePokemon.forEach {
+            if (dataSource.getPokemonFromLocal(it.pokemonId) == null) {
+                dataSource.insertPokemon(it)
             }
-            pokemonList.add(pokemon)
-            pokemonList.add(pokemon)
         }
-        return pokemonList.shuffled()
+        val remoteList = remotePokemon.take(amount).shuffled().toMutableList()
+        remoteList.addAll(remoteList.shuffled())
+        return remoteList.shuffled()
     }
 
     override suspend fun getScores(): List<Score> {
@@ -43,10 +51,5 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
 
     override suspend fun insertScore(score: Int, amount: Int) {
         dataSource.insertScore(score, amount)
-    }
-
-    companion object {
-        private const val MIN_ID = 1
-        private const val MAX_ID = 999
     }
 }

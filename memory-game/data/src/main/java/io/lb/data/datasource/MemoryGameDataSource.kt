@@ -46,7 +46,7 @@ internal class MemoryGameDataSource @Inject constructor(
      *
      * @return The Pokemon.
      */
-    suspend fun getPokemonFromRemote(id: Int) = clientService.getPokemon(id)
+    suspend fun getPokemonListFromRemote(amount: Int) = clientService.getPokemon(amount)
 
     /**
      * Get a Pokemon from the database.
@@ -56,6 +56,15 @@ internal class MemoryGameDataSource @Inject constructor(
      * @return The Pokemon.
      */
     suspend fun getPokemonFromLocal(id: Int) = databaseService.getPokemonById(id)
+
+    /**
+     * Get a list of Pokemon from the database.
+     *
+     * @param amount The amount of Pokemon to get.
+     *
+     * @return The list of Pokemon.
+     */
+    suspend fun getPokemonListFromLocal() = databaseService.getPokemonList()
 
     /**
      * Insert a Pokemon into the database.

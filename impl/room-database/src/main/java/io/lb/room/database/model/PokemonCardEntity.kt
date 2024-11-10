@@ -14,7 +14,8 @@ data class PokemonCardEntity(
     val name: String
 ) {
     fun toPokemonCard() = PokemonCard(
-        id = pokemonId,
+        id = id.toString(),
+        pokemonId = pokemonId,
         imageUrl = imageUrl,
         name = name
     )

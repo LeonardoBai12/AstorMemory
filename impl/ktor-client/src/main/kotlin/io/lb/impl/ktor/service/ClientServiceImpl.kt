@@ -13,7 +13,7 @@ import io.lb.impl.ktor.util.requestPokemon
 internal class ClientServiceImpl(
     private val client: HttpClient
 ) : ClientService {
-    override suspend fun getPokemon(id: Int): PokemonCard {
-        return client.requestPokemon(id = id)
+    override suspend fun getPokemon(amount: Int): List<PokemonCard> {
+        return client.requestPokemon(amount = amount)
     }
 }
