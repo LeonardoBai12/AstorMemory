@@ -46,11 +46,11 @@ fun MemoryGameCard(
 @Composable
 private fun NotFlippedCard(onClick: () -> Unit) {
     val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
+    val screenHeight = configuration.screenHeightDp
 
     Card(
         modifier = Modifier
-            .height(screenHeight / 6)
+            .height((screenHeight / 6.35).dp)
             .padding(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = PrimaryBlue
@@ -84,11 +84,11 @@ private fun FlippedCard(
     card: GameCard
 ) {
     val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
+    val screenHeight = configuration.screenHeightDp
 
     Card(
         modifier = Modifier
-            .height(screenHeight / 6)
+            .height((screenHeight / 6.35).dp)
             .padding(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White

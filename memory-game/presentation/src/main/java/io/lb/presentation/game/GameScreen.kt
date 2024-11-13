@@ -43,6 +43,7 @@ import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameRestartButton
+import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -184,9 +185,9 @@ private fun GameTopBar(
                 Box(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
-                        .fillMaxWidth(0.3f)
+                        .fillMaxWidth(0.2f)
                 ) {
-                    MemoryGameBlueButton("STOP") {
+                    MemoryGameStopButton {
                         navController.navigate(MemoryGameScreens.Menu.name) {
                             popUpTo(MemoryGameScreens.Menu.name) {
                                 inclusive = true
@@ -224,11 +225,10 @@ private fun CardGrid(
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp),
+            .padding(top = 12.dp)
+            .padding(horizontal = 12.dp),
         columns = GridCells.Fixed(4),
         userScrollEnabled = true,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(state.cards.size) { index ->
             MemoryGameCard(state.cards[index]) {

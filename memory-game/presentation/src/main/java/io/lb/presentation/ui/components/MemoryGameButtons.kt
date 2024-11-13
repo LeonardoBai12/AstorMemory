@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,6 +41,29 @@ internal fun MemoryGameRedButton(
             text = text,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+internal fun MemoryGameStopButton(
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PrimaryBlue,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(4.dp, DarkerRed),
+        onClick = {
+            onClick()
+        }
+    ) {
+        Icon(
+            Icons.Default.Close,
+            modifier = Modifier.size(32.dp),
+            contentDescription = "Restart Game"
         )
     }
 }
