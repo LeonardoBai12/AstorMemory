@@ -22,13 +22,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import io.lb.presentation.R
+import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 
 @Composable
 fun GameOverScreen(
     navController: NavController,
-    score: Int
+    score: Int,
+    amount: Int,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -81,13 +83,16 @@ fun GameOverScreen(
                 )
             }
 
-            GameOverButtons(navController)
+            GameOverButtons(navController, amount)
         }
     }
 }
 
 @Composable
-private fun GameOverButtons(navController: NavController) {
+private fun GameOverButtons(
+    navController: NavController,
+    amount: Int
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -95,6 +100,13 @@ private fun GameOverButtons(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
+        MemoryGameRedButton(
+            text = "PLAY AGAIN",
+            onClick = {
+                navController.navigate(MemoryGameScreens.Game.name + "/$amount")
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         MemoryGameWhiteButton(
             text = "BACK",
             onClick = {

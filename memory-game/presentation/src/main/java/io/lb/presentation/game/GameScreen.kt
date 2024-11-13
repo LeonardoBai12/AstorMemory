@@ -187,7 +187,11 @@ private fun GameTopBar(
                         .fillMaxWidth(0.3f)
                 ) {
                     MemoryGameBlueButton("STOP") {
-                        navController.navigateUp()
+                        navController.navigate(MemoryGameScreens.Menu.name) {
+                            popUpTo(MemoryGameScreens.Menu.name) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
                 if (state.isLoading.not()) {
