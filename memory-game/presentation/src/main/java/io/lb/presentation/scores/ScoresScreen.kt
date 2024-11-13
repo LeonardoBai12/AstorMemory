@@ -115,25 +115,19 @@ private fun ScoresColumn(state: ScoreState) {
             ) {
                 Text(
                     text = "${index + 1}.",
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = state.scores[index].score.toString(),
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "(${state.scores[index].amount} cards)",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = state.scores[index].timeMillis.toDateFormat(),
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
             }

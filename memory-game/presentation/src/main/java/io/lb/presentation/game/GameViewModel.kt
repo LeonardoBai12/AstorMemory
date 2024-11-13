@@ -90,6 +90,19 @@ internal class GameViewModel @Inject constructor(
             GameEvent.OnRequestGames -> {
                 getGames(amount)
             }
+
+            GameEvent.GameRestarted -> {
+                viewModelScope.launch {
+                    mismatches = 0
+                    _state.update {
+                        it.copy(
+                            cards = games.map { game -> GameCard(pokemonCard = game) }.shuffled(),
+                            score = amount * 100,
+                            amount = amount
+                        )
+                    }
+                }
+            }
         }
     }
 

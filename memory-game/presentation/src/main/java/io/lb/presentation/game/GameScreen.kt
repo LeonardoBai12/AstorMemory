@@ -1,12 +1,11 @@
 package io.lb.presentation.game
 
-import android.content.Context
-import android.net.ConnectivityManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,13 +36,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.R
 import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
+import io.lb.presentation.ui.components.MemoryGameRestartButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import kotlinx.coroutines.flow.collectLatest
 
@@ -76,7 +75,7 @@ internal fun GameScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color.White,
         topBar = {
-            GameTopBar(navController, state)
+            GameTopBar(navController, state, viewModel, lastSelectedCard)
         }
     ) { padding ->
         if (state.isLoading) {
@@ -157,7 +156,12 @@ private fun ErrorMessage(
 
 @ExperimentalMaterial3Api
 @Composable
-private fun GameTopBar(navController: NavController, state: GameState) {
+private fun GameTopBar(
+    navController: NavController,
+    state: GameState,
+    viewModel: GameViewModel,
+    lastSelectedCard: MutableState<String>
+) {
     TopAppBar(
         modifier = Modifier.padding(top = 8.dp),
         title = {
@@ -166,7 +170,7 @@ private fun GameTopBar(navController: NavController, state: GameState) {
                     .padding(horizontal = 8.dp)
                     .fillMaxWidth(),
                 text = if (state.isLoading.not() && state.score > 0) {
-                    "Score: ${state.score}"
+                    "${state.score} pts"
                 } else {
                     ""
                 },
@@ -176,13 +180,27 @@ private fun GameTopBar(navController: NavController, state: GameState) {
             )
         },
         navigationIcon = {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(0.4f)
-            ) {
-                MemoryGameBlueButton("STOP") {
-                    navController.navigateUp()
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth(0.3f)
+                ) {
+                    MemoryGameBlueButton("STOP") {
+                        navController.navigateUp()
+                    }
+                }
+                if (state.isLoading.not()) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(0.3f)
+                    ) {
+                        MemoryGameRestartButton {
+                            lastSelectedCard.value = ""
+                            viewModel.onEvent(GameEvent.GameRestarted)
+                        }
+                    }
                 }
             }
         }
