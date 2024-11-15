@@ -60,7 +60,7 @@ fun SettingsScreen(
                             .fillMaxWidth(),
                         text = "",
                         fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 },
                 navigationIcon = {
@@ -89,7 +89,8 @@ fun SettingsScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
 
             Spacer(modifier = Modifier.size(12.dp))
@@ -106,7 +107,8 @@ fun SettingsScreen(
                         "Cards per line",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = Color.Black
                     )
                     IntSelector(
                         intState = selectedCardsPerLine,
@@ -126,7 +128,8 @@ fun SettingsScreen(
                         "Cards per column",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = Color.Black
                     )
                     IntSelector(
                         intState = selectedCardsPerColumn,
@@ -146,7 +149,8 @@ fun SettingsScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
 
             Spacer(modifier = Modifier.size(12.dp))
