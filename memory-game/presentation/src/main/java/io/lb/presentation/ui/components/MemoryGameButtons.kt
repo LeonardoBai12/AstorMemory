@@ -1,5 +1,6 @@
 package io.lb.presentation.ui.components
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -88,6 +89,26 @@ internal fun MemoryGameRestartButton(
             modifier = Modifier.size(32.dp),
             contentDescription = "Restart Game"
         )
+    }
+}
+
+@Composable
+internal fun MemoryGameIconButton(
+    icon: @Composable () -> Unit,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier.fillMaxWidth(0.2f),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PrimaryRed,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(4.dp, DarkerBlue),
+        onClick = {
+            onClick()
+        }
+    ) {
+        icon.invoke()
     }
 }
 

@@ -29,6 +29,8 @@ import io.lb.presentation.ui.theme.PrimaryRed
 @Composable
 fun MemoryGameCard(
     card: GameCard,
+    cardsPerLine: Int = 4,
+    cardsPerColumn: Int = 6,
     onClick: () -> Unit
 ) {
     if (card.isFlipped) {
@@ -38,22 +40,30 @@ fun MemoryGameCard(
             BorderStroke(2.dp, PrimaryRed)
         }
 
-        FlippedCard(border, onClick, card)
+        FlippedCard(border, cardsPerLine, cardsPerColumn, onClick, card)
     } else {
-        NotFlippedCard(onClick)
+        NotFlippedCard(cardsPerLine, cardsPerColumn, onClick)
     }
 }
 
 @ExperimentalMaterial3Api
 @Composable
-private fun NotFlippedCard(onClick: () -> Unit) {
+private fun NotFlippedCard(
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
+    onClick: () -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
 
     Card(
         modifier = Modifier
-            .height((screenHeight / 6.35).dp)
-            .padding(8.dp),
+            .height(
+                getCardHeight(cardsPerColumn, screenHeight)
+            )
+            .padding(
+                getCardPadding(cardsPerLine)
+            ),
         colors = CardDefaults.cardColors(
             containerColor = PrimaryBlue
         ),
@@ -78,10 +88,44 @@ private fun NotFlippedCard(onClick: () -> Unit) {
     }
 }
 
+@Composable
+private fun getCardPadding(cardsPerLine: Int) = if (cardsPerLine <= 4) {
+    8.dp
+} else if (cardsPerLine == 5) {
+    4.dp
+} else {
+    2.dp
+}
+
+@Composable
+private fun getCardHeight(cardsPerColumn: Int, screenHeight: Int) = when (cardsPerColumn) {
+    6 -> {
+        (screenHeight / 6.35).dp
+    }
+
+    5 -> {
+        (screenHeight / 5.1).dp
+    }
+
+    8 -> {
+        (screenHeight / 8.5).dp
+    }
+
+    7 -> {
+        (screenHeight / 7.4).dp
+    }
+
+    else -> {
+        (screenHeight / 9.35).dp
+    }
+}
+
 @ExperimentalMaterial3Api
 @Composable
 private fun FlippedCard(
     border: BorderStroke,
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
     onClick: () -> Unit,
     card: GameCard
 ) {
@@ -90,16 +134,16 @@ private fun FlippedCard(
 
     Card(
         modifier = Modifier
-            .height((screenHeight / 6.35).dp)
-            .padding(8.dp),
+            .height(
+                getCardHeight(cardsPerColumn, screenHeight)
+            )
+            .padding(
+                getCardPadding(cardsPerLine)
+            ),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
         border = border,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp,
-            pressedElevation = 16.dp
-        ),
         onClick = {
             onClick()
         },

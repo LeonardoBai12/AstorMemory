@@ -1,5 +1,6 @@
 package io.lb.presentation
 
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Bundle
@@ -19,6 +20,7 @@ import io.lb.presentation.game.GameScreen
 import io.lb.presentation.gameover.GameOverScreen
 import io.lb.presentation.menu.MenuScreen
 import io.lb.presentation.scores.ScoreScreen
+import io.lb.presentation.settings.SettingsScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
 import io.lb.presentation.util.buildSoundPool
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var victoryRoadMediaPlayer: MediaPlayer
     private lateinit var lavenderMediaPlayer: MediaPlayer
     private lateinit var finalVictoryMediaPlayer: MediaPlayer
+    private lateinit var sharedPref: SharedPreferences
 
     private lateinit var soundPool: SoundPool
 
@@ -49,6 +52,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         soundPool = buildSoundPool(this)
+        sharedPref = getSharedPreferences("memory_game", MODE_PRIVATE)
 
         titleMediaPlayer = MediaPlayer.create(this, R.raw.title_screen)
         wildMediaPlayer = MediaPlayer.create(this, R.raw.wild)
@@ -72,6 +76,19 @@ class MainActivity : ComponentActivity() {
                     composable(MemoryGameScreens.Menu.name) {
                         StartMenuScreen(navController)
                     }
+                    composable(MemoryGameScreens.Settings.name) {
+                        SettingsScreen(
+                            navController = navController,
+                            cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
+                            cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
+                            onChangeCardsPerLine = { cardsPerLine ->
+                                sharedPref.edit().putInt("cardsPerLine", cardsPerLine).apply()
+                            },
+                            onChangeCardsPerColumn = { cardsPerColumn ->
+                                sharedPref.edit().putInt("cardsPerColumn", cardsPerColumn).apply()
+                            }
+                        )
+                    }
                     composable(
                         route = MemoryGameScreens.Game.name + "/{amount}",
                         arguments = listOf(
@@ -80,7 +97,9 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
-                        StartGameScreen(backStackEntry, navController)
+                        StartGameScreen(
+                            backStackEntry, navController
+                        )
                     }
                     composable(
                         route = MemoryGameScreens.HighScores.name,
@@ -119,6 +138,10 @@ class MainActivity : ComponentActivity() {
         finalVictoryMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
+            initialAmount = sharedPref.getInt("amount", 6),
+            onChangeAmount = {
+                sharedPref.edit().putInt("amount", it).apply()
+            },
             onClickQuit = {
                 finish()
             }
@@ -128,7 +151,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun StartGameScreen(
         backStackEntry: NavBackStackEntry,
-        navController: NavHostController
+        navController: NavHostController,
     ) {
         val amount = backStackEntry.arguments?.getInt("amount") ?: 6
 
@@ -171,6 +194,8 @@ class MainActivity : ComponentActivity() {
         finalVictoryMediaPlayer.pauseMusic()
         GameScreen(
             navController = navController,
+            cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
+            cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
             onCardFlipped = {
                 soundPool.playFlipEffect()
             },

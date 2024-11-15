@@ -1,6 +1,5 @@
 package io.lb.presentation.game
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -30,17 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import io.lb.presentation.R
 import io.lb.presentation.ui.components.LoadingIndicator
-import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameRestartButton
@@ -53,6 +46,8 @@ import kotlinx.coroutines.flow.collectLatest
 internal fun GameScreen(
     navController: NavController,
     viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
     onCardFlipped: () -> Unit,
     onCardMatched: (Int) -> Unit,
 ) {
@@ -89,11 +84,13 @@ internal fun GameScreen(
             ErrorMessage(padding, state, viewModel)
         } else {
             CardGrid(
+                viewModel = viewModel,
                 padding = padding,
                 state = state,
-                onCardFlipped = onCardFlipped,
                 lastSelectedCard = lastSelectedCard,
-                viewModel = viewModel,
+                cardsPerLine = cardsPerLine,
+                cardsPerColumn = cardsPerColumn,
+                onCardFlipped = onCardFlipped,
                 onCardMatched = {
                     onCardMatched(state.cards.filter { it.isMatched }.size)
                 }
@@ -175,7 +172,7 @@ private fun GameTopBar(
                         }
                     }
                 }
-                if (state.isLoading.not()) {
+                if (state.isLoading.not() && state.message.isNullOrEmpty()) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
@@ -195,11 +192,13 @@ private fun GameTopBar(
 @ExperimentalMaterial3Api
 @Composable
 private fun CardGrid(
+    viewModel: GameViewModel,
     padding: PaddingValues,
     state: GameState,
-    onCardFlipped: () -> Unit,
     lastSelectedCard: MutableState<String>,
-    viewModel: GameViewModel,
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
+    onCardFlipped: () -> Unit,
     onCardMatched: () -> Unit,
 ) {
     LazyVerticalGrid(
@@ -207,11 +206,15 @@ private fun CardGrid(
             .padding(padding)
             .padding(top = 12.dp)
             .padding(horizontal = 12.dp),
-        columns = GridCells.Fixed(4),
+        columns = GridCells.Fixed(cardsPerLine),
         userScrollEnabled = true,
     ) {
         items(state.cards.size) { index ->
-            MemoryGameCard(state.cards[index]) {
+            MemoryGameCard(
+                card = state.cards[index],
+                cardsPerLine = cardsPerLine,
+                cardsPerColumn = cardsPerColumn
+            ) {
                 if (state.cards[index].isFlipped || state.cards[index].isMatched) {
                     return@MemoryGameCard
                 }
