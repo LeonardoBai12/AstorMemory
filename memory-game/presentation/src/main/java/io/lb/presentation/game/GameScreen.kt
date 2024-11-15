@@ -172,7 +172,8 @@ private fun GameTopBar(
                         }
                     }
                 }
-                if (state.isLoading.not() && state.message.isNullOrEmpty()) {
+                if (state.isLoading.not() && state.message.isNullOrEmpty() &&
+                    state.cards.any { it.isMatched.not() }) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 8.dp)

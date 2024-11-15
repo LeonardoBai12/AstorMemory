@@ -13,7 +13,7 @@ import kotlinx.serialization.json.Json
  * Object containing the middleware client.
  */
 internal object PokemonGameClient {
-    private const val TIMEOUT = 10000L
+    private const val TIMEOUT = 20000L
 
     /**
      * The middleware client.
