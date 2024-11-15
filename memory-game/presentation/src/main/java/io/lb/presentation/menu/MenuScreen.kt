@@ -66,7 +66,8 @@ internal fun MenuScreen(
             Text(
                 text = "Select the amount of cards",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
 
             Row(
@@ -83,7 +84,8 @@ internal fun MenuScreen(
                 Spacer(modifier = Modifier.width(24.dp))
                 Text(
                     text = amount.intValue.toString(),
-                    fontSize = 72.sp
+                    fontSize = 72.sp,
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.width(24.dp))
                 MemoryGameWhiteButton(

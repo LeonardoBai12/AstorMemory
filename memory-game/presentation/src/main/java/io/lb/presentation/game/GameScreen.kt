@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.R
+import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
@@ -80,7 +81,7 @@ internal fun GameScreen(
         }
     ) { padding ->
         if (state.isLoading) {
-            LoadingIndicator(screenHeight)
+            LoadingIndicator(screenHeight = screenHeight)
         } else if (state.message.isNullOrEmpty().not() ||
             state.cards.isEmpty() ||
             state.message == "null"
@@ -98,27 +99,6 @@ internal fun GameScreen(
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun LoadingIndicator(screenHeight: Dp) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(screenHeight / 6),
-            color = Color.Red,
-            strokeWidth = 5.dp,
-        )
-        Image(
-            modifier = Modifier.size(screenHeight / 8),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "PokeBall",
-        )
     }
 }
 

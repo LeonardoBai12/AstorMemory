@@ -1,5 +1,7 @@
 package io.lb.presentation.ui.components
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import io.lb.presentation.R
 import io.lb.presentation.game.model.GameCard
 import io.lb.presentation.ui.theme.PrimaryBlue
@@ -108,11 +110,14 @@ private fun FlippedCard(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = rememberAsyncImagePainter(
-                    model = card.pokemonCard.imageUrl,
-                ),
+                bitmap = convertImageByteArrayToBitmap(card.pokemonCard.imageData)
+                    .asImageBitmap(),
                 contentDescription = "Pokemon Flipped Card"
             )
         }
     }
+}
+
+fun convertImageByteArrayToBitmap(imageData: ByteArray): Bitmap {
+    return BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
 }

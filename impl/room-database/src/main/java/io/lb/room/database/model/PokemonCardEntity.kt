@@ -11,12 +11,14 @@ data class PokemonCardEntity(
     val id: UUID = UUID.randomUUID(),
     val pokemonId: Int,
     val imageUrl: String,
+    val imageData: ByteArray,
     val name: String
 ) {
     fun toPokemonCard() = PokemonCard(
         id = id.toString(),
         pokemonId = pokemonId,
         imageUrl = imageUrl,
+        imageData = imageData,
         name = name
     )
 }

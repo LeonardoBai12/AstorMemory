@@ -41,7 +41,8 @@ internal class DatabaseServiceImpl @Inject constructor(
             PokemonCardEntity(
                 pokemonId = pokemonCard.pokemonId,
                 name = pokemonCard.name,
-                imageUrl = pokemonCard.imageUrl
+                imageUrl = pokemonCard.imageUrl,
+                imageData = pokemonCard.imageData
             )
         )
     }
