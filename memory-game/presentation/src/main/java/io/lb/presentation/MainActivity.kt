@@ -254,7 +254,7 @@ class MainActivity : ComponentActivity() {
         GameOverScreen(
             navController = navController,
             score = score ?: 0,
-            amount = amount ?: 6
+            amount = amount
         )
     }
 

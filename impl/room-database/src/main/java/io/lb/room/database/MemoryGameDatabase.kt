@@ -10,7 +10,7 @@ import io.lb.room.database.model.ScoreEntity
  * The Room database for the memory game.
  */
 @Database(
-    version = 2,
+    version = 3,
     entities = [
         ScoreEntity::class,
         PokemonCardEntity::class

@@ -100,13 +100,15 @@ private fun GameOverButtons(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
-        MemoryGameRedButton(
-            text = "PLAY AGAIN",
-            onClick = {
-                navController.navigate(MemoryGameScreens.Game.name + "/$amount")
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        if (amount != 0) {
+            MemoryGameRedButton(
+                text = "PLAY AGAIN",
+                onClick = {
+                    navController.navigate(MemoryGameScreens.Game.name + "/$amount")
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         MemoryGameWhiteButton(
             text = "BACK",
             onClick = {
