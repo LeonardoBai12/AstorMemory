@@ -167,7 +167,7 @@ class MainActivity : ComponentActivity() {
             gymLeaderBattleMediaPlayer.pauseMusic()
             victoryRoadMediaPlayer.pauseMusic()
             eliteFourBattleMediaPlayer.pauseMusic()
-        } else if (amount == 20) {
+        } else if (amount >= 20) {
             wildMediaPlayer.pauseMusic()
             trainerBattleMediaPlayer.pauseMusic()
             gymLeaderBattleMediaPlayer.pauseMusic()
@@ -237,12 +237,12 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         val score = backStackEntry.arguments?.getInt("score")
-        val amount = backStackEntry.arguments?.getInt("amount")
+        val amount = backStackEntry.arguments?.getInt("amount") ?: 6
         if (score == 0) {
             lavenderMediaPlayer.playMusic(0.95f)
             gameOverMediaPlayer.pauseMusic()
             finalVictoryMediaPlayer.pauseMusic()
-        } else if (amount == 20) {
+        } else if (amount >= 20) {
             lavenderMediaPlayer.pauseMusic()
             gameOverMediaPlayer.pauseMusic()
             finalVictoryMediaPlayer.playMusic()
