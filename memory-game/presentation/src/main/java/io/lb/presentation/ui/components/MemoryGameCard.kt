@@ -89,9 +89,7 @@ private fun NotFlippedCard(
 }
 
 @Composable
-private fun getCardPadding(cardsPerLine: Int) = if (cardsPerLine <= 4) {
-    8.dp
-} else if (cardsPerLine == 5) {
+private fun getCardPadding(cardsPerLine: Int) = if (cardsPerLine <= 5) {
     4.dp
 } else {
     2.dp
