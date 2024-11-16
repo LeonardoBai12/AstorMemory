@@ -3,6 +3,7 @@ package io.lb.presentation.ui.components
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -98,7 +99,10 @@ internal fun MemoryGameIconButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier.fillMaxWidth(0.2f),
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .padding(horizontal = 8.dp)
+            .fillMaxWidth(0.2f),
         colors = ButtonDefaults.buttonColors(
             containerColor = PrimaryRed,
             contentColor = Color.White

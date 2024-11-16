@@ -1,5 +1,6 @@
 package io.lb.presentation.game
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import kotlinx.coroutines.flow.collectLatest
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
 internal fun GameScreen(
@@ -190,6 +192,7 @@ private fun GameTopBar(
     )
 }
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
 private fun CardGrid(

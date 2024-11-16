@@ -5,7 +5,9 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
@@ -31,6 +33,7 @@ import io.lb.presentation.util.playMatchEffect
 import io.lb.presentation.util.playMusic
 import io.lb.presentation.util.playPausedMusic
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -77,6 +80,7 @@ class MainActivity : ComponentActivity() {
                         StartMenuScreen(navController)
                     }
                     composable(MemoryGameScreens.Settings.name) {
+                        BackHandler(navController)
                         SettingsScreen(
                             navController = navController,
                             cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
@@ -97,6 +101,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
+                        BackHandler(navController)
                         StartGameScreen(
                             backStackEntry, navController
                         )
@@ -104,6 +109,7 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = MemoryGameScreens.HighScores.name,
                     ) {
+                        BackHandler(navController)
                         StartScoreScreen(navController)
                     }
                     composable(
@@ -117,8 +123,20 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     ) { backStackEntry ->
+                        BackHandler(navController)
                         StartGameOverScreen(backStackEntry, navController)
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun BackHandler(navController: NavHostController) {
+        BackHandler {
+            navController.navigate(MemoryGameScreens.Menu.name) {
+                popUpTo(MemoryGameScreens.Menu.name) {
+                    inclusive = true
                 }
             }
         }

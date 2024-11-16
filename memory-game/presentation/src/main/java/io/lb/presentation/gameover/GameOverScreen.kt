@@ -107,7 +107,7 @@ private fun GameOverButtons(
                     navController.navigate(MemoryGameScreens.Game.name + "/$amount")
                 }
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
         MemoryGameWhiteButton(
             text = "BACK",

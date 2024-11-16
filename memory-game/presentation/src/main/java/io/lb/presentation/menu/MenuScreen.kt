@@ -55,6 +55,25 @@ internal fun MenuScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color.White
     ) { padding ->
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(
+                onClick = {
+                    navController.navigate(MemoryGameScreens.Settings.name)
+                },
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        }
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -62,25 +81,7 @@ internal fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate(MemoryGameScreens.Settings.name)
-                    },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            }
-
+            Spacer(modifier = Modifier.height(24.dp))
             Image(
                 modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(id = R.drawable.pokemon_game_logo),
