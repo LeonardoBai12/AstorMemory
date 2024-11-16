@@ -10,8 +10,8 @@ android {
     namespace = "io.lb.pokememory.app"
 
     defaultConfig {
-        versionCode = 405
-        versionName = "0.4.5"
+        versionCode = 500
+        versionName = "0.5.0"
     }
 
     packaging {
