@@ -1,6 +1,5 @@
 package io.lb.presentation.ui.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,17 +10,13 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.lb.presentation.ui.theme.DarkerBlue
-import io.lb.presentation.ui.theme.DarkerRed
-import io.lb.presentation.ui.theme.PrimaryBlue
-import io.lb.presentation.ui.theme.PrimaryRed
 
 @Composable
 internal fun MemoryGameRedButton(
@@ -31,10 +26,10 @@ internal fun MemoryGameRedButton(
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryRed,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        border = BorderStroke(4.dp, DarkerBlue),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimaryContainer),
         onClick = {
             onClick()
         }
@@ -54,10 +49,10 @@ internal fun MemoryGameStopButton(
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryBlue,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         ),
-        border = BorderStroke(4.dp, DarkerRed),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onSecondaryContainer),
         onClick = {
             onClick()
         }
@@ -77,10 +72,10 @@ internal fun MemoryGameRestartButton(
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryRed,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        border = BorderStroke(4.dp, DarkerBlue),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimaryContainer),
         onClick = {
             onClick()
         }
@@ -104,10 +99,10 @@ internal fun MemoryGameIconButton(
             .padding(horizontal = 8.dp)
             .fillMaxWidth(0.2f),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryRed,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        border = BorderStroke(4.dp, DarkerBlue),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onPrimaryContainer),
         onClick = {
             onClick()
         }
@@ -124,10 +119,10 @@ internal fun MemoryGameBlueButton(
     Button(
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = PrimaryBlue,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         ),
-        border = BorderStroke(4.dp, DarkerRed),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onSecondaryContainer),
         onClick = {
             onClick()
         }
@@ -149,10 +144,10 @@ internal fun MemoryGameWhiteButton(
     Button(
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = PrimaryRed
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary
         ),
-        border = BorderStroke(4.dp, DarkerBlue),
+        border = BorderStroke(4.dp, MaterialTheme.colorScheme.onTertiaryContainer),
         onClick = {
             onClick()
         }

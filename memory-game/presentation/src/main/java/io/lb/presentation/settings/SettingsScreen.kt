@@ -1,5 +1,6 @@
 package io.lb.presentation.settings
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,6 +36,7 @@ import io.lb.presentation.ui.components.IntSelector
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameIconButton
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
 fun SettingsScreen(
@@ -79,7 +82,7 @@ fun SettingsScreen(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
@@ -90,7 +93,7 @@ fun SettingsScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Spacer(modifier = Modifier.size(12.dp))
@@ -108,7 +111,7 @@ fun SettingsScreen(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     IntSelector(
                         intState = selectedCardsPerLine,
@@ -129,7 +132,7 @@ fun SettingsScreen(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     IntSelector(
                         intState = selectedCardsPerColumn,
@@ -150,7 +153,7 @@ fun SettingsScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Spacer(modifier = Modifier.size(12.dp))

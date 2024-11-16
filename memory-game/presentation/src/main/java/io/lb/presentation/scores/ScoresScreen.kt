@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,7 +61,7 @@ internal fun ScoreScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         Column(
             modifier = Modifier
@@ -84,7 +85,7 @@ internal fun ScoreScreen(
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
                     text = "Filter:",
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -108,7 +109,7 @@ internal fun ScoreScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = state.message.orEmpty(),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -156,21 +157,21 @@ private fun ScoresColumn(
             ) {
                 Text(
                     text = "${index + 1}.",
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = state.scores[index].score.toString(),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "(${state.scores[index].amount} cards)",
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -206,7 +207,6 @@ private fun FilterMenu(
                     "All"
                 else
                     "${selectedFilter.intValue} cards",
-                color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -220,7 +220,7 @@ private fun FilterMenu(
                     text = {
                         Text(
                             text = if (filter == 0) "All" else "$filter cards",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 16.sp,
                             fontWeight = if (selectedFilter.intValue == filter) FontWeight.Bold else FontWeight.Normal
                         )

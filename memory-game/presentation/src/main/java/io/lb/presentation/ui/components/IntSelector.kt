@@ -3,6 +3,7 @@ package io.lb.presentation.ui.components
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
@@ -37,7 +38,7 @@ fun IntSelector(
         Text(
             text = intState.intValue.toString(),
             fontSize = textSize.sp,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.width(spaceBetween.dp))
         MemoryGameWhiteButton(
