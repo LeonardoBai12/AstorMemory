@@ -72,7 +72,7 @@ private fun NotFlippedCard(
                 getCardPadding(cardsPerLine)
             ),
         colors = CardDefaults.cardColors(
-            containerColor = PrimaryBlue
+            containerColor = MaterialTheme.colorScheme.secondary
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp,
