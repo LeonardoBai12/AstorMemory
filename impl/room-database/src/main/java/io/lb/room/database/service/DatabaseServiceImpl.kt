@@ -19,10 +19,16 @@ internal class DatabaseServiceImpl @Inject constructor(
 ) : DatabaseService {
     override suspend fun getScores(): List<Score> {
         return dao.getScores().map { it.toScore() }
+            .distinctBy {
+                it.score
+            }.take(MAX_SCORES)
     }
 
     override suspend fun getScoresByAmount(amount: Int): List<Score> {
         return dao.getScoresByAmount(amount).map { it.toScore() }
+            .distinctBy {
+                it.score
+            }.take(MAX_SCORES)
     }
 
     @Throws(MemoryGameException::class)
