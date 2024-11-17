@@ -17,10 +17,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,8 @@ fun SettingsScreen(
     navController: NavController,
     cardsPerLine: Int,
     cardsPerColumn: Int,
+    isDarkMode: Boolean,
+    onChangeDarkMode: (Boolean) -> Unit,
     onChangeCardsPerLine: (Int) -> Unit,
     onChangeCardsPerColumn: (Int) -> Unit
 ) {
@@ -52,41 +56,61 @@ fun SettingsScreen(
     val selectedCardsPerColumn = remember {
         mutableIntStateOf(cardsPerColumn)
     }
+    val darkMode = remember {
+        mutableStateOf(isDarkMode)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        modifier = Modifier.padding(start = 32.dp)
-                            .fillMaxWidth(),
-                        text = "",
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                navigationIcon = {
-                    MemoryGameIconButton(
-                        icon = {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                modifier = Modifier.size(32.dp),
-                                contentDescription = "Restart Game"
-                            )
-                        },
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    )
-                }
-            )
-        },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MemoryGameIconButton(
+                    icon = {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            modifier = Modifier.size(32.dp),
+                            contentDescription = "Restart Game"
+                        )
+                    },
+                    onClick = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(start = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    "Dark mode",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.size(12.dp))
+
+                Switch(
+                    checked = darkMode.value,
+                    onCheckedChange = {
+                        darkMode.value = it
+                        onChangeDarkMode(it)
+                    }
+                )
+            }
+
             Text(
                 "Game screen layout",
                 fontSize = 24.sp,

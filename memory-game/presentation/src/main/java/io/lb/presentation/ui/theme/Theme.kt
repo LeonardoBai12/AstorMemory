@@ -42,7 +42,7 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun PokemonMemoryChallengeTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

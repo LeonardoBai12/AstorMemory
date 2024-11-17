@@ -120,7 +120,7 @@ internal class ScoreViewModel @Inject constructor(
                     if (state.value.filters.isNotEmpty()) {
                         _state.update {
                             it.copy(
-                                scores = scores,
+                                scores = scores.take(10),
                                 isLoading = false,
                                 message = null
                             )
@@ -132,7 +132,7 @@ internal class ScoreViewModel @Inject constructor(
 
                     _state.update {
                         it.copy(
-                            scores = scores,
+                            scores = scores.take(10),
                             isLoading = false,
                             filters = availableAmounts.sorted(),
                             message = null

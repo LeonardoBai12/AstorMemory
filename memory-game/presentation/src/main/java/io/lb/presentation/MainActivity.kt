@@ -8,8 +8,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -69,62 +75,77 @@ class MainActivity : ComponentActivity() {
         finalVictoryMediaPlayer = MediaPlayer.create(this, R.raw.victory_final)
 
         setContent {
-            PokemonMemoryChallengeTheme {
-                val navController = rememberNavController()
+            val navController = rememberNavController()
+            val isDarkMode = sharedPref.getBoolean("darkMode", isSystemInDarkTheme())
+            val isDarkModeState = remember {
+                mutableStateOf(sharedPref.getBoolean("darkMode", isDarkMode))
+            }
 
-                NavHost(
-                    navController = navController,
-                    startDestination = MemoryGameScreens.Menu.name
-                ) {
-                    composable(MemoryGameScreens.Menu.name) {
-                        StartMenuScreen(navController)
-                    }
-                    composable(MemoryGameScreens.Settings.name) {
-                        BackHandler(navController)
-                        SettingsScreen(
-                            navController = navController,
-                            cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
-                            cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
-                            onChangeCardsPerLine = { cardsPerLine ->
-                                sharedPref.edit().putInt("cardsPerLine", cardsPerLine).apply()
-                            },
-                            onChangeCardsPerColumn = { cardsPerColumn ->
-                                sharedPref.edit().putInt("cardsPerColumn", cardsPerColumn).apply()
-                            }
-                        )
-                    }
-                    composable(
-                        route = MemoryGameScreens.Game.name + "/{amount}",
-                        arguments = listOf(
-                            navArgument(name = "amount") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        BackHandler(navController)
-                        StartGameScreen(
-                            backStackEntry, navController
-                        )
-                    }
-                    composable(
-                        route = MemoryGameScreens.HighScores.name,
+            PokemonMemoryChallengeTheme(isDarkModeState.value) {
+                Surface {
+                    NavHost(
+                        navController = navController,
+                        startDestination = MemoryGameScreens.Menu.name
                     ) {
-                        BackHandler(navController)
-                        StartScoreScreen(navController)
-                    }
-                    composable(
-                        route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
-                        arguments = listOf(
-                            navArgument(name = "score") {
-                                type = NavType.IntType
-                            },
-                            navArgument(name = "amount") {
-                                type = NavType.IntType
-                            }
-                        )
-                    ) { backStackEntry ->
-                        BackHandler(navController)
-                        StartGameOverScreen(backStackEntry, navController)
+                        composable(MemoryGameScreens.Menu.name) {
+                            StartMenuScreen(navController)
+                        }
+                        composable(MemoryGameScreens.Settings.name) {
+                            BackHandler(navController)
+                            SettingsScreen(
+                                navController = navController,
+                                cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
+                                cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
+                                isDarkMode = sharedPref.getBoolean(
+                                    "darkMode",
+                                    isSystemInDarkTheme()
+                                ),
+                                onChangeDarkMode = { darkMode ->
+                                    sharedPref.edit().putBoolean("darkMode", darkMode).apply()
+                                    isDarkModeState.value = darkMode
+                                },
+                                onChangeCardsPerLine = { cardsPerLine ->
+                                    sharedPref.edit().putInt("cardsPerLine", cardsPerLine).apply()
+                                },
+                                onChangeCardsPerColumn = { cardsPerColumn ->
+                                    sharedPref.edit().putInt("cardsPerColumn", cardsPerColumn)
+                                        .apply()
+                                }
+                            )
+                        }
+                        composable(
+                            route = MemoryGameScreens.Game.name + "/{amount}",
+                            arguments = listOf(
+                                navArgument(name = "amount") {
+                                    type = NavType.IntType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            BackHandler(navController)
+                            StartGameScreen(
+                                backStackEntry, navController
+                            )
+                        }
+                        composable(
+                            route = MemoryGameScreens.HighScores.name,
+                        ) {
+                            BackHandler(navController)
+                            StartScoreScreen(navController)
+                        }
+                        composable(
+                            route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
+                            arguments = listOf(
+                                navArgument(name = "score") {
+                                    type = NavType.IntType
+                                },
+                                navArgument(name = "amount") {
+                                    type = NavType.IntType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            BackHandler(navController)
+                            StartGameOverScreen(backStackEntry, navController)
+                        }
                     }
                 }
             }
