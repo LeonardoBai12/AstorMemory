@@ -21,7 +21,7 @@ internal class DatabaseServiceImpl @Inject constructor(
         return dao.getScores().map { it.toScore() }
             .distinctBy {
                 it.score
-            }.take(MAX_SCORES)
+            }
     }
 
     override suspend fun getScoresByAmount(amount: Int): List<Score> {
