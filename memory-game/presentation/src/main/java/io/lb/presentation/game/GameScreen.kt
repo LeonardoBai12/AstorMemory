@@ -41,7 +41,11 @@ import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameRestartButton
 import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -206,6 +210,9 @@ private fun CardGrid(
     onCardFlipped: () -> Unit,
     onCardMatched: () -> Unit,
 ) {
+    val clickLock = remember {
+        mutableStateOf(false)
+    }
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
@@ -220,32 +227,61 @@ private fun CardGrid(
                 cardsPerLine = cardsPerLine,
                 cardsPerColumn = cardsPerColumn
             ) {
+                if (clickLock.value) {
+                    return@MemoryGameCard
+                }
+                clickLock.value = true
+
                 if (state.cards[index].isFlipped || state.cards[index].isMatched) {
                     return@MemoryGameCard
                 }
-
-                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size == 2) {
+                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
+                    clickLock.value = false
                     return@MemoryGameCard
                 }
 
                 onCardFlipped()
+                afterCardFlipped(
+                    lastSelectedCard = lastSelectedCard,
+                    state = state,
+                    index = index,
+                    viewModel = viewModel,
+                    onCardMatched = onCardMatched
+                )
 
-                if (lastSelectedCard.value.isEmpty()) {
-                    lastSelectedCard.value = state.cards[index].pokemonCard.name
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                } else if (lastSelectedCard.value != state.cards[index].pokemonCard.name) {
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                    viewModel.onEvent(GameEvent.CardMismatched)
-                    lastSelectedCard.value = ""
-                } else {
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                    viewModel.onEvent(
-                        GameEvent.CardMatched(id = state.cards[index].pokemonCard.pokemonId)
-                    )
-                    lastSelectedCard.value = ""
-                    onCardMatched()
-                }
+                resetClickLock(clickLock)
             }
         }
+    }
+}
+
+private fun afterCardFlipped(
+    lastSelectedCard: MutableState<String>,
+    state: GameState,
+    index: Int,
+    viewModel: GameViewModel,
+    onCardMatched: () -> Unit
+) {
+    if (lastSelectedCard.value.isEmpty()) {
+        lastSelectedCard.value = state.cards[index].pokemonCard.name
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+    } else if (lastSelectedCard.value != state.cards[index].pokemonCard.name) {
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+        viewModel.onEvent(GameEvent.CardMismatched)
+        lastSelectedCard.value = ""
+    } else {
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+        viewModel.onEvent(
+            GameEvent.CardMatched(id = state.cards[index].pokemonCard.pokemonId)
+        )
+        lastSelectedCard.value = ""
+        onCardMatched()
+    }
+}
+
+private fun resetClickLock(clickLock: MutableState<Boolean>) {
+    CoroutineScope(Dispatchers.Main).launch {
+        delay(100)
+        clickLock.value = false
     }
 }
