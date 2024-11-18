@@ -233,6 +233,7 @@ class MainActivity : ComponentActivity() {
         finalVictoryMediaPlayer.pauseMusic()
         GameScreen(
             navController = navController,
+            isDarkMode = sharedPref.getBoolean("darkMode", isSystemInDarkTheme()),
             cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
             cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
             onCardFlipped = {

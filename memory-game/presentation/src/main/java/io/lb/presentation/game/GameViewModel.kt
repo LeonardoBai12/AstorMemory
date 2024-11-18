@@ -42,6 +42,7 @@ internal class GameViewModel @Inject constructor(
 
     private var mismatches = 0
     private val amount = savedStateHandle["amount"] ?: DEFAULT_CARD_AMOUNT
+    private val combos = mutableListOf<Int>()
 
     init {
         _state.update {
@@ -81,6 +82,18 @@ internal class GameViewModel @Inject constructor(
             }
             GameEvent.GameFinished -> {
                 viewModelScope.launch {
+                    if (_state.value.currentCombo > 1) {
+                        combos.add(_state.value.currentCombo)
+                    }
+                    _state.update {
+                        it.copy(
+                            score = useCases.calculateScoreUseCase(
+                                amount = amount,
+                                combos = combos,
+                                mismatches = mismatches
+                            ),
+                        )
+                    }
                     useCases.saveScoreUseCase(state.value.score, amount)
                     delay(GET_SCORES_DELAY)
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
@@ -116,7 +129,8 @@ internal class GameViewModel @Inject constructor(
                         } else {
                             gameCard
                         }
-                    }
+                    },
+                    currentCombo = it.currentCombo + 1,
                 )
                 currentState
             }
@@ -128,7 +142,10 @@ internal class GameViewModel @Inject constructor(
 
     private suspend fun onMismatched() {
         mismatches++
-        delay(MISMATCH_DELAY)
+        if (_state.value.currentCombo > 1) {
+            combos.add(_state.value.currentCombo)
+        }
+        delay(CALCULATE_DELAY)
         _state.update {
             it.copy(
                 cards = it.cards.map { gameCard ->
@@ -138,7 +155,12 @@ internal class GameViewModel @Inject constructor(
                         gameCard
                     }
                 },
-                score = useCases.calculateScoreUseCase(amount, mismatches)
+                score = useCases.calculateScoreUseCase(
+                    amount = amount,
+                    combos = combos,
+                    mismatches = mismatches
+                ),
+                currentCombo = 0
             )
         }
     }
@@ -183,7 +205,7 @@ internal class GameViewModel @Inject constructor(
     }
     companion object {
         private const val DEFAULT_CARD_AMOUNT = 5
-        private const val MISMATCH_DELAY = 750L
+        private const val CALCULATE_DELAY = 750L
         private const val GET_SCORES_DELAY = 2000L
     }
 }

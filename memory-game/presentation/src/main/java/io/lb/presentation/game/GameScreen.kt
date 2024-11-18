@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun GameScreen(
     navController: NavController,
+    isDarkMode: Boolean,
     viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
     cardsPerLine: Int,
     cardsPerColumn: Int,
@@ -79,7 +80,7 @@ internal fun GameScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBar(navController, state, viewModel, lastSelectedCard)
+            GameTopBar(navController, state, viewModel, lastSelectedCard, isDarkMode)
         }
     ) { padding ->
         if (state.isLoading) {
@@ -145,24 +146,47 @@ private fun GameTopBar(
     navController: NavController,
     state: GameState,
     viewModel: GameViewModel,
-    lastSelectedCard: MutableState<String>
+    lastSelectedCard: MutableState<String>,
+    isDarkMode: Boolean
 ) {
     TopAppBar(
         modifier = Modifier.padding(top = 8.dp),
         title = {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(),
-                text = if (state.isLoading.not() && state.score > 0) {
-                    "${state.score} pts"
+            Column(
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth(),
+                    text = if (state.isLoading.not() && state.score > 0) {
+                        "${state.score} pts"
+                    } else {
+                        ""
+                    },
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.End
+                )
+                if (state.currentCombo > 1) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(),
+                        text = "Combo Bonus: +${(state.currentCombo) * 10}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.W600,
+                        textAlign = TextAlign.End,
+                        color = if (isDarkMode) {
+                            Color.Yellow
+                        } else {
+                            Color.DarkGray
+                        }
+                    )
                 } else {
-                    ""
-                },
-                fontSize = 32.sp,
-                fontWeight = FontWeight.W600,
-                textAlign = TextAlign.End
-            )
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
         },
         navigationIcon = {
             Row {
