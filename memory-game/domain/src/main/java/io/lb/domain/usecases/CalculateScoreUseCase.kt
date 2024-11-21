@@ -17,6 +17,10 @@ class CalculateScoreUseCase {
         combos: List<Int>,
         mismatches: Int
     ): Int {
+        if (amount <= 1) {
+            return 0
+        }
+
         val maxScore = MAX_SCORE_MULTIPLIER * amount
         val penalty = mismatches * PENALTY
         var score = (maxScore - penalty).coerceAtLeast(0)
