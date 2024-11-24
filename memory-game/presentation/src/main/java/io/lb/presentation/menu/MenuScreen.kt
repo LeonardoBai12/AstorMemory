@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -37,13 +36,16 @@ import androidx.navigation.NavController
 import io.lb.presentation.R
 import io.lb.presentation.ui.components.IntSelector
 import io.lb.presentation.ui.components.MemoryGameBlueButton
+import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
+import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
 
 @Composable
 internal fun MenuScreen(
     navController: NavController,
+    isDarkMode: Boolean,
     initialAmount: Int,
     onClickQuit: () -> Unit,
     onChangeAmount: (Int) -> Unit
@@ -82,12 +84,8 @@ internal fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.pokemon_game_logo),
-                contentDescription = "Pokemon Memory Challenge",
-            )
+            Spacer(modifier = Modifier.height(48.dp))
+            MemoryGameLogo(isDarkMode)
 
             Spacer(modifier = Modifier.height(72.dp))
             Text(
@@ -100,6 +98,7 @@ internal fun MenuScreen(
                 intState = amount,
                 minValue = 1,
                 maxValue = 30,
+                isDarkMode = isDarkMode,
                 onChangeAmount = onChangeAmount
             )
 
@@ -113,7 +112,12 @@ internal fun MenuScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            ButtonsColumn(navController, amount, onClickQuit)
+            ButtonsColumn(
+                navController,
+                isDarkMode,
+                amount,
+                onClickQuit
+            )
         }
     }
 }
@@ -121,6 +125,7 @@ internal fun MenuScreen(
 @Composable
 private fun ButtonsColumn(
     navController: NavController,
+    isDarkMode: Boolean,
     amount: MutableIntState,
     onClickQuit: () -> Unit
 ) {
@@ -146,6 +151,7 @@ private fun ButtonsColumn(
         )
         Spacer(modifier = Modifier.height(8.dp))
         MemoryGameWhiteButton(
+            isDarkMode = isDarkMode,
             text = "QUIT",
             onClick = {
                 onClickQuit()
@@ -164,5 +170,9 @@ private fun ButtonsColumn(
 @Composable
 internal fun MenuScreenPreview() {
     val context = LocalContext.current
-    MenuScreen(NavController(context), 5, {}, {})
+    PokemonMemoryChallengeTheme(
+        darkTheme = false
+    ) {
+        MenuScreen(NavController(context), true,5, {}, {})
+    }
 }

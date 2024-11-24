@@ -21,7 +21,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -41,12 +40,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.R
 import io.lb.presentation.ui.components.LoadingIndicator
+import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.theme.DarkerRed
 
 @Composable
 internal fun ScoreScreen(
     navController: NavController,
+    isDarkMode: Boolean,
     viewModel: ScoreViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
@@ -70,13 +71,9 @@ internal fun ScoreScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.pokemon_game_logo),
-                contentDescription = "Pokemon Game Logo",
-            )
+            MemoryGameLogo(isDarkMode)
 
             Spacer(modifier = Modifier.height(12.dp))
             Row(
@@ -127,6 +124,7 @@ internal fun ScoreScreen(
             ) {
                 MemoryGameWhiteButton(
                     text = "BACK",
+                    isDarkMode = isDarkMode,
                     onClick = {
                         navController.navigateUp()
                     }

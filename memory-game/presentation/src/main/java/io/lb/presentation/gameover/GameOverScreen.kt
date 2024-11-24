@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,13 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import io.lb.presentation.R
+import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
@@ -30,6 +29,7 @@ import io.lb.presentation.ui.navigation.MemoryGameScreens
 @Composable
 fun GameOverScreen(
     navController: NavController,
+    isDarkMode: Boolean,
     score: Int,
     amount: Int,
 ) {
@@ -44,13 +44,9 @@ fun GameOverScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.pokemon_game_logo),
-                contentDescription = "Pokemon Game Logo",
-            )
+            MemoryGameLogo(isDarkMode)
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(

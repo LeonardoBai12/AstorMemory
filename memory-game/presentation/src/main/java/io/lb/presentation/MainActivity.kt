@@ -10,10 +10,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavBackStackEntry
@@ -88,7 +86,13 @@ class MainActivity : ComponentActivity() {
                         startDestination = MemoryGameScreens.Menu.name
                     ) {
                         composable(MemoryGameScreens.Menu.name) {
-                            StartMenuScreen(navController)
+                            StartMenuScreen(
+                                navController = navController,
+                                isDarkMode = sharedPref.getBoolean(
+                                    "darkMode",
+                                    isSystemInDarkTheme()
+                                )
+                            )
                         }
                         composable(MemoryGameScreens.Settings.name) {
                             BackHandler(navController)
@@ -130,7 +134,13 @@ class MainActivity : ComponentActivity() {
                             route = MemoryGameScreens.HighScores.name,
                         ) {
                             BackHandler(navController)
-                            StartScoreScreen(navController)
+                            StartScoreScreen(
+                                navController = navController,
+                                isDarkMode = sharedPref.getBoolean(
+                                    "darkMode",
+                                    isSystemInDarkTheme()
+                                ),
+                            )
                         }
                         composable(
                             route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
@@ -144,7 +154,14 @@ class MainActivity : ComponentActivity() {
                             )
                         ) { backStackEntry ->
                             BackHandler(navController)
-                            StartGameOverScreen(backStackEntry, navController)
+                            StartGameOverScreen(
+                                backStackEntry = backStackEntry,
+                                navController = navController,
+                                isDarkMode = sharedPref.getBoolean(
+                                    "darkMode",
+                                    isSystemInDarkTheme()
+                                ),
+                            )
                         }
                     }
                 }
@@ -164,7 +181,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun StartMenuScreen(navController: NavHostController) {
+    private fun StartMenuScreen(navController: NavHostController, isDarkMode: Boolean) {
         titleMediaPlayer.playMusic()
         gameOverMediaPlayer.pauseMusic()
         wildMediaPlayer.pauseMusic()
@@ -177,6 +194,7 @@ class MainActivity : ComponentActivity() {
         finalVictoryMediaPlayer.pauseMusic()
         MenuScreen(
             navController = navController,
+            isDarkMode = isDarkMode,
             initialAmount = sharedPref.getInt("amount", 6),
             onChangeAmount = {
                 sharedPref.edit().putInt("amount", it).apply()
@@ -250,7 +268,10 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun StartScoreScreen(navController: NavHostController) {
+    private fun StartScoreScreen(
+        navController: NavHostController,
+        isDarkMode: Boolean
+    ) {
         highScoresMediaPlayer.playMusic()
         lavenderMediaPlayer.pauseMusic()
         gameOverMediaPlayer.pauseMusic()
@@ -261,12 +282,16 @@ class MainActivity : ComponentActivity() {
         eliteFourBattleMediaPlayer.pauseMusic()
         victoryRoadMediaPlayer.pauseMusic()
         finalVictoryMediaPlayer.pauseMusic()
-        ScoreScreen(navController = navController)
+        ScoreScreen(
+            navController = navController,
+            isDarkMode = isDarkMode
+        )
     }
 
     @Composable
     private fun StartGameOverScreen(
         backStackEntry: NavBackStackEntry,
+        isDarkMode: Boolean,
         navController: NavHostController
     ) {
         titleMediaPlayer.pauseMusic()
@@ -294,7 +319,8 @@ class MainActivity : ComponentActivity() {
         GameOverScreen(
             navController = navController,
             score = score ?: 0,
-            amount = amount
+            isDarkMode = isDarkMode,
+            amount = amount,
         )
     }
 

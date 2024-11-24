@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -20,15 +19,13 @@ fun IntSelector(
     maxValue: Int,
     textSize: Int = 72,
     spaceBetween: Int = 24,
+    isDarkMode: Boolean,
     onChangeAmount: (Int) -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MemoryGameWhiteButton(
-            modifier = Modifier,
-            text = "-"
-        ) {
+        MemoryGameMinusButton(isDarkMode) {
             if (intState.intValue > minValue) {
                 intState.intValue--
             }
@@ -41,10 +38,7 @@ fun IntSelector(
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.width(spaceBetween.dp))
-        MemoryGameWhiteButton(
-            modifier = Modifier,
-            text = "+"
-        ) {
+        MemoryGamePlusButton(isDarkMode) {
             if (intState.intValue < maxValue) {
                 intState.intValue++
             }

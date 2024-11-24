@@ -35,8 +35,9 @@ import androidx.navigation.NavController
 import io.lb.common.data.model.PokemonCard
 import io.lb.presentation.game.model.GameCard
 import io.lb.presentation.ui.components.IntSelector
+import io.lb.presentation.ui.components.MemoryGameBackButton
 import io.lb.presentation.ui.components.MemoryGameCard
-import io.lb.presentation.ui.components.MemoryGameIconButton
+import io.lb.presentation.ui.components.MemoryGameStopButton
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -72,18 +73,14 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MemoryGameIconButton(
-                    icon = {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            modifier = Modifier.size(32.dp),
-                            contentDescription = "Restart Game"
-                        )
-                    },
-                    onClick = {
-                        navController.navigateUp()
-                    }
-                )
+                MemoryGameBackButton(
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        start = 16.dp
+                    ),
+                ) {
+                    navController.navigateUp()
+                }
             }
 
             Row(
@@ -143,6 +140,7 @@ fun SettingsScreen(
                         maxValue = 6,
                         spaceBetween = 12,
                         textSize = 48,
+                        isDarkMode = darkMode.value,
                         onChangeAmount = {
                             onChangeCardsPerLine(it)
                         }
@@ -164,6 +162,7 @@ fun SettingsScreen(
                         maxValue = 9,
                         spaceBetween = 12,
                         textSize = 48,
+                        isDarkMode = darkMode.value,
                         onChangeAmount = {
                             onChangeCardsPerColumn(it)
                         }
