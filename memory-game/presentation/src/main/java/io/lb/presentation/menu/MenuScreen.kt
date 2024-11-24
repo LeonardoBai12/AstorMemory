@@ -84,7 +84,7 @@ internal fun MenuScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(32.dp))
             MemoryGameLogo(isDarkMode)
 
             Spacer(modifier = Modifier.height(72.dp))
