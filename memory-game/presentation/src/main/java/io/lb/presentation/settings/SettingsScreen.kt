@@ -27,12 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import io.lb.common.data.model.PokemonCard
+import io.lb.presentation.R
 import io.lb.presentation.game.model.GameCard
 import io.lb.presentation.ui.components.IntSelector
 import io.lb.presentation.ui.components.MemoryGameBackButton
@@ -84,13 +86,14 @@ fun SettingsScreen(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(start = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    "Dark mode",
+                    stringResource(R.string.dark_mode),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -109,7 +112,7 @@ fun SettingsScreen(
             }
 
             Text(
-                "Game screen layout",
+                stringResource(R.string.game_screen_layout),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
@@ -128,7 +131,7 @@ fun SettingsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Cards per line",
+                        stringResource(R.string.cards_per_line),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -150,7 +153,7 @@ fun SettingsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Cards per column",
+                        stringResource(R.string.cards_per_column),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -171,7 +174,7 @@ fun SettingsScreen(
             }
 
             Text(
-                "Preview",
+                stringResource(R.string.preview),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),

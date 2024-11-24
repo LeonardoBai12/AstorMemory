@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +60,8 @@ internal fun MenuScreen(
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.End
         ) {
@@ -71,7 +73,7 @@ internal fun MenuScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
+                    contentDescription = stringResource(R.string.settings),
                     tint = Color.Gray,
                     modifier = Modifier.size(48.dp)
                 )
@@ -89,7 +91,7 @@ internal fun MenuScreen(
 
             Spacer(modifier = Modifier.height(72.dp))
             Text(
-                text = "Amount of card pairs",
+                text = stringResource(R.string.amount_of_card_pairs),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -105,7 +107,7 @@ internal fun MenuScreen(
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(0.8f),
-                text = "The more cards you play with, the harder the game will be",
+                text = stringResource(R.string.the_more_cards_you_play_with),
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -137,14 +139,14 @@ private fun ButtonsColumn(
         verticalArrangement = Arrangement.Bottom
     ) {
         MemoryGameRedButton(
-            text = "START GAME",
+            text = stringResource(R.string.start_game),
             onClick = {
                 navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
         MemoryGameBlueButton(
-            text = "HIGHSCORES",
+            text = stringResource(R.string.highscores),
             onClick = {
                 navController.navigate(MemoryGameScreens.HighScores.name)
             }
@@ -152,7 +154,7 @@ private fun ButtonsColumn(
         Spacer(modifier = Modifier.height(8.dp))
         MemoryGameWhiteButton(
             isDarkMode = isDarkMode,
-            text = "QUIT",
+            text = stringResource(R.string.quit),
             onClick = {
                 onClickQuit()
             }
@@ -161,7 +163,7 @@ private fun ButtonsColumn(
         Image(
             modifier = Modifier.size(48.dp),
             painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "PokeBall",
+            contentDescription = stringResource(R.string.pokeball),
         )
     }
 }

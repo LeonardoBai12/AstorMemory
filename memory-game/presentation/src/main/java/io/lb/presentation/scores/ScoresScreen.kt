@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,7 +82,7 @@ internal fun ScoreScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = "Filter:",
+                    text = stringResource(R.string.filter),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
@@ -168,7 +169,7 @@ private fun ScoresColumn(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "(${state.scores[index].amount} cards)",
+                    text = "(${state.scores[index].amount} ${stringResource(R.string.cards)})",
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
@@ -217,7 +218,7 @@ private fun FilterMenu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = if (filter == 0) "All" else "$filter cards",
+                            text = if (filter == 0) stringResource(R.string.all) else "$filter ${stringResource(R.string.cards)}",
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 16.sp,
                             fontWeight = if (selectedFilter.intValue == filter) FontWeight.Bold else FontWeight.Normal

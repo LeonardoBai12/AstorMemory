@@ -29,12 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import io.lb.presentation.R
 import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
@@ -128,12 +130,12 @@ private fun ErrorMessage(
             Text(
                 text = state.message.takeIf {
                     it.isNullOrEmpty().not() && it != "null"
-                } ?: "Ops! Something went wrong",
+                } ?: stringResource(R.string.ops_something_went_wrong),
                 fontWeight = FontWeight.W600,
                 fontSize = 24.sp
             )
             Spacer(modifier = Modifier.height(16.dp))
-            MemoryGameRedButton("Try again") {
+            MemoryGameRedButton(stringResource(R.string.try_again)) {
                 viewModel.onEvent(GameEvent.OnRequestGames)
             }
         }
@@ -173,7 +175,7 @@ private fun GameTopBar(
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                             .fillMaxWidth(),
-                        text = "Combo Bonus: +${(state.currentCombo) * 10}",
+                        text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.W600,
                         textAlign = TextAlign.End,

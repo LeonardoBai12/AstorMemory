@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +51,7 @@ fun GameOverScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "You won!",
+                text = stringResource(R.string.you_won),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -60,7 +61,7 @@ fun GameOverScreen(
 
             if (score == 0) {
                 Text(
-                    text = "Score:",
+                    text = stringResource(R.string.score),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -100,7 +101,7 @@ private fun GameOverButtons(
     ) {
         if (amount != 0) {
             MemoryGameRedButton(
-                text = "PLAY AGAIN",
+                text = stringResource(R.string.play_again),
                 onClick = {
                     navController.navigate(MemoryGameScreens.Game.name + "/$amount")
                 }
@@ -108,7 +109,7 @@ private fun GameOverButtons(
             Spacer(modifier = Modifier.height(8.dp))
         }
         MemoryGameWhiteButton(
-            text = "BACK",
+            text = stringResource(R.string.back),
             isDarkMode = isDarkMode,
             onClick = {
                 navController.navigate(MemoryGameScreens.Menu.name) {
