@@ -80,7 +80,7 @@ fun GameOverScreen(
                 )
             }
 
-            GameOverButtons(navController, amount)
+            GameOverButtons(navController, isDarkMode, amount)
         }
     }
 }
@@ -88,6 +88,7 @@ fun GameOverScreen(
 @Composable
 private fun GameOverButtons(
     navController: NavController,
+    isDarkMode: Boolean,
     amount: Int
 ) {
     Column(
@@ -108,6 +109,7 @@ private fun GameOverButtons(
         }
         MemoryGameWhiteButton(
             text = "BACK",
+            isDarkMode = isDarkMode,
             onClick = {
                 navController.navigate(MemoryGameScreens.Menu.name) {
                     popUpTo(MemoryGameScreens.Menu.name) {
