@@ -31,7 +31,7 @@ internal suspend fun HttpClient.requestPokemon(
         accept(ContentType.Any)
         header("Content-Type", "application/json")
         bearerAuth("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6Imh0dHA6Ly8wLjAuMC4wOjgwODAiLCJleHAiOjE3NjI3NDIyMDIsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4ifQ.bXQnXi51Bp3KFFSUmIKUkvVqlexOOB0mOXbmUsHZTzc")
-        url("https://pokeman-summer-bush-3988.fly.dev/api/pokemon?amount=$amount")
+        url("https://pokamann-env.eba-p9qmtfkx.sa-east-1.elasticbeanstalk.com/api/pokemon?amount=$amount")
     }
     val body = response.body<List<PokemonCard>?>() ?: throw MemoryGameException(
         HttpStatusCode.BadRequest.value,
