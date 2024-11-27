@@ -14,13 +14,13 @@ fun MemoryGameLogo(
     if (isDarkMode) {
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.pokemon_game_logo_b),
+            painter = painterResource(id = R.drawable.pokemon_game_logo_w),
             contentDescription = "Pokemon Memory Challenge",
         )
     } else {
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.pokemon_game_logo_w),
+            painter = painterResource(id = R.drawable.pokemon_game_logo_b),
             contentDescription = "Pokemon Memory Challenge",
         )
     }
