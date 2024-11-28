@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,12 +48,15 @@ fun GameOverScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            MemoryGameLogo(isDarkMode)
+            MemoryGameLogo(
+                isDarkMode,
+                Modifier.fillMaxWidth(0.6f)
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = stringResource(R.string.you_won),
-                fontSize = 24.sp,
+                fontSize = 48.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -76,6 +80,12 @@ fun GameOverScreen(
                 Text(
                     text = "Score: $score",
                     fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "with $amount card pairs",
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )

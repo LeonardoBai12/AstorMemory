@@ -74,7 +74,10 @@ internal fun ScoreScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            MemoryGameLogo(isDarkMode)
+            MemoryGameLogo(
+                isDarkMode,
+                Modifier.fillMaxWidth(0.6f)
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
             Row(
