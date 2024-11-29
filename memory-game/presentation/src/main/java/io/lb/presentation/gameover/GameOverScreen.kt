@@ -26,6 +26,7 @@ import io.lb.presentation.R
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
+import io.lb.presentation.ui.components.PokeBall
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 
 @Composable
@@ -41,6 +42,7 @@ fun GameOverScreen(
     ) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(padding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -130,10 +132,6 @@ private fun GameOverButtons(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        Image(
-            modifier = Modifier.size(48.dp),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "PokeBall",
-        )
+        PokeBall()
     }
 }

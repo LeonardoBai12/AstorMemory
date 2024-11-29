@@ -40,6 +40,7 @@ import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
+import io.lb.presentation.ui.components.PokeBall
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
 
@@ -51,6 +52,8 @@ internal fun MenuScreen(
     onClickQuit: () -> Unit,
     onChangeAmount: (Int) -> Unit
 ) {
+    val configuration = LocalContext.current.resources.configuration
+    val screenHeight = configuration.screenHeightDp
     val amount = remember {
         mutableIntStateOf(initialAmount)
     }
@@ -69,25 +72,30 @@ internal fun MenuScreen(
                 onClick = {
                     navController.navigate(MemoryGameScreens.Settings.name)
                 },
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(screenHeight.dp / 16)
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = stringResource(R.string.settings),
                     tint = Color.Gray,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(screenHeight.dp / 16)
                 )
             }
         }
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(padding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(32.dp))
-            MemoryGameLogo(isDarkMode)
+            MemoryGameLogo(
+                isDarkMode,
+                Modifier.fillMaxWidth(0.9f)
+                    .height(screenHeight.dp / 5)
+            )
 
             Spacer(modifier = Modifier.height(72.dp))
             Text(
@@ -160,11 +168,7 @@ private fun ButtonsColumn(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        Image(
-            modifier = Modifier.size(48.dp),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = stringResource(R.string.pokeball),
-        )
+        PokeBall()
     }
 }
 

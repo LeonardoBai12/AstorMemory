@@ -43,6 +43,7 @@ import io.lb.presentation.R
 import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
+import io.lb.presentation.ui.components.PokeBall
 import io.lb.presentation.ui.theme.DarkerRed
 
 @Composable
@@ -134,11 +135,7 @@ internal fun ScoreScreen(
                     }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(id = R.drawable.pokeball),
-                    contentDescription = "PokeBall",
-                )
+                PokeBall()
             }
         }
     }

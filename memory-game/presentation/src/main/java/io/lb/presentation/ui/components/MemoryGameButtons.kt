@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,8 +54,10 @@ internal fun MemoryGameRedButton(
     text: String,
     onClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
     MemoryGameButtonWithBackground(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = R.drawable.rebbutton,
         text = text,
         textColor = Color.White,
@@ -107,8 +110,10 @@ fun MemoryGamePlusButton(
     isDarkMode: Boolean,
     onClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
     MemoryGameButtonWithBackground(
-        modifier = Modifier.height(48.dp),
+        modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = if (isDarkMode) R.drawable.plusbutton_b else R.drawable.plusbutton_w,
         onClick = {
             onClick()
@@ -121,8 +126,10 @@ fun MemoryGameMinusButton(
     isDarkMode: Boolean,
     onClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
     MemoryGameButtonWithBackground(
-        modifier = Modifier.height(48.dp),
+        modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = if (isDarkMode) R.drawable.minusbutton_b else R.drawable.minusbutton_w,
         onClick = {
             onClick()
@@ -135,8 +142,10 @@ internal fun MemoryGameBlueButton(
     text: String,
     onClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
     MemoryGameButtonWithBackground(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = R.drawable.bluebutton,
         text = text,
         textColor = Color.White,
@@ -150,8 +159,10 @@ internal fun MemoryGameWhiteButton(
     text: String,
     onClick: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp
     MemoryGameButtonWithBackground(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = if (isDarkMode) R.drawable.blackbutton else R.drawable.whitebutton,
         text = text,
         textColor = Color.Red,
