@@ -80,13 +80,13 @@ fun GameOverScreen(
                 )
             } else {
                 Text(
-                    text = "Score: $score",
+                    text = stringResource(R.string.score_result, score),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "with $amount card pairs",
+                    text = stringResource(R.string.with_card_pairs, amount),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground

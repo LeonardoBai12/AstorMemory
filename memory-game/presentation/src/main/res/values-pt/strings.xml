@@ -1,49 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-      
   <string name="app_name">PokéMemory</string>
-      
   <string name="ops_something_went_wrong">Ops! Algo deu errado</string>
-      
   <string name="try_again">Tente novamente</string>
-      
-  <string name="combo_bonus">Bônus de combinação: +%1$s</string>
-      
+  <string name="combo_bonus">Bônus de combo: +%1$s</string>
   <string name="back">VOLTAR</string>
-      
   <string name="play_again">JOGAR DE NOVO</string>
-      
   <string name="score">Pontuação:</string>
-      
   <string name="you_won">Você venceu!</string>
-      
   <string name="settings">Configurações</string>
-      
   <string name="amount_of_card_pairs">Quantidade de pares de cartas</string>
-      
   <string name="the_more_cards_you_play_with">Quanto mais cartas você jogar, mais difícil será o jogo</string>
-      
   <string name="start_game">INICIAR JOGO</string>
-      
   <string name="highscores">RECORDES</string>
-      
   <string name="quit">SAIR</string>
-      
   <string name="pokeball">Pokébola</string>
-      
   <string name="filter">Filtro:</string>
-      
   <string name="cards">cartas</string>
-      
   <string name="all">Todos</string>
-      
   <string name="dark_mode">Modo escuro</string>
-      
   <string name="game_screen_layout">Layout da tela do jogo</string>
-      
   <string name="cards_per_line">Cartas por linha</string>
-      
   <string name="cards_per_column">Cartas por coluna</string>
-      
   <string name="preview">Visualização</string>
-  
+  <string name="with_card_pairs">com %1$s pares de cartas</string>
+  <string name="score_result">Pontuação: %1$s</string>
 </resources>

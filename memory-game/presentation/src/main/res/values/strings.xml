@@ -4,7 +4,6 @@
     <string name="try_again">Try again</string>
     <string name="combo_bonus">Combo Bonus: +%1$s</string>
     <string name="back">BACK</string>
-    <string name="play_again">PLAY AGAIN</string>
     <string name="score">Score:</string>
     <string name="you_won">You won!</string>
     <string name="settings">Settings</string>
@@ -22,4 +21,7 @@
     <string name="cards_per_line">Cards per line</string>
     <string name="cards_per_column">Cards per column</string>
     <string name="preview">Preview</string>
+    <string name="with_card_pairs">with %1$s card pairs</string>
+    <string name="play_again">PLAY AGAIN</string>
+    <string name="score_result">Score: %1$s</string>
 </resources>
