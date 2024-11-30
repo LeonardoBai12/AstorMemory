@@ -202,7 +202,7 @@ private fun FilterMenu(
             onClick = { dropDownMenuExpanded.value = true },
         ) {
             Text(
-                text = if (selectedFilter.intValue == 0) stringResource(R.string.all) else "$selectedFilter.intValue ${stringResource(R.string.cards)}",
+                text = if (selectedFilter.intValue == 0) stringResource(R.string.all) else "${selectedFilter.intValue} ${stringResource(R.string.cards)}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
