@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         versionCode = 1102
-        versionName = "1.1.2"
+        versionName = "1.1.3"
     }
 
     packaging {
