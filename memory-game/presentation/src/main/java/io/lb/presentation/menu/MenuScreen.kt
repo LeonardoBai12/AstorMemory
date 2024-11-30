@@ -102,6 +102,7 @@ internal fun MenuScreen(
                 text = stringResource(R.string.amount_of_card_pairs),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
             IntSelector(

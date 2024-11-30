@@ -10,8 +10,8 @@ android {
     namespace = "io.lb.pokememory.app"
 
     defaultConfig {
-        versionCode = 1000
-        versionName = "1.0.0"
+        versionCode = 1100
+        versionName = "1.1.0"
     }
 
     packaging {
@@ -23,6 +23,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.android.play:integrity:1.4.0")
     implementation(project(":impl:ktor-client"))
     implementation(project(":impl:room-database"))
     implementation(project(":memory-game:data"))

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><resources>
+      
+  <string name="app_name">PokéMemory</string>
+      
+  <string name="ops_something_went_wrong">ऑप्स! कुछ गलत हो गया</string>
+      
+  <string name="try_again">पुन: प्रयास करें</string>
+      
+  <string name="combo_bonus">कॉम्बो बोनस: +%1$s</string>
+      
+  <string name="back">वापस जाएं</string>
+      
+  <string name="play_again">फिर से खेलें</string>
+      
+  <string name="score">स्कोर:</string>
+      
+  <string name="you_won">आप जीत गए!</string>
+      
+  <string name="settings">सेटिंग</string>
+      
+  <string name="amount_of_card_pairs">कार्ड जोड़े की मात्रा</string>
+      
+  <string name="the_more_cards_you_play_with">आप जितने अधिक कार्डों के साथ खेलेंगे, खेल उतना ही कठिन होगा</string>
+      
+  <string name="start_game">गेम शुरू करें</string>
+      
+  <string name="highscores">हाईस्कोर</string>
+      
+  <string name="quit">छोड़ें</string>
+      
+  <string name="pokeball">PokeBall</string>
+      
+  <string name="filter">फ़िल्टर:</string>
+      
+  <string name="cards">कार्ड</string>
+      
+  <string name="all">सभी</string>
+      
+  <string name="dark_mode">डार्क मोड</string>
+      
+  <string name="game_screen_layout">गेम स्क्रीन लेआउट</string>
+      
+  <string name="cards_per_line">प्रति पंक्ति कार्ड</string>
+      
+  <string name="cards_per_column">प्रति कॉलम कार्ड</string>
+      
+  <string name="preview">पूर्वावलोकन</string>
+  
+</resources>

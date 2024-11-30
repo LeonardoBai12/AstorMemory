@@ -128,7 +128,7 @@ internal fun ScoreScreen(
                 verticalArrangement = Arrangement.Bottom
             ) {
                 MemoryGameWhiteButton(
-                    text = "BACK",
+                    text = stringResource(R.string.back),
                     isDarkMode = isDarkMode,
                     onClick = {
                         navController.navigateUp()

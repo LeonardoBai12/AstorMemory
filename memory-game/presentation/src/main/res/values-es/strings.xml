@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><resources>
+      
+  <string name="app_name">PokéMemoria</string>
+      
+  <string name="ops_something_went_wrong">¡Ups! Algo salió mal</string>
+      
+  <string name="try_again">Intentar otra vez</string>
+      
+  <string name="combo_bonus">Bono combinado: +%1$s</string>
+      
+  <string name="back">ATRÁS</string>
+      
+  <string name="play_again">JUGAR DE NUEVO</string>
+      
+  <string name="score">Puntaje:</string>
+      
+  <string name="you_won">¡Ganaste!</string>
+      
+  <string name="settings">Ajustes</string>
+      
+  <string name="amount_of_card_pairs">Cantidad de pares de cartas</string>
+      
+  <string name="the_more_cards_you_play_with">Cuanto más cartas uses, más difícil será el juego.</string>
+      
+  <string name="start_game">COMENZAR EL JUEGO</string>
+      
+  <string name="highscores">PUNTAJES ALTOS</string>
+      
+  <string name="quit">ABANDONAR</string>
+      
+  <string name="pokeball">Pokebola</string>
+      
+  <string name="filter">Filtrar:</string>
+      
+  <string name="cards">tarjetas</string>
+      
+  <string name="all">Todo</string>
+      
+  <string name="dark_mode">Modo oscuro</string>
+      
+  <string name="game_screen_layout">Disposición de la pantalla del juego</string>
+      
+  <string name="cards_per_line">Tarjetas por línea</string>
+      
+  <string name="cards_per_column">Tarjetas por columna</string>
+      
+  <string name="preview">Avance</string>
+  
+</resources>
