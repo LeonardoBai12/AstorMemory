@@ -1,9 +1,16 @@
 package io.lb.data.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.compose.ui.text.capitalize
 import io.lb.common.data.model.PokemonCard
 import io.lb.common.data.model.Score
+import io.lb.data.R
 import io.lb.data.datasource.MemoryGameDataSource
 import io.lb.domain.repository.MemoryGameRepository
+import java.io.ByteArrayOutputStream
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -12,33 +19,54 @@ import javax.inject.Inject
  * @property dataSource The data source to fetch data from.
  */
 internal class MemoryGameRepositoryImpl @Inject constructor(
+    private val context: Context,
     private val dataSource: MemoryGameDataSource
 ) : MemoryGameRepository {
     override suspend fun getPokemonPairs(amount: Int): List<PokemonCard> {
-//        val localPokemon = dataSource.getPokemonListFromLocal()
-//        if (localPokemon.size >= 999) {
-//            val localList = localPokemon.take(amount).shuffled().toMutableList()
-//            localList.addAll(localList.shuffled())
-//            return localList.shuffled()
-//        }
-        val remotePokemon = // kotlin.runCatching {
-            dataSource.getPokemonListFromRemote(amount)
-//        }.getOrElse {
-//            if (localPokemon.size < amount) {
-//                throw it
-//            }
-//            val localList = localPokemon.take(amount).shuffled().toMutableList()
-//            localList.addAll(localList.shuffled())
-//            return localList.shuffled()
-//        }
-//        remotePokemon.forEach {
-//            if (dataSource.getPokemonFromLocal(it.pokemonId) == null) {
-//                dataSource.insertPokemon(it)
-//            }
-//        }
-        val remoteList = remotePokemon.take(amount).shuffled().toMutableList()
-        remoteList.addAll(remoteList.shuffled())
-        return remoteList.shuffled()
+        val pokemonCards = getAllPokemonCards(context)
+        val selectedPokemon = pokemonCards.take(amount).shuffled().toMutableList()
+        selectedPokemon.addAll(selectedPokemon.shuffled())
+        return selectedPokemon.shuffled()
+    }
+
+    private fun getAllPokemonCards(context: Context): List<PokemonCard> {
+        val drawableFieldNames = R.drawable::class.java.fields
+        val pokemonCards = mutableListOf<PokemonCard>()
+
+        for (field in drawableFieldNames) {
+            val resourceName = field.name
+
+            val regex = Regex("([a-zA-Z_]+)_(\\d+)")
+            val matchResult = regex.matchEntire(resourceName)
+
+            if (matchResult != null) {
+                val (nameWithUnderscores, id) = matchResult.destructured
+                val name = nameWithUnderscores.replace("_", " ")
+                    .split(" ")
+                    .joinToString(" ") { it.capitalize(Locale.ROOT) }
+
+                val resourceId = field.getInt(null)
+                val imageUrl = "android.resource://${context.packageName}/drawable/$resourceName"
+
+                val imageData = context.resources.openRawResource(resourceId).use { inputStream ->
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    val outputStream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    outputStream.toByteArray()
+                }
+
+                pokemonCards.add(
+                    PokemonCard(
+                        id = id,
+                        pokemonId = id.toInt(),
+                        imageUrl = imageUrl,
+                        imageData = imageData,
+                        name = name
+                    )
+                )
+            }
+        }
+        return pokemonCards.shuffled()
     }
 
     override suspend fun getScores(): List<Score> {

@@ -24,7 +24,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.android.play:integrity:1.4.0")
-    implementation(project(":impl:ktor-client"))
     implementation(project(":impl:room-database"))
     implementation(project(":memory-game:data"))
     implementation(project(":memory-game:domain"))
