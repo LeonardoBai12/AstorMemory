@@ -1,6 +1,5 @@
 package io.lb.presentation.menu
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,11 +49,16 @@ internal fun MenuScreen(
     navController: NavController,
     isDarkMode: Boolean,
     initialAmount: Int,
+    isMuted: Boolean,
+    onChangeMuted: (Boolean) -> Unit,
     onClickQuit: () -> Unit,
     onChangeAmount: (Int) -> Unit
 ) {
     val configuration = LocalContext.current.resources.configuration
     val screenHeight = configuration.screenHeightDp
+    val muted = remember {
+        mutableStateOf(isMuted)
+    }
     val amount = remember {
         mutableIntStateOf(initialAmount)
     }
@@ -66,8 +71,26 @@ internal fun MenuScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
+            IconButton(
+                onClick = {
+                    onChangeMuted(muted.value.not())
+                    muted.value = muted.value.not()
+                },
+                modifier = Modifier.size(screenHeight.dp / 16)
+            ) {
+                Icon(
+                    painter = if (muted.value) {
+                        painterResource(R.drawable.music_off)
+                    } else {
+                        painterResource(R.drawable.music_on)
+                    },
+                    contentDescription = "Muted or not",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(screenHeight.dp / 16)
+                )
+            }
             IconButton(
                 onClick = {
                     navController.navigate(MemoryGameScreens.Settings.name)
@@ -180,6 +203,6 @@ internal fun MenuScreenPreview() {
     PokemonMemoryChallengeTheme(
         darkTheme = false
     ) {
-        MenuScreen(NavController(context), true,5, {}, {})
+      //  MenuScreen(NavController(context), true,5, {}, {})
     }
 }
