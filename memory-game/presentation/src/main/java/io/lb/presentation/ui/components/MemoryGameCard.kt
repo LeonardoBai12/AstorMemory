@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -160,6 +161,7 @@ private fun FlippedCard(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
                 bitmap = convertImageByteArrayToBitmap(card.astorCard.imageData)
                     .asImageBitmap(),
                 contentDescription = "Astor Flipped Card"
