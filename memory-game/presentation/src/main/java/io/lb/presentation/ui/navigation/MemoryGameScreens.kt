@@ -12,5 +12,6 @@ enum class MemoryGameScreens {
     Menu,
     Game,
     HighScores,
-    GameOver
+    GameOver,
+    Settings
 }

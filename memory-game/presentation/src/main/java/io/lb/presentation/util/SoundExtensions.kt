@@ -63,16 +63,28 @@ fun buildSoundPool(context: Context): SoundPool {
     return soundPool
 }
 
-fun SoundPool.playFlipEffect() {
-    playEffect(flipCardEffectId, FLIP_VOLUME)
+fun SoundPool.playFlipEffect(isMuted: Boolean) {
+    if (isMuted) {
+        playEffect(flipCardEffectId, FLIP_VOLUME / 2)
+    } else {
+        playEffect(flipCardEffectId, FLIP_VOLUME)
+    }
 }
 
-fun SoundPool.playInitialMatchEffect() {
-    playEffect(flipInitialCardsEffectId, MATCH_VOLUME)
+fun SoundPool.playInitialMatchEffect(isMuted: Boolean) {
+    if (isMuted) {
+        playEffect(flipInitialCardsEffectId, MATCH_VOLUME / 2)
+    } else {
+        playEffect(flipInitialCardsEffectId, MATCH_VOLUME)
+    }
 }
 
-fun SoundPool.playMatchEffect() {
-    playEffect(matchEffectId, MATCH_VOLUME)
+fun SoundPool.playMatchEffect(isMuted: Boolean) {
+    if (isMuted) {
+        playEffect(matchEffectId, MATCH_VOLUME / 3)
+    } else {
+        playEffect(matchEffectId, MATCH_VOLUME)
+    }
 }
 
 private const val MATCH_VOLUME = 0.7f

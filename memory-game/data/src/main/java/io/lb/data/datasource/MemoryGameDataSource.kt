@@ -1,6 +1,5 @@
 package io.lb.data.datasource
 
-import io.lb.common.data.service.ClientService
 import io.lb.common.data.service.DatabaseService
 import javax.inject.Inject
 
@@ -8,11 +7,9 @@ import javax.inject.Inject
  * Data source for the memory game.
  *
  * @property databaseService The service to interact with the database.
- * @property clientService The service to interact with the client.
  */
 internal class MemoryGameDataSource @Inject constructor(
     private val databaseService: DatabaseService,
-    private val clientService: ClientService
 ) {
     /**
      * Get the scores from the database.
@@ -22,18 +19,19 @@ internal class MemoryGameDataSource @Inject constructor(
     suspend fun getScores() = databaseService.getScores()
 
     /**
+     * Get the scores from the database by amount of cards.
+     *
+     * @param amount The amount of cards in the game.
+     *
+     * @return The scores.
+     */
+    suspend fun getScoresByAmount(amount: Int) = databaseService.getScoresByAmount(amount)
+
+    /**
      * Insert a score into the database.
      *
      * @param score The score to insert.
+     * @param amount The amount of cards in the game.
      */
-    suspend fun insertScore(score: Int) = databaseService.insertScore(score)
-
-    /**
-     * Get a list of Pokemon pairs.
-     *
-     * @param amount The amount of Pokemon pairs to get.
-     *
-     * @return A list of Pokemon pairs.
-     */
-    suspend fun getPokemonPairs(amount: Int) = clientService.getPokemonPairs(amount)
+    suspend fun insertScore(score: Int, amount: Int) = databaseService.insertScore(score, amount)
 }

@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "io.lb.pokememory.app"
+    namespace = "io.lb.astormemory.app"
 
     defaultConfig {
-        versionCode = 113
-        versionName = "1.1.3"
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     packaging {
@@ -20,10 +20,10 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
-    implementation(project(":impl:ktor-client"))
+    implementation("com.google.android.play:integrity:1.4.0")
     implementation(project(":impl:room-database"))
     implementation(project(":memory-game:data"))
     implementation(project(":memory-game:domain"))

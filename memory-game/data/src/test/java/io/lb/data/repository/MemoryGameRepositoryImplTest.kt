@@ -1,6 +1,6 @@
 package io.lb.data.repository
 
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.data.model.Score
 import io.lb.data.datasource.MemoryGameDataSource
 import io.mockk.coEvery
@@ -28,21 +28,21 @@ class MemoryGameRepositoryImplTest {
     }
 
     @Test
-    fun `When get pokemon pairs, expect a list of pokemon pairs`() = runTest {
-        coEvery { dataSource.getPokemonPairs(2) } returns listOf(
-            PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
-            PokemonCard(2, "Ivysaur.png", "Ivysaur")
+    fun `When get astor pairs, expect a list of astor pairs`() = runTest {
+        coEvery { dataSource.getAstorPairs(2) } returns listOf(
+            AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
+            AstorCard(2, "Ivysaur.png", "Ivysaur")
         )
 
-        val pokemonPairs = repository.getPokemonPairs(2)
+        val astorPairs = repository.getAstorPairs(2)
 
-        assertEquals(2, pokemonPairs.size)
+        assertEquals(2, astorPairs.size)
         assertEquals(
             listOf(
-                PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
-                PokemonCard(2, "Ivysaur.png", "Ivysaur")
+                AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
+                AstorCard(2, "Ivysaur.png", "Ivysaur")
             ),
-            pokemonPairs
+            astorPairs
         )
     }
 

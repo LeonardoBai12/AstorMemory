@@ -1,6 +1,6 @@
 package io.lb.data.datasource
 
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.data.model.Score
 import io.lb.common.data.service.ClientService
 import io.lb.common.data.service.DatabaseService
@@ -54,21 +54,21 @@ class MemoryGameDataSourceTest {
     }
 
     @Test
-    fun `When get pokemon pairs, expect a list of pokemon pairs`() = runTest {
-        coEvery { clientService.getPokemonPairs(2) } returns listOf(
-            PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
-            PokemonCard(2, "Ivysaur.png", "Ivysaur")
+    fun `When get astor pairs, expect a list of astor pairs`() = runTest {
+        coEvery { clientService.getAstor(2) } returns listOf(
+            AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
+            AstorCard(2, "Ivysaur.png", "Ivysaur")
         )
 
-        val pokemonPairs = dataSource.getPokemonPairs(2)
+        val astorPairs = dataSource.getAstorPairs(2)
 
-        assertEquals(2, pokemonPairs.size)
+        assertEquals(2, astorPairs.size)
         assertEquals(
             listOf(
-                PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
-                PokemonCard(2, "Ivysaur.png", "Ivysaur")
+                AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
+                AstorCard(2, "Ivysaur.png", "Ivysaur")
             ),
-            pokemonPairs
+            astorPairs
         )
     }
 }

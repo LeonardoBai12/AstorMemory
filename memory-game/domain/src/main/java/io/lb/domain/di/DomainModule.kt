@@ -6,7 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.lb.domain.repository.MemoryGameRepository
 import io.lb.domain.usecases.CalculateScoreUseCase
-import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetAstorPairsUseCase
+import io.lb.domain.usecases.GetScoresByAmountUseCase
 import io.lb.domain.usecases.GetScoresUseCase
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.domain.usecases.SaveScoreUseCase
@@ -18,8 +19,9 @@ object DomainModule {
     fun providesUseCases(repository: MemoryGameRepository): MemoryGameUseCases {
         return MemoryGameUseCases(
             getScoresUseCase = GetScoresUseCase(repository),
+            getScoresByAmountUseCase = GetScoresByAmountUseCase(repository),
             saveScoreUseCase = SaveScoreUseCase(repository),
-            getMemoryGameUseCase = GetPokemonPairsUseCase(repository),
+            getMemoryGameUseCase = GetAstorPairsUseCase(repository),
             calculateScoreUseCase = CalculateScoreUseCase()
         )
     }

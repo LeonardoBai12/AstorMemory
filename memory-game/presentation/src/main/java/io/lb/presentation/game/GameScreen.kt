@@ -1,20 +1,20 @@
 package io.lb.presentation.game
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,26 +29,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.presentation.R
-import io.lb.presentation.ui.components.MemoryGameBlueButton
+import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
+import io.lb.presentation.ui.components.MemoryGameRestartButton
+import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
 internal fun GameScreen(
     navController: NavController,
+    isDarkMode: Boolean,
     viewModel: GameViewModel = hiltViewModel<GameViewModel>(),
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
     onCardFlipped: () -> Unit,
     onCardMatched: (Int) -> Unit,
 ) {
@@ -71,13 +80,13 @@ internal fun GameScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBar(navController, state)
+            GameTopBar(navController, state, viewModel, lastSelectedCard, isDarkMode)
         }
     ) { padding ->
         if (state.isLoading) {
-            LoadingIndicator(screenHeight)
+            LoadingIndicator(screenHeight = screenHeight)
         } else if (state.message.isNullOrEmpty().not() ||
             state.cards.isEmpty() ||
             state.message == "null"
@@ -85,37 +94,18 @@ internal fun GameScreen(
             ErrorMessage(padding, state, viewModel)
         } else {
             CardGrid(
+                viewModel = viewModel,
                 padding = padding,
                 state = state,
-                onCardFlipped = onCardFlipped,
                 lastSelectedCard = lastSelectedCard,
-                viewModel = viewModel,
+                cardsPerLine = cardsPerLine,
+                cardsPerColumn = cardsPerColumn,
+                onCardFlipped = onCardFlipped,
                 onCardMatched = {
                     onCardMatched(state.cards.filter { it.isMatched }.size)
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun LoadingIndicator(screenHeight: Dp) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(screenHeight / 6),
-            color = Color.Red,
-            strokeWidth = 5.dp,
-        )
-        Image(
-            modifier = Modifier.size(screenHeight / 8),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "PokeBall",
-        )
     }
 }
 
@@ -140,12 +130,12 @@ private fun ErrorMessage(
             Text(
                 text = state.message.takeIf {
                     it.isNullOrEmpty().not() && it != "null"
-                } ?: "Ops! Something went wrong",
+                } ?: stringResource(R.string.ops_something_went_wrong),
                 fontWeight = FontWeight.W600,
                 fontSize = 24.sp
             )
             Spacer(modifier = Modifier.height(16.dp))
-            MemoryGameRedButton("Try again") {
+            MemoryGameRedButton(stringResource(R.string.try_again)) {
                 viewModel.onEvent(GameEvent.OnRequestGames)
             }
         }
@@ -154,83 +144,170 @@ private fun ErrorMessage(
 
 @ExperimentalMaterial3Api
 @Composable
-private fun GameTopBar(navController: NavController, state: GameState) {
+private fun GameTopBar(
+    navController: NavController,
+    state: GameState,
+    viewModel: GameViewModel,
+    lastSelectedCard: MutableState<String>,
+    isDarkMode: Boolean
+) {
     TopAppBar(
         modifier = Modifier.padding(top = 8.dp),
         title = {
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(),
-                text = if (state.isLoading.not() && state.score > 0) {
-                    "Score: ${state.score}"
+            Column(
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth(),
+                    text = if (state.isLoading.not() && state.score > 0) {
+                        "${state.score} pts"
+                    } else {
+                        ""
+                    },
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.End
+                )
+                if (state.currentCombo > 1) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.W600,
+                        textAlign = TextAlign.End,
+                        color = if (isDarkMode) {
+                            Color.Yellow
+                        } else {
+                            Color.DarkGray
+                        }
+                    )
                 } else {
-                    ""
-                },
-                fontSize = 32.sp,
-                fontWeight = FontWeight.W600,
-                textAlign = TextAlign.End
-            )
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
         },
         navigationIcon = {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth(0.4f)
-            ) {
-                MemoryGameBlueButton("STOP") {
-                    navController.navigateUp()
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .fillMaxWidth(0.2f)
+                ) {
+                    MemoryGameStopButton {
+                        navController.navigate(MemoryGameScreens.Menu.name) {
+                            popUpTo(MemoryGameScreens.Menu.name) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
+                if (state.isLoading.not() && state.message.isNullOrEmpty() &&
+                    state.cards.any { it.isMatched.not() }) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxWidth(0.3f)
+                    ) {
+                        MemoryGameRestartButton {
+                            lastSelectedCard.value = ""
+                            viewModel.onEvent(GameEvent.GameRestarted)
+                        }
+                    }
                 }
             }
         }
     )
 }
 
+@ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
 private fun CardGrid(
+    viewModel: GameViewModel,
     padding: PaddingValues,
     state: GameState,
-    onCardFlipped: () -> Unit,
     lastSelectedCard: MutableState<String>,
-    viewModel: GameViewModel,
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
+    onCardFlipped: () -> Unit,
     onCardMatched: () -> Unit,
 ) {
+    val clickLock = remember {
+        mutableStateOf(false)
+    }
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp),
-        columns = GridCells.Fixed(4),
+            .padding(top = 12.dp)
+            .padding(horizontal = 12.dp),
+        columns = GridCells.Fixed(cardsPerLine),
         userScrollEnabled = true,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(state.cards.size) { index ->
-            MemoryGameCard(state.cards[index]) {
+            MemoryGameCard(
+                card = state.cards[index],
+                cardsPerLine = cardsPerLine,
+                cardsPerColumn = cardsPerColumn
+            ) {
+                if (clickLock.value) {
+                    return@MemoryGameCard
+                }
+                clickLock.value = true
+
                 if (state.cards[index].isFlipped || state.cards[index].isMatched) {
                     return@MemoryGameCard
                 }
-
-                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size == 2) {
+                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
+                    clickLock.value = false
                     return@MemoryGameCard
                 }
 
                 onCardFlipped()
+                afterCardFlipped(
+                    lastSelectedCard = lastSelectedCard,
+                    state = state,
+                    index = index,
+                    viewModel = viewModel,
+                    onCardMatched = onCardMatched
+                )
 
-                if (lastSelectedCard.value.isEmpty()) {
-                    lastSelectedCard.value = state.cards[index].pokemonCard.name
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                } else if (lastSelectedCard.value != state.cards[index].pokemonCard.name) {
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                    viewModel.onEvent(GameEvent.CardMismatched)
-                    lastSelectedCard.value = ""
-                } else {
-                    viewModel.onEvent(GameEvent.CardFlipped(index))
-                    viewModel.onEvent(GameEvent.CardMatched(id = state.cards[index].pokemonCard.id))
-                    lastSelectedCard.value = ""
-                    onCardMatched()
-                }
+                resetClickLock(clickLock)
             }
         }
+    }
+}
+
+private fun afterCardFlipped(
+    lastSelectedCard: MutableState<String>,
+    state: GameState,
+    index: Int,
+    viewModel: GameViewModel,
+    onCardMatched: () -> Unit
+) {
+    if (lastSelectedCard.value.isEmpty()) {
+        lastSelectedCard.value = state.cards[index].astorCard.name
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+    } else if (lastSelectedCard.value != state.cards[index].astorCard.name) {
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+        viewModel.onEvent(GameEvent.CardMismatched)
+        lastSelectedCard.value = ""
+    } else {
+        viewModel.onEvent(GameEvent.CardFlipped(index))
+        viewModel.onEvent(
+            GameEvent.CardMatched(id = state.cards[index].astorCard.astorId)
+        )
+        lastSelectedCard.value = ""
+        onCardMatched()
+    }
+}
+
+private fun resetClickLock(clickLock: MutableState<Boolean>) {
+    CoroutineScope(Dispatchers.Main).launch {
+        delay(100)
+        clickLock.value = false
     }
 }

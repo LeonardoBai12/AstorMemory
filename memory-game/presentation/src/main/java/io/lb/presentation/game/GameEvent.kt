@@ -32,4 +32,9 @@ sealed interface GameEvent {
      * Represents the game being finished.
      */
     data object GameFinished : GameEvent
+
+    /**
+     * Represents the game being restarted.
+     */
+    data object GameRestarted : GameEvent
 }

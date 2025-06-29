@@ -15,11 +15,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PokemonMemoryGame"
+rootProject.name = "AstorMemoryGame"
 
 include(":common:shared")
 include(":common:data")
-include(":impl:ktor-client")
 include(":memory-game:presentation")
 include(":memory-game:data")
 include(":memory-game:domain")

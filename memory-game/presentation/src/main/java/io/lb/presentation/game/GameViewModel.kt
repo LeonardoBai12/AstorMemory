@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.presentation.game.model.GameCard
@@ -31,7 +31,7 @@ internal class GameViewModel @Inject constructor(
     val state: StateFlow<GameState> = _state
 
     private var getCardsJob: Job? = null
-    private val games = mutableListOf<PokemonCard>()
+    private val games = mutableListOf<AstorCard>()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -42,6 +42,7 @@ internal class GameViewModel @Inject constructor(
 
     private var mismatches = 0
     private val amount = savedStateHandle["amount"] ?: DEFAULT_CARD_AMOUNT
+    private val combos = mutableListOf<Int>()
 
     init {
         _state.update {
@@ -81,7 +82,19 @@ internal class GameViewModel @Inject constructor(
             }
             GameEvent.GameFinished -> {
                 viewModelScope.launch {
-                    useCases.saveScoreUseCase(state.value.score)
+                    if (_state.value.currentCombo > 1) {
+                        combos.add(_state.value.currentCombo)
+                    }
+                    _state.update {
+                        it.copy(
+                            score = useCases.calculateScoreUseCase(
+                                amount = amount,
+                                combos = combos,
+                                mismatches = mismatches
+                            ),
+                        )
+                    }
+                    useCases.saveScoreUseCase(state.value.score, amount)
                     delay(GET_SCORES_DELAY)
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
@@ -89,6 +102,19 @@ internal class GameViewModel @Inject constructor(
 
             GameEvent.OnRequestGames -> {
                 getGames(amount)
+            }
+
+            GameEvent.GameRestarted -> {
+                viewModelScope.launch {
+                    mismatches = 0
+                    _state.update {
+                        it.copy(
+                            cards = games.map { game -> GameCard(astorCard = game) }.shuffled(),
+                            score = amount * 100,
+                            amount = amount
+                        )
+                    }
+                }
             }
         }
     }
@@ -98,12 +124,13 @@ internal class GameViewModel @Inject constructor(
             _state.update {
                 val currentState = it.copy(
                     cards = it.cards.map { gameCard ->
-                        if (gameCard.pokemonCard.id == event.id) {
+                        if (gameCard.astorCard.astorId == event.id) {
                             gameCard.copy(isMatched = true)
                         } else {
                             gameCard
                         }
-                    }
+                    },
+                    currentCombo = it.currentCombo + 1,
                 )
                 currentState
             }
@@ -115,7 +142,10 @@ internal class GameViewModel @Inject constructor(
 
     private suspend fun onMismatched() {
         mismatches++
-        delay(MISMATCH_DELAY)
+        if (_state.value.currentCombo > 1) {
+            combos.add(_state.value.currentCombo)
+        }
+        delay(CALCULATE_DELAY)
         _state.update {
             it.copy(
                 cards = it.cards.map { gameCard ->
@@ -125,7 +155,12 @@ internal class GameViewModel @Inject constructor(
                         gameCard
                     }
                 },
-                score = useCases.calculateScoreUseCase(amount, mismatches)
+                score = useCases.calculateScoreUseCase(
+                    amount = amount,
+                    combos = combos,
+                    mismatches = mismatches
+                ),
+                currentCombo = 0
             )
         }
     }
@@ -159,7 +194,7 @@ internal class GameViewModel @Inject constructor(
                     games.addAll(resource.data ?: emptyList())
                     _state.update {
                         it.copy(
-                            cards = games.map { game -> GameCard(pokemonCard = game) },
+                            cards = games.map { game -> GameCard(astorCard = game) },
                             isLoading = false,
                             message = null
                         )
@@ -170,7 +205,7 @@ internal class GameViewModel @Inject constructor(
     }
     companion object {
         private const val DEFAULT_CARD_AMOUNT = 5
-        private const val MISMATCH_DELAY = 750L
+        private const val CALCULATE_DELAY = 750L
         private const val GET_SCORES_DELAY = 2000L
     }
 }
