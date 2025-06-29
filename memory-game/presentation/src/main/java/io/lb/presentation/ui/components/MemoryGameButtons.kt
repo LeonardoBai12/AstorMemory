@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.lb.presentation.R
+import io.lb.presentation.ui.theme.PrimaryRed
 
 @Composable
 internal fun MemoryGameButtonWithBackground(
@@ -165,7 +166,7 @@ internal fun MemoryGameWhiteButton(
         modifier = Modifier.height(screenHeight.dp / 16),
         backgroundDrawable = if (isDarkMode) R.drawable.blackbutton else R.drawable.whitebutton,
         text = text,
-        textColor = Color.Red,
+        textColor =  PrimaryRed,
         onClick = onClick
     )
 }

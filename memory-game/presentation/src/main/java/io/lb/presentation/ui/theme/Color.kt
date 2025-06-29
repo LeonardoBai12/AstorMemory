@@ -2,18 +2,16 @@ package io.lb.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val PrimaryRed = Color(0xFFEE1A25)
-val DarkerRed = Color(0xFFA90D14)
-val GrayRed = Color(0xFF793D41)
+val PrimaryRed = Color(0xFFFF5F00)
+val DarkerRed = Color(0xFFB04306)
 
-val PrimaryBlue = Color(0xFF2C4593)
-val DarkerBlue = Color(0xFF2D2C5F)
-val GrayBlue = Color(0xFF3D5A79)
+val PrimaryBlue = Color(0xFF2A09B0)
+val DarkerBlue = Color(0xFF200367)
+val GrayBlue = Color(0xFF7C87AE)
 
-val PrimaryRedDark = Color(0xFFB3191E)
-val DarkerRedDark = Color(0xFF801113)
-val GrayRedDark = Color(0xFF5C2A2D)
+val PrimaryRedDark = Color(0xFFD1530A)
+val DarkerRedDark = Color(0xFF8E3704)
 
-val PrimaryBlueDark = Color(0xFF1B336B)
-val DarkerBlueDark = Color(0xFF1A1A40)
-val GrayBlueDark = Color(0xFF2B455C)
+val PrimaryBlueDark = Color(0xFF210C80)
+val DarkerBlueDark = Color(0xFF180252)
+val GrayBlueDark = Color(0xFF646E91)

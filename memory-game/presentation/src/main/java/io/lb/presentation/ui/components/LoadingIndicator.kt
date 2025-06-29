@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.lb.presentation.R
+import io.lb.presentation.ui.theme.PrimaryRed
 
 @Composable
 fun LoadingIndicator(
@@ -27,7 +28,7 @@ fun LoadingIndicator(
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(screenHeight / 6),
-            color = Color.Red,
+            color = PrimaryRed,
             strokeWidth = 5.dp,
         )
         Image(

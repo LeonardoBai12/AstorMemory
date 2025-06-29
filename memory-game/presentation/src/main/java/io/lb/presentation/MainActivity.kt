@@ -262,7 +262,7 @@ class MainActivity : ComponentActivity() {
                 victoryRoadMediaPlayer.pauseMusic()
             } else {
                 wildMediaPlayer.pauseMusic()
-                trainerBattleMediaPlayer.playMusic(0.95f)
+                trainerBattleMediaPlayer.playMusic(0.85f)
                 gymLeaderBattleMediaPlayer.pauseMusic()
                 victoryRoadMediaPlayer.pauseMusic()
                 eliteFourBattleMediaPlayer.pauseMusic()
