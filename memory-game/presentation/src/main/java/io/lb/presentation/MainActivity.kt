@@ -28,7 +28,7 @@ import io.lb.presentation.menu.MenuScreen
 import io.lb.presentation.scores.ScoreScreen
 import io.lb.presentation.settings.SettingsScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
-import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
+import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
 import io.lb.presentation.util.buildSoundPool
 import io.lb.presentation.util.pauseMusic
 import io.lb.presentation.util.playFlipEffect
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(sharedPref.getBoolean("darkMode", isDarkMode))
             }
 
-            PokemonMemoryChallengeTheme(isDarkModeState.value) {
+            AstorMemoryChallengeTheme(isDarkModeState.value) {
                 Surface {
                     NavHost(
                         navController = navController,

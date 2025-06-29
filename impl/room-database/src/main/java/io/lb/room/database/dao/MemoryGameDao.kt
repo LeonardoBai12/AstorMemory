@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.lb.room.database.model.PokemonCardEntity
+import io.lb.room.database.model.AstorCardEntity
 import io.lb.room.database.model.ScoreEntity
 
 /**
@@ -39,28 +39,28 @@ internal interface MemoryGameDao {
     suspend fun getScoresByAmount(amount: Int): List<ScoreEntity>
 
     /**
-     * Inserts a Pokemon into the database.
+     * Inserts a Astor into the database.
      *
-     * @param pokemonCard The Pokemon to insert.
+     * @param astorCard The Astor to insert.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemon(pokemonCard: PokemonCardEntity)
+    suspend fun insertAstor(astorCard: AstorCardEntity)
 
     /**
      * Retrieves all scores from the database.
      *
      * @return A list of all scores in the database.
      */
-    @Query("SELECT * FROM pokemon_cards WHERE pokemonId = :id LIMIT 1")
-    suspend fun getPokemonById(id: Int): PokemonCardEntity?
+    @Query("SELECT * FROM astor_cards WHERE astorId = :id LIMIT 1")
+    suspend fun getAstorById(id: Int): AstorCardEntity?
 
     /**
-     * Retrieves a list of Pokemon from the database.
+     * Retrieves a list of Astor from the database.
      *
-     * @param amount The amount of Pokemon to get.
+     * @param amount The amount of Astor to get.
      *
-     * @return A list of Pokemon.
+     * @return A list of Astor.
      */
-    @Query("SELECT * FROM pokemon_cards ORDER BY RANDOM()")
-    suspend fun getPokemonList(): List<PokemonCardEntity>
+    @Query("SELECT * FROM astor_cards ORDER BY RANDOM()")
+    suspend fun getAstorList(): List<AstorCardEntity>
 }

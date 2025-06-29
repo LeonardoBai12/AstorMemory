@@ -1,6 +1,6 @@
 package io.lb.domain.usecases
 
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.repository.MemoryGameRepository
 import io.mockk.coEvery
@@ -13,14 +13,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class GetPokemonPairsUseCaseTest {
+class GetAstorPairsUseCaseTest {
     private lateinit var repository: MemoryGameRepository
-    private lateinit var useCase: GetPokemonPairsUseCase
+    private lateinit var useCase: GetAstorPairsUseCase
 
     @BeforeEach
     fun setUp() {
         repository = mockk()
-        useCase = GetPokemonPairsUseCase(repository)
+        useCase = GetAstorPairsUseCase(repository)
     }
 
     @AfterEach
@@ -29,26 +29,26 @@ class GetPokemonPairsUseCaseTest {
     }
 
     @Test
-    fun `When get pokemon pairs, expect a list of pokemon pairs`() = runTest {
-        val pokemonPairs = listOf(
-            PokemonCard(1, "Bulbasaur.png", "Bulbasaur"),
-            PokemonCard(2, "Ivysaur.png", "Ivysaur")
+    fun `When get astor pairs, expect a list of astor pairs`() = runTest {
+        val astorPairs = listOf(
+            AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
+            AstorCard(2, "Ivysaur.png", "Ivysaur")
         )
-        coEvery { repository.getPokemonPairs(2) } returns pokemonPairs
-        val states = mutableListOf<Resource<List<PokemonCard>>>()
+        coEvery { repository.getAstorPairs(2) } returns astorPairs
+        val states = mutableListOf<Resource<List<AstorCard>>>()
         val result = useCase(2).toCollection(states)
 
         assert(states.first() is Resource.Loading)
         assert(result.last() is Resource.Success)
-        assertEquals(pokemonPairs, result.last().data)
+        assertEquals(astorPairs, result.last().data)
     }
 
     @Test
-    fun `When get pokemon pairs, expect an error`() = runTest {
+    fun `When get astor pairs, expect an error`() = runTest {
         val error = Exception("Error")
-        coEvery { repository.getPokemonPairs(2) } throws error
+        coEvery { repository.getAstorPairs(2) } throws error
 
-        val states = mutableListOf<Resource<List<PokemonCard>>>()
+        val states = mutableListOf<Resource<List<AstorCard>>>()
         val result = useCase(2).toCollection(states)
 
         assert(states.first() is Resource.Loading)

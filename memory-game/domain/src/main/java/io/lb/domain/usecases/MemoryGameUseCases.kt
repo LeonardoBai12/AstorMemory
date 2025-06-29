@@ -12,6 +12,6 @@ data class MemoryGameUseCases(
     val getScoresUseCase: GetScoresUseCase,
     val getScoresByAmountUseCase: GetScoresByAmountUseCase,
     val saveScoreUseCase: SaveScoreUseCase,
-    val getMemoryGameUseCase: GetPokemonPairsUseCase,
+    val getMemoryGameUseCase: GetAstorPairsUseCase,
     val calculateScoreUseCase: CalculateScoreUseCase
 )

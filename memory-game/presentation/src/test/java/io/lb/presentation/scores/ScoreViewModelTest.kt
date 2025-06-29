@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import io.lb.common.data.model.Score
 import io.lb.domain.repository.MemoryGameRepository
 import io.lb.domain.usecases.CalculateScoreUseCase
-import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetAstorPairsUseCase
 import io.lb.domain.usecases.GetScoresUseCase
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.domain.usecases.SaveScoreUseCase
@@ -31,7 +31,7 @@ class ScoreViewModelTest {
         useCases = MemoryGameUseCases(
             GetScoresUseCase(repository),
             SaveScoreUseCase(repository),
-            GetPokemonPairsUseCase(repository),
+            GetAstorPairsUseCase(repository),
             CalculateScoreUseCase(),
         )
     }

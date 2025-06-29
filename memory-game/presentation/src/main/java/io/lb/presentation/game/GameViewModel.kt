@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.shared.flow.Resource
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.presentation.game.model.GameCard
@@ -31,7 +31,7 @@ internal class GameViewModel @Inject constructor(
     val state: StateFlow<GameState> = _state
 
     private var getCardsJob: Job? = null
-    private val games = mutableListOf<PokemonCard>()
+    private val games = mutableListOf<AstorCard>()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -109,7 +109,7 @@ internal class GameViewModel @Inject constructor(
                     mismatches = 0
                     _state.update {
                         it.copy(
-                            cards = games.map { game -> GameCard(pokemonCard = game) }.shuffled(),
+                            cards = games.map { game -> GameCard(astorCard = game) }.shuffled(),
                             score = amount * 100,
                             amount = amount
                         )
@@ -124,7 +124,7 @@ internal class GameViewModel @Inject constructor(
             _state.update {
                 val currentState = it.copy(
                     cards = it.cards.map { gameCard ->
-                        if (gameCard.pokemonCard.pokemonId == event.id) {
+                        if (gameCard.astorCard.astorId == event.id) {
                             gameCard.copy(isMatched = true)
                         } else {
                             gameCard
@@ -194,7 +194,7 @@ internal class GameViewModel @Inject constructor(
                     games.addAll(resource.data ?: emptyList())
                     _state.update {
                         it.copy(
-                            cards = games.map { game -> GameCard(pokemonCard = game) },
+                            cards = games.map { game -> GameCard(astorCard = game) },
                             isLoading = false,
                             message = null
                         )

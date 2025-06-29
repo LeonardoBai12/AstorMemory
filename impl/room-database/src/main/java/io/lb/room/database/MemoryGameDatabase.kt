@@ -3,7 +3,7 @@ package io.lb.room.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import io.lb.room.database.dao.MemoryGameDao
-import io.lb.room.database.model.PokemonCardEntity
+import io.lb.room.database.model.AstorCardEntity
 import io.lb.room.database.model.ScoreEntity
 
 /**
@@ -13,7 +13,7 @@ import io.lb.room.database.model.ScoreEntity
     version = 3,
     entities = [
         ScoreEntity::class,
-        PokemonCardEntity::class
+        AstorCardEntity::class
     ],
     exportSchema = false
 )

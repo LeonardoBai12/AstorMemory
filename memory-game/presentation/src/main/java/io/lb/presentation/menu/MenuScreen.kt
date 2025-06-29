@@ -42,7 +42,7 @@ import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.components.PokeBall
 import io.lb.presentation.ui.navigation.MemoryGameScreens
-import io.lb.presentation.ui.theme.PokemonMemoryChallengeTheme
+import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
 
 @Composable
 internal fun MenuScreen(
@@ -200,7 +200,7 @@ private fun ButtonsColumn(
 @Composable
 internal fun MenuScreenPreview() {
     val context = LocalContext.current
-    PokemonMemoryChallengeTheme(
+    AstorMemoryChallengeTheme(
         darkTheme = false
     ) {
       //  MenuScreen(NavController(context), true,5, {}, {})

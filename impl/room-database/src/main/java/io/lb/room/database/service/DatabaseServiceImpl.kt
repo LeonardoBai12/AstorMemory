@@ -1,11 +1,11 @@
 package io.lb.room.database.service
 
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.data.model.Score
 import io.lb.common.data.service.DatabaseService
 import io.lb.common.shared.error.MemoryGameException
 import io.lb.room.database.dao.MemoryGameDao
-import io.lb.room.database.model.PokemonCardEntity
+import io.lb.room.database.model.AstorCardEntity
 import io.lb.room.database.model.ScoreEntity
 import javax.inject.Inject
 
@@ -42,23 +42,23 @@ internal class DatabaseServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertPokemon(pokemonCard: PokemonCard) {
-        dao.insertPokemon(
-            PokemonCardEntity(
-                pokemonId = pokemonCard.pokemonId,
-                name = pokemonCard.name,
-                imageUrl = pokemonCard.imageUrl.orEmpty(),
-                imageData = pokemonCard.imageData
+    override suspend fun insertAstor(astorCard: AstorCard) {
+        dao.insertAstor(
+            AstorCardEntity(
+                astorId = astorCard.astorId,
+                name = astorCard.name,
+                imageUrl = astorCard.imageUrl.orEmpty(),
+                imageData = astorCard.imageData
             )
         )
     }
 
-    override suspend fun getPokemonById(id: Int): PokemonCard? {
-        return dao.getPokemonById(id)?.toPokemonCard()
+    override suspend fun getAstorById(id: Int): AstorCard? {
+        return dao.getAstorById(id)?.toAstorCard()
     }
 
-    override suspend fun getPokemonList(): List<PokemonCard> {
-        return dao.getPokemonList().map { it.toPokemonCard() }
+    override suspend fun getAstorList(): List<AstorCard> {
+        return dao.getAstorList().map { it.toAstorCard() }
     }
 
     companion object {

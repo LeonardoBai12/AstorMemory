@@ -147,7 +147,7 @@ private fun FlippedCard(
                 onClick = {
                 },
                 onLongClick = {
-                    Toast.makeText(context, card.pokemonCard.name, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, card.astorCard.name, Toast.LENGTH_SHORT).show()
                 },
             ),
         colors = CardDefaults.cardColors(
@@ -161,9 +161,9 @@ private fun FlippedCard(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                bitmap = convertImageByteArrayToBitmap(card.pokemonCard.imageData)
+                bitmap = convertImageByteArrayToBitmap(card.astorCard.imageData)
                     .asImageBitmap(),
-                contentDescription = "Pokemon Flipped Card"
+                contentDescription = "Astor Flipped Card"
             )
         }
     }

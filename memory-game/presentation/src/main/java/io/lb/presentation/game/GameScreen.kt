@@ -289,16 +289,16 @@ private fun afterCardFlipped(
     onCardMatched: () -> Unit
 ) {
     if (lastSelectedCard.value.isEmpty()) {
-        lastSelectedCard.value = state.cards[index].pokemonCard.name
+        lastSelectedCard.value = state.cards[index].astorCard.name
         viewModel.onEvent(GameEvent.CardFlipped(index))
-    } else if (lastSelectedCard.value != state.cards[index].pokemonCard.name) {
+    } else if (lastSelectedCard.value != state.cards[index].astorCard.name) {
         viewModel.onEvent(GameEvent.CardFlipped(index))
         viewModel.onEvent(GameEvent.CardMismatched)
         lastSelectedCard.value = ""
     } else {
         viewModel.onEvent(GameEvent.CardFlipped(index))
         viewModel.onEvent(
-            GameEvent.CardMatched(id = state.cards[index].pokemonCard.pokemonId)
+            GameEvent.CardMatched(id = state.cards[index].astorCard.astorId)
         )
         lastSelectedCard.value = ""
         onCardMatched()

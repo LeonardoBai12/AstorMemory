@@ -20,12 +20,12 @@ fun MemoryGameLogo(
         modifier = modifier,
         painter = painterResource(
             id = if (isDarkMode) {
-                R.drawable.pokemon_game_logo_b
+                R.drawable.astor_game_logo_b
             } else {
-                R.drawable.pokemon_game_logo_w
+                R.drawable.astor_game_logo_w
             }
         ),
-        contentDescription = "Pokemon Memory Challenge",
+        contentDescription = "Astor Memory Challenge",
     )
 }
 

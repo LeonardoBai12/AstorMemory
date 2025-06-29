@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PokemonMemoryGame"
+rootProject.name = "AstorMemoryGame"
 
 include(":common:shared")
 include(":common:data")

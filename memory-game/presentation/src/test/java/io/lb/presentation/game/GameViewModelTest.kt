@@ -2,10 +2,10 @@ package io.lb.presentation.game
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.domain.repository.MemoryGameRepository
 import io.lb.domain.usecases.CalculateScoreUseCase
-import io.lb.domain.usecases.GetPokemonPairsUseCase
+import io.lb.domain.usecases.GetAstorPairsUseCase
 import io.lb.domain.usecases.GetScoresUseCase
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.domain.usecases.SaveScoreUseCase
@@ -39,7 +39,7 @@ class GameViewModelTest {
         useCases = MemoryGameUseCases(
             GetScoresUseCase(repository),
             SaveScoreUseCase(repository),
-            GetPokemonPairsUseCase(repository),
+            GetAstorPairsUseCase(repository),
             CalculateScoreUseCase(),
         )
     }
@@ -52,7 +52,7 @@ class GameViewModelTest {
 
     @Test
     fun `When the view model is created, expect cards to be fetched`() = runTest {
-        coEvery { repository.getPokemonPairs(5) } returns pokemonCards()
+        coEvery { repository.getAstorPairs(5) } returns astorCards()
 
         val savedStateHandle = mockk<SavedStateHandle>()
         every { savedStateHandle["amount"] ?: 0 } returns 5
@@ -71,7 +71,7 @@ class GameViewModelTest {
 
     @Test
     fun `When a card is flipped, expect the card to be updated`() = runTest {
-        coEvery { repository.getPokemonPairs(5) } returns pokemonCards()
+        coEvery { repository.getAstorPairs(5) } returns astorCards()
 
         val savedStateHandle = mockk<SavedStateHandle>()
         every { savedStateHandle["amount"] ?: 0 } returns 5
@@ -91,7 +91,7 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 1) {
+                    if (it.astorCard.id == 1) {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -104,7 +104,7 @@ class GameViewModelTest {
 
     @Test
     fun `When a card is matched, expect the card to be updated`() = runTest {
-        coEvery { repository.getPokemonPairs(5) } returns pokemonCards()
+        coEvery { repository.getAstorPairs(5) } returns astorCards()
 
         val savedStateHandle = mockk<SavedStateHandle>()
         every { savedStateHandle["amount"] ?: 0 } returns 5
@@ -124,7 +124,7 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 1) {
+                    if (it.astorCard.id == 1) {
                         it.copy(isMatched = true)
                     } else {
                         it
@@ -137,7 +137,7 @@ class GameViewModelTest {
 
     @Test
     fun `When a card is mismatched, expect the card to be updated`() = runTest {
-        coEvery { repository.getPokemonPairs(5) } returns pokemonCards()
+        coEvery { repository.getAstorPairs(5) } returns astorCards()
 
         val savedStateHandle = mockk<SavedStateHandle>()
         every { savedStateHandle["amount"] ?: 0 } returns 5
@@ -157,7 +157,7 @@ class GameViewModelTest {
             val emission2 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 3) {
+                    if (it.astorCard.id == 3) {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -172,7 +172,7 @@ class GameViewModelTest {
             val emission3 = awaitItem()
             assertEquals(
                 gameCards().map {
-                    if (it.pokemonCard.id == 4 || it.pokemonCard.id == 3) {
+                    if (it.astorCard.id == 4 || it.astorCard.id == 3) {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -192,15 +192,15 @@ class GameViewModelTest {
         }
     }
 
-    private fun pokemonCards(): List<PokemonCard> = listOf(
-        PokemonCard(1, "Bulbasaur", "https://pokeapi.co/api/v2/pokemon/1"),
-        PokemonCard(2, "Ivysaur", "https://pokeapi.co/api/v2/pokemon/2"),
-        PokemonCard(3, "Venusaur", "https://pokeapi.co/api/v2/pokemon/3"),
-        PokemonCard(4, "Charmander", "https://pokeapi.co/api/v2/pokemon/4"),
-        PokemonCard(5, "Charmeleon", "https://pokeapi.co/api/v2/pokemon/5"),
+    private fun astorCards(): List<AstorCard> = listOf(
+        AstorCard(1, "Bulbasaur", "https://pokeapi.co/api/v2/astor/1"),
+        AstorCard(2, "Ivysaur", "https://pokeapi.co/api/v2/astor/2"),
+        AstorCard(3, "Venusaur", "https://pokeapi.co/api/v2/astor/3"),
+        AstorCard(4, "Charmander", "https://pokeapi.co/api/v2/astor/4"),
+        AstorCard(5, "Charmeleon", "https://pokeapi.co/api/v2/astor/5"),
     )
 
-    private fun gameCards(): List<GameCard> = pokemonCards().map {
-        GameCard(pokemonCard = it)
+    private fun gameCards(): List<GameCard> = astorCards().map {
+        GameCard(astorCard = it)
     }
 }

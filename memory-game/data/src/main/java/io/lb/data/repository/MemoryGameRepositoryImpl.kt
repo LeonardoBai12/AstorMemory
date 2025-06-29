@@ -3,8 +3,7 @@ package io.lb.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.ui.text.capitalize
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import io.lb.common.data.model.Score
 import io.lb.data.R
 import io.lb.data.datasource.MemoryGameDataSource
@@ -22,16 +21,16 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
     private val context: Context,
     private val dataSource: MemoryGameDataSource
 ) : MemoryGameRepository {
-    override suspend fun getPokemonPairs(amount: Int): List<PokemonCard> {
-        val pokemonCards = getAllPokemonCards(context)
-        val selectedPokemon = pokemonCards.take(amount).shuffled().toMutableList()
-        selectedPokemon.addAll(selectedPokemon.shuffled())
-        return selectedPokemon.shuffled()
+    override suspend fun getAstorPairs(amount: Int): List<AstorCard> {
+        val astorCards = getAllAstorCards(context)
+        val selectedAstor = astorCards.take(amount).shuffled().toMutableList()
+        selectedAstor.addAll(selectedAstor.shuffled())
+        return selectedAstor.shuffled()
     }
 
-    private fun getAllPokemonCards(context: Context): List<PokemonCard> {
+    private fun getAllAstorCards(context: Context): List<AstorCard> {
         val drawableFieldNames = R.drawable::class.java.fields
-        val pokemonCards = mutableListOf<PokemonCard>()
+        val astorCards = mutableListOf<AstorCard>()
 
         for (field in drawableFieldNames) {
             val resourceName = field.name
@@ -55,10 +54,10 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
                     outputStream.toByteArray()
                 }
 
-                pokemonCards.add(
-                    PokemonCard(
+                astorCards.add(
+                    AstorCard(
                         id = id,
-                        pokemonId = id.toInt(),
+                        astorId = id.toInt(),
                         imageUrl = imageUrl,
                         imageData = imageData,
                         name = name
@@ -66,7 +65,7 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
                 )
             }
         }
-        return pokemonCards.shuffled()
+        return astorCards.shuffled()
     }
 
     override suspend fun getScores(): List<Score> {

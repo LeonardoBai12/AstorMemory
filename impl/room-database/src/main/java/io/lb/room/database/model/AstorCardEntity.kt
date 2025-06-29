@@ -2,21 +2,21 @@ package io.lb.room.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import io.lb.common.data.model.PokemonCard
+import io.lb.common.data.model.AstorCard
 import java.util.UUID
 
-@Entity(tableName = "pokemon_cards")
-data class PokemonCardEntity(
+@Entity(tableName = "astor_cards")
+data class AstorCardEntity(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
-    val pokemonId: Int,
+    val astorId: Int,
     val imageUrl: String,
     val imageData: ByteArray,
     val name: String
 ) {
-    fun toPokemonCard() = PokemonCard(
+    fun toAstorCard() = AstorCard(
         id = id.toString(),
-        pokemonId = pokemonId,
+        astorId = astorId,
         imageUrl = imageUrl,
         imageData = imageData,
         name = name
