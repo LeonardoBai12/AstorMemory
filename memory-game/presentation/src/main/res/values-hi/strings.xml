@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-  <string name="app_name">PokéMemory</string>
+  <string name="app_name">AstorMemory</string>
   <string name="ops_something_went_wrong">ऑप्स! कुछ गलत हो गया</string>
   <string name="try_again">पुन: प्रयास करें</string>
   <string name="combo_bonus">कॉम्बो बोनस: +%1$s</string>
@@ -13,7 +13,7 @@
   <string name="start_game">गेम शुरू करें</string>
   <string name="highscores">हाईस्कोर</string>
   <string name="quit">छोड़ें</string>
-  <string name="pokeball">PokeBall</string>
+  <string name="narcisus">Narcisus</string>
   <string name="filter">फ़िल्टर:</string>
   <string name="cards">कार्ड</string>
   <string name="all">सभी</string>

@@ -1,6 +1,5 @@
 package io.lb.presentation.scores
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -32,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,7 +40,7 @@ import io.lb.presentation.R
 import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
-import io.lb.presentation.ui.components.PokeBall
+import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.theme.DarkerRed
 
 @Composable
@@ -76,7 +73,6 @@ internal fun ScoreScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MemoryGameLogo(
-                isDarkMode,
                 Modifier.fillMaxWidth(0.6f)
             )
 
@@ -135,7 +131,7 @@ internal fun ScoreScreen(
                     }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                PokeBall()
+                Narcisus()
             }
         }
     }

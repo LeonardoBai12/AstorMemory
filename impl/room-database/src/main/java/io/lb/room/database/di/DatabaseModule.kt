@@ -18,7 +18,7 @@ internal object DatabaseModule {
         return Room.databaseBuilder(
             app,
             MemoryGameDatabase::class.java,
-            "pokeman.db"
+            "astor.db"
         ).fallbackToDestructiveMigration()
             .build()
     }

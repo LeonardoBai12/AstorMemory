@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import io.lb.presentation.R
 import io.lb.presentation.game.model.GameCard
-import io.lb.presentation.ui.theme.PrimaryBlue
 import io.lb.presentation.ui.theme.PrimaryRed
 
 @ExperimentalFoundationApi
@@ -88,8 +87,8 @@ private fun NotFlippedCard(
         ) {
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.pokeball),
-                contentDescription = "Pokeball"
+                painter = painterResource(id = R.drawable.narcisus),
+                contentDescription = "Narcisus"
             )
         }
     }

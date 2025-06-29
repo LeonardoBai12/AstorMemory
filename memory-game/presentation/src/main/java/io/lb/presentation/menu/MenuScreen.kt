@@ -40,7 +40,7 @@ import io.lb.presentation.ui.components.MemoryGameBlueButton
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
-import io.lb.presentation.ui.components.PokeBall
+import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
 
@@ -115,7 +115,6 @@ internal fun MenuScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             MemoryGameLogo(
-                isDarkMode,
                 Modifier.fillMaxWidth(0.9f)
                     .height(screenHeight.dp / 5)
             )
@@ -192,7 +191,7 @@ private fun ButtonsColumn(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        PokeBall()
+        Narcisus()
     }
 }
 

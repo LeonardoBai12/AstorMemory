@@ -8,7 +8,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,8 +32,8 @@ fun LoadingIndicator(
         )
         Image(
             modifier = Modifier.size(screenHeight / 8),
-            painter = painterResource(id = R.drawable.pokeball),
-            contentDescription = "PokeBall",
+            painter = painterResource(id = R.drawable.narcisus),
+            contentDescription = "Loading",
         )
     }
 }

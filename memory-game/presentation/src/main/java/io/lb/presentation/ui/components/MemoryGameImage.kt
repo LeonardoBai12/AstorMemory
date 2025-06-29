@@ -13,29 +13,24 @@ import io.lb.presentation.R
 
 @Composable
 fun MemoryGameLogo(
-    isDarkMode: Boolean,
     modifier: Modifier = Modifier.fillMaxWidth(0.9f),
 ) {
     Image(
         modifier = modifier,
         painter = painterResource(
-            id = if (isDarkMode) {
-                R.drawable.astor_game_logo_b
-            } else {
-                R.drawable.astor_game_logo_w
-            }
+            id = R.drawable.astor_game_logo
         ),
         contentDescription = "Astor Memory Challenge",
     )
 }
 
 @Composable
-fun PokeBall() {
+fun Narcisus() {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp
     Image(
         modifier = Modifier.size(screenHeight.dp / 16),
-        painter = painterResource(id = R.drawable.pokeball),
-        contentDescription = stringResource(R.string.pokeball),
+        painter = painterResource(id = R.drawable.narcisus),
+        contentDescription = stringResource(R.string.narcisus),
     )
 }

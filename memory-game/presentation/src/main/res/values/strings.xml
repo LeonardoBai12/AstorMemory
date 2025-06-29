@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PokéMemory</string>
+    <string name="app_name">AstorMemory</string>
     <string name="ops_something_went_wrong">Ops! Something went wrong</string>
     <string name="try_again">Try again</string>
     <string name="combo_bonus">Combo Bonus: +%1$s</string>
@@ -12,7 +12,7 @@
     <string name="start_game">START GAME</string>
     <string name="highscores">HIGHSCORES</string>
     <string name="quit">QUIT</string>
-    <string name="pokeball">PokeBall</string>
+    <string name="narcisus">Narcisus</string>
     <string name="filter">Filter:</string>
     <string name="cards">cards</string>
     <string name="all">All</string>

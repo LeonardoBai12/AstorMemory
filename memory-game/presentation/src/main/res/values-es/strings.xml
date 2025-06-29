@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-  <string name="app_name">PokéMemoria</string>
+  <string name="app_name">AstorMemory</string>
   <string name="ops_something_went_wrong">¡Ups! Algo salió mal</string>
   <string name="try_again">Intentar otra vez</string>
   <string name="combo_bonus">Bono combinado: +%1$s</string>
@@ -13,7 +13,7 @@
   <string name="start_game">COMENZAR EL JUEGO</string>
   <string name="highscores">PUNTAJES ALTOS</string>
   <string name="quit">ABANDONAR</string>
-  <string name="pokeball">Pokebola</string>
+  <string name="narcisus">Narcisus</string>
   <string name="filter">Filtrar:</string>
   <string name="cards">tarjetas</string>
   <string name="all">Todo</string>

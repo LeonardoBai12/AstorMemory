@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "io.lb.pokememory.app"
+    namespace = "io.lb.astormemory.app"
 
     defaultConfig {
         versionCode = 1302

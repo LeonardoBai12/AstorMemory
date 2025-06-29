@@ -26,7 +26,7 @@ import io.lb.presentation.R
 import io.lb.presentation.ui.components.MemoryGameLogo
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameWhiteButton
-import io.lb.presentation.ui.components.PokeBall
+import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 
 @Composable
@@ -51,7 +51,6 @@ fun GameOverScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             MemoryGameLogo(
-                isDarkMode,
                 Modifier.fillMaxWidth(0.6f)
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -132,6 +131,6 @@ private fun GameOverButtons(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        PokeBall()
+        Narcisus()
     }
 }

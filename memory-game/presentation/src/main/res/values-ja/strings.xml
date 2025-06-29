@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-  <string name="app_name">ポケメモリー</string>
+  <string name="app_name">アスターメモリ</string>
   <string name="ops_something_went_wrong">オプス！問題が発生しました</string>
   <string name="try_again">もう一度お試しください</string>
   <string name="combo_bonus">コンボボーナス：+%1$s</string>
@@ -13,7 +13,7 @@
   <string name="start_game">ゲームを開始</string>
   <string name="highscores">ハイスコア</string>
   <string name="quit">やめる</string>
-  <string name="pokeball">モンスターボール</string>
+  <string name="narcisus">水仙</string>
   <string name="filter">フィルター：</string>
   <string name="cards">カード</string>
   <string name="all">すべて</string>
