@@ -50,7 +50,7 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
                 val imageData = context.resources.openRawResource(resourceId).use { inputStream ->
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val outputStream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
                     outputStream.toByteArray()
                 }
 
