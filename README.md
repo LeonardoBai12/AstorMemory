@@ -1,4 +1,4 @@
-# Pokémon Memory Game
+# Astor Memory Game
 
 Welcome to **Astor Memory Game**! This classic memory game combines the nostalgic world of Pokémon with simple gameplay, using Pokémon images as card pairs. Test your memory, enjoy original music from the Game Boy Color, and try to beat your high score!
 
