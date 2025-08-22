@@ -1,40 +1,48 @@
 # Astor Memory Game
 
-Welcome to **Astor Memory Game**! This classic memory game combines the world of Astor(AI generated monsters) with simple gameplay, using Astor images as card pairs. Test your memory, enjoy original music from the Game Boy Color, and try to beat your high score!
+A classic memory matching game featuring AI-generated fantasy creatures called "Astors" with original background music.
 
-## Game Rules
+## 🎮 How to Play
 
-- **Match Two Cards:** Earn **100 points** for every matching pair.
-- **Mismatch Penalty:** Lose **10 points** if the cards do not match.
+Flip cards to reveal Astor creatures and find matching pairs. Clear the board by matching all cards!
 
-Simple yet challenging, perfect for all Astor fans!
+**Scoring System:**
+- **Starting Score:** Based on difficulty (e.g., 12 pairs = 120 points)
+- **Match Bonus:** +10 points for each consecutive match
+- **Miss Penalty:** -10 points for mismatched cards
 
-## Project Structure
+## 🎵 Features
 
-This Android app is built as a **multi-module project** with the following key components:
+- Classic memory matching gameplay
+- Unique AI-generated Astor creatures
+- Original background music
+- Multiple difficulty levels
+- Clean, responsive interface
+- No registration required
 
-- **Ktor Client:** Fetches Astor data, bringing each Astor’s image into the game dynamically.
-- **Jetpack Compose:** Handles the presentation layer, making the UI intuitive and responsive.
-- **Clean Architecture:** Ensures a modular, scalable, and testable code structure.
-- **Custom Convention Plugins:** These plugins help optimize build times across modules, enhancing development efficiency.
+## 🛠 Technical Overview
 
-## Code Quality
+This Android app showcases modern development practices with a **multi-module architecture**:
 
-- **JaCoCo Integration:** The project maintains a high standard with **90% code coverage**, tested rigorously using **JUnit 5**.
-- **Dokka Documentation:** Comprehensive KDoc documentation is auto-generated using Dokka, making the project easy to understand and maintain.
+### Architecture & Libraries
+- **Ktor Client** - Dynamic Astor data fetching
+- **Jetpack Compose** - Modern UI framework
+- **Clean Architecture** - Modular, scalable structure
+- **Custom Convention Plugins** - Optimized build performance
 
-## Nostalgic Features
+### Code Quality
+- **JaCoCo Integration** for coverage reporting
+- **Dokka Documentation** - Auto-generated KDoc documentation
 
-The game includes the original AI generated Astor music, played in the background to enhance the retro gaming experience.
+## 📺 Demonstrations
 
-## Demonstration (PT-BR)
+- **Gameplay Demo (PT-BR):** [Watch on YouTube](https://www.youtube.com/watch?v=MGe6Ya4dN-8)
+- **Technical Walkthrough (PT-BR):** [Watch on YouTube](https://www.youtube.com/watch?v=7TpLs7FteHQ)
 
-Watch the author playing the game:
+## 📱 Download
 
-https://www.youtube.com/watch?v=MGe6Ya4dN-8
+[![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=io.lb.astormemory.app)
 
-## Technical Explanation (PT-BR)
+---
 
-Watch the author explaining each technical layer of the project:
-
-https://www.youtube.com/watch?v=7TpLs7FteHQ
+*A simple, fun memory game built with modern Android development practices.*
