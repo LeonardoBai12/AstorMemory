@@ -1,19 +1,19 @@
 # Astor Memory Game
 
-Welcome to **Astor Memory Game**! This classic memory game combines the nostalgic world of Pokémon with simple gameplay, using Pokémon images as card pairs. Test your memory, enjoy original music from the Game Boy Color, and try to beat your high score!
+Welcome to **Astor Memory Game**! This classic memory game combines the world of Astor(AI generated monsters) with simple gameplay, using Astor images as card pairs. Test your memory, enjoy original music from the Game Boy Color, and try to beat your high score!
 
 ## Game Rules
 
 - **Match Two Cards:** Earn **100 points** for every matching pair.
 - **Mismatch Penalty:** Lose **10 points** if the cards do not match.
 
-Simple yet challenging, perfect for all Pokémon fans!
+Simple yet challenging, perfect for all Astor fans!
 
 ## Project Structure
 
 This Android app is built as a **multi-module project** with the following key components:
 
-- **Ktor Client:** Fetches Pokémon data, bringing each Pokémon’s image into the game dynamically.
+- **Ktor Client:** Fetches Astor data, bringing each Astor’s image into the game dynamically.
 - **Jetpack Compose:** Handles the presentation layer, making the UI intuitive and responsive.
 - **Clean Architecture:** Ensures a modular, scalable, and testable code structure.
 - **Custom Convention Plugins:** These plugins help optimize build times across modules, enhancing development efficiency.
@@ -25,7 +25,7 @@ This Android app is built as a **multi-module project** with the following key c
 
 ## Nostalgic Features
 
-The game includes the original Pokémon music from the **Game Boy Color** version, played in the background to enhance the retro gaming experience.
+The game includes the original AI generated Astor music, played in the background to enhance the retro gaming experience.
 
 ## Demonstration (PT-BR)
 
