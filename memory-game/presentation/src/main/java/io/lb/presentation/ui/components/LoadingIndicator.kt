@@ -8,6 +8,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,30 @@ fun LoadingIndicator(
             modifier = Modifier.size(screenHeight / 8),
             painter = painterResource(id = R.drawable.narcisus),
             contentDescription = "Loading",
+        )
+    }
+}
+
+@Composable
+fun LoadingIndicator(
+    modifier: Modifier = Modifier.fillMaxSize()
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(80.dp),
+            color = PrimaryRed,
+            strokeWidth = 5.dp,
+        )
+        Image(
+            modifier = Modifier.size(60.dp),
+            painter = painterResource(id = R.drawable.narcisus),
+            contentDescription = "Loading",
+            contentScale = ContentScale.Fit
         )
     }
 }

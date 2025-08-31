@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import io.lb.presentation.R
 import io.lb.presentation.ui.components.IntSelector
 import io.lb.presentation.ui.components.MemoryGameBlueButton
@@ -54,8 +59,6 @@ internal fun MenuScreen(
     onClickQuit: () -> Unit,
     onChangeAmount: (Int) -> Unit
 ) {
-    val configuration = LocalContext.current.resources.configuration
-    val screenHeight = configuration.screenHeightDp
     val muted = remember {
         mutableStateOf(isMuted)
     }
@@ -67,90 +70,113 @@ internal fun MenuScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            IconButton(
-                onClick = {
-                    onChangeMuted(muted.value.not())
-                    muted.value = muted.value.not()
-                },
-                modifier = Modifier.size(screenHeight.dp / 16)
-            ) {
-                Icon(
-                    painter = if (muted.value) {
-                        painterResource(R.drawable.music_off)
-                    } else {
-                        painterResource(R.drawable.music_on)
-                    },
-                    contentDescription = "Muted or not",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(screenHeight.dp / 16)
-                )
-            }
-            IconButton(
-                onClick = {
-                    navController.navigate(MemoryGameScreens.Settings.name)
-                },
-                modifier = Modifier.size(screenHeight.dp / 16)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = stringResource(R.string.settings),
-                    tint = Color.Gray,
-                    modifier = Modifier.size(screenHeight.dp / 16)
-                )
-            }
-        }
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            MemoryGameLogo(
-                Modifier.fillMaxWidth(0.9f)
-                    .height(screenHeight.dp / 5)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                val configuration = LocalConfiguration.current
+                val screenHeight = configuration.screenHeightDp
+                val buttonSize = (screenHeight.dp / 12).coerceIn(56.dp, 72.dp)
+                val iconSize = (buttonSize * 0.6f).coerceIn(28.dp, 40.dp)
 
-            Spacer(modifier = Modifier.height(72.dp))
-            Text(
-                text = stringResource(R.string.amount_of_card_pairs),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            IntSelector(
-                intState = amount,
-                minValue = 1,
-                maxValue = 30,
-                isDarkMode = isDarkMode,
-                onChangeAmount = onChangeAmount
-            )
+                IconButton(
+                    onClick = {
+                        onChangeMuted(muted.value.not())
+                        muted.value = muted.value.not()
+                    },
+                    modifier = Modifier.size(buttonSize)
+                ) {
+                    Icon(
+                        painter = if (muted.value) {
+                            painterResource(R.drawable.music_off)
+                        } else {
+                            painterResource(R.drawable.music_on)
+                        },
+                        contentDescription = "Muted or not",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(iconSize)
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        navController.navigate(MemoryGameScreens.Settings.name)
+                    },
+                    modifier = Modifier.size(buttonSize)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(R.string.settings),
+                        tint = Color.Gray,
+                        modifier = Modifier.size(iconSize)
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                text = stringResource(R.string.the_more_cards_you_play_with),
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            ButtonsColumn(
-                navController,
-                isDarkMode,
-                amount,
-                onClickQuit
-            )
+                MemoryGameLogo(
+                    Modifier
+                        .fillMaxWidth(0.9f)
+                        .heightIn(min = 80.dp, max = 160.dp)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = stringResource(R.string.amount_of_card_pairs),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                IntSelector(
+                    intState = amount,
+                    minValue = 1,
+                    maxValue = 30,
+                    isDarkMode = isDarkMode,
+                    onChangeAmount = onChangeAmount
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    text = stringResource(R.string.the_more_cards_you_play_with),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                ButtonsColumn(
+                    navController,
+                    isDarkMode,
+                    amount,
+                    onClickQuit
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -163,11 +189,9 @@ private fun ButtonsColumn(
     onClickQuit: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         MemoryGameRedButton(
             text = stringResource(R.string.start_game),
@@ -175,14 +199,14 @@ private fun ButtonsColumn(
                 navController.navigate(MemoryGameScreens.Game.name + "/${amount.intValue}")
             }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
         MemoryGameBlueButton(
             text = stringResource(R.string.highscores),
             onClick = {
                 navController.navigate(MemoryGameScreens.HighScores.name)
             }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
         MemoryGameWhiteButton(
             isDarkMode = isDarkMode,
             text = stringResource(R.string.quit),
@@ -190,18 +214,80 @@ private fun ButtonsColumn(
                 onClickQuit()
             }
         )
-        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(8.dp))
         Narcisus()
     }
 }
 
-@Preview
+@Preview(name = "Light Mode", showBackground = true)
 @Composable
 internal fun MenuScreenPreview() {
-    val context = LocalContext.current
     AstorMemoryChallengeTheme(
         darkTheme = false
     ) {
-      //  MenuScreen(NavController(context), true,5, {}, {})
+        MenuScreen(
+            navController = rememberNavController(),
+            isDarkMode = false,
+            initialAmount = 5,
+            isMuted = false,
+            onChangeMuted = { },
+            onClickQuit = { },
+            onChangeAmount = { }
+        )
+    }
+}
+
+@Preview(name = "Dark Mode", showBackground = true)
+@Composable
+internal fun MenuScreenDarkPreview() {
+    AstorMemoryChallengeTheme(
+        darkTheme = true
+    ) {
+        MenuScreen(
+            navController = rememberNavController(),
+            isDarkMode = true,
+            initialAmount = 10,
+            isMuted = true,
+            onChangeMuted = { },
+            onClickQuit = { },
+            onChangeAmount = { }
+        )
+    }
+}
+
+@Preview(name = "Large Font", showBackground = true, fontScale = 1.5f)
+@Composable
+internal fun MenuScreenLargeFontPreview() {
+    AstorMemoryChallengeTheme(
+        darkTheme = false
+    ) {
+        MenuScreen(
+            navController = rememberNavController(),
+            isDarkMode = false,
+            initialAmount = 15,
+            isMuted = false,
+            onChangeMuted = { },
+            onClickQuit = { },
+            onChangeAmount = { }
+        )
+    }
+}
+
+@Preview(name = "Small Screen", showBackground = true, widthDp = 320, heightDp = 480)
+@Composable
+internal fun MenuScreenSmallPreview() {
+    AstorMemoryChallengeTheme(
+        darkTheme = false
+    ) {
+        MenuScreen(
+            navController = rememberNavController(),
+            isDarkMode = false,
+            initialAmount = 8,
+            isMuted = false,
+            onChangeMuted = { },
+            onClickQuit = { },
+            onChangeAmount = { }
+        )
     }
 }
