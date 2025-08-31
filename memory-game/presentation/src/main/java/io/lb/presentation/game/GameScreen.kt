@@ -1,5 +1,10 @@
 package io.lb.presentation.game
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseOutBounce
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,8 +31,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,9 +77,8 @@ internal fun GameScreen(
     onCardMatched: (Int) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
-    val lastSelectedCard = remember {
-        mutableStateOf("")
-    }
+    val lastSelectedCard = remember { mutableStateOf("") }
+    var restartTrigger by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(key1 = "GameScreen") {
         viewModel.eventFlow.collectLatest { event ->
@@ -87,7 +94,14 @@ internal fun GameScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBar(navController, state, viewModel, lastSelectedCard, isDarkMode)
+            GameTopBar(
+                navController = navController,
+                state = state,
+                viewModel = viewModel,
+                lastSelectedCard = lastSelectedCard,
+                isDarkMode = isDarkMode,
+                onRestart = { restartTrigger++ }
+            )
         }
     ) { padding ->
         if (state.isLoading) {
@@ -112,45 +126,8 @@ internal fun GameScreen(
                 onCardFlipped = onCardFlipped,
                 onCardMatched = {
                     onCardMatched(state.cards.filter { it.isMatched }.size)
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun ErrorMessage(
-    padding: PaddingValues,
-    state: GameState,
-    viewModel: GameViewModel
-) {
-    Surface(
-        modifier = Modifier
-            .padding(padding)
-            .padding(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = state.message.takeIf {
-                    it.isNullOrEmpty().not() && it != "null"
-                } ?: stringResource(R.string.ops_something_went_wrong),
-                fontWeight = FontWeight.W600,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            MemoryGameRedButton(
-                text = stringResource(R.string.try_again),
-                onClick = {
-                    viewModel.onEvent(GameEvent.OnRequestGames)
-                }
+                },
+                restartTrigger = restartTrigger
             )
         }
     }
@@ -163,7 +140,8 @@ private fun GameTopBar(
     state: GameState,
     viewModel: GameViewModel,
     lastSelectedCard: MutableState<String>,
-    isDarkMode: Boolean
+    isDarkMode: Boolean,
+    onRestart: () -> Unit
 ) {
     TopAppBar(
         modifier = Modifier.padding(top = 8.dp),
@@ -229,12 +207,51 @@ private fun GameTopBar(
                         MemoryGameRestartButton {
                             lastSelectedCard.value = ""
                             viewModel.onEvent(GameEvent.GameRestarted)
+                            onRestart()
                         }
                     }
                 }
             }
         }
     )
+}
+
+@Composable
+private fun ErrorMessage(
+    padding: PaddingValues,
+    state: GameState,
+    viewModel: GameViewModel
+) {
+    Surface(
+        modifier = Modifier
+            .padding(padding)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = state.message.takeIf {
+                    it.isNullOrEmpty().not() && it != "null"
+                } ?: stringResource(R.string.ops_something_went_wrong),
+                fontWeight = FontWeight.W600,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            MemoryGameRedButton(
+                text = stringResource(R.string.try_again),
+                onClick = {
+                    viewModel.onEvent(GameEvent.OnRequestGames)
+                }
+            )
+        }
+    }
 }
 
 @ExperimentalFoundationApi
@@ -249,10 +266,19 @@ private fun CardGrid(
     cardsPerColumn: Int,
     onCardFlipped: () -> Unit,
     onCardMatched: () -> Unit,
+    restartTrigger: Int = 0
 ) {
-    val clickLock = remember {
-        mutableStateOf(false)
+    val clickLock = remember { mutableStateOf(false) }
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.cards.isNotEmpty(), restartTrigger) {
+        if (state.cards.isNotEmpty()) {
+            isVisible = false
+            delay(50)
+            isVisible = true
+        }
     }
+
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
@@ -262,36 +288,57 @@ private fun CardGrid(
         userScrollEnabled = true,
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        items(state.cards.size) { index ->
-            MemoryGameCard(
-                card = state.cards[index],
-                cardsPerLine = cardsPerLine,
-                cardsPerColumn = cardsPerColumn
+        items(
+            count = state.cards.size,
+            key = { index -> index }
+        ) { index ->
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        delayMillis = index * 50,
+                        easing = EaseOutBounce
+                    )
+                ) + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        delayMillis = index * 50
+                    )
+                ),
+                modifier = Modifier.animateItem()
             ) {
-                if (clickLock.value) {
-                    return@MemoryGameCard
-                }
-                clickLock.value = true
+                MemoryGameCard(
+                    card = state.cards[index],
+                    cardsPerLine = cardsPerLine,
+                    cardsPerColumn = cardsPerColumn
+                ) {
+                    if (clickLock.value) {
+                        return@MemoryGameCard
+                    }
+                    clickLock.value = true
 
-                if (state.cards[index].isFlipped || state.cards[index].isMatched) {
-                    clickLock.value = false
-                    return@MemoryGameCard
-                }
-                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
-                    clickLock.value = false
-                    return@MemoryGameCard
-                }
+                    if (state.cards[index].isFlipped || state.cards[index].isMatched) {
+                        clickLock.value = false
+                        return@MemoryGameCard
+                    }
+                    if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
+                        clickLock.value = false
+                        return@MemoryGameCard
+                    }
 
-                onCardFlipped()
-                afterCardFlipped(
-                    lastSelectedCard = lastSelectedCard,
-                    state = state,
-                    index = index,
-                    viewModel = viewModel,
-                    onCardMatched = onCardMatched
-                )
+                    onCardFlipped()
+                    afterCardFlipped(
+                        lastSelectedCard = lastSelectedCard,
+                        state = state,
+                        index = index,
+                        viewModel = viewModel,
+                        onCardMatched = onCardMatched
+                    )
 
-                resetClickLock(clickLock)
+                    resetClickLock(clickLock)
+                }
             }
         }
     }

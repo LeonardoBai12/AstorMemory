@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ktor.plugin)
     alias(libs.plugins.serialization)
     alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.compose.compiler) apply false
     id("com.google.gms.google-services") version "4.4.2" apply false
     id("com.google.firebase.crashlytics") version "3.0.2" apply false
     id("io.lb.dokka") apply true

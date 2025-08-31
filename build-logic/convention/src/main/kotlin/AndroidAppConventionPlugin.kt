@@ -25,6 +25,7 @@ class AndroidAppConventionPlugin : Plugin<Project> {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlin.plugin.compose")
                 apply("io.lb.jacoco.android.module")
                 apply("io.lb.detekt")
                 apply("io.lb.dokka")
