@@ -96,11 +96,7 @@ private fun NotFlippedCard(
 
     Card(
         modifier = Modifier
-            .aspectRatio(0.75f)
-            .heightIn(
-                min = getMinCardHeight(cardsPerColumn),
-                max = getMaxCardHeight(cardsPerColumn, screenHeight)
-            )
+            .height(getCardHeight(cardsPerColumn, screenHeight))
             .padding(
                 getCardPadding(cardsPerLine)
             ),
@@ -137,21 +133,26 @@ private fun getCardPadding(cardsPerLine: Int) = if (cardsPerLine <= 5) {
 }
 
 @Composable
-private fun getMinCardHeight(cardsPerColumn: Int) = when (cardsPerColumn) {
-    6 -> 60.dp
-    5 -> 70.dp
-    8 -> 45.dp
-    7 -> 50.dp
-    else -> 40.dp
-}
+private fun getCardHeight(cardsPerColumn: Int, screenHeight: Int) = when (cardsPerColumn) {
+    6 -> {
+        (screenHeight / 6.35).dp
+    }
 
-@Composable
-private fun getMaxCardHeight(cardsPerColumn: Int, screenHeight: Int) = when (cardsPerColumn) {
-    6 -> minOf((screenHeight / 6.35).dp, 120.dp)
-    5 -> minOf((screenHeight / 5.1).dp, 140.dp)
-    8 -> minOf((screenHeight / 8.5).dp, 90.dp)
-    7 -> minOf((screenHeight / 7.4).dp, 100.dp)
-    else -> minOf((screenHeight / 9.35).dp, 80.dp)
+    5 -> {
+        (screenHeight / 5.1).dp
+    }
+
+    8 -> {
+        (screenHeight / 8.5).dp
+    }
+
+    7 -> {
+        (screenHeight / 7.4).dp
+    }
+
+    else -> {
+        (screenHeight / 9.35).dp
+    }
 }
 
 @ExperimentalFoundationApi
@@ -169,11 +170,7 @@ private fun FlippedCard(
 
     Card(
         modifier = Modifier
-            .aspectRatio(0.75f)
-            .heightIn(
-                min = getMinCardHeight(cardsPerColumn),
-                max = getMaxCardHeight(cardsPerColumn, screenHeight)
-            )
+            .heightIn(max = getCardHeight(cardsPerColumn, screenHeight))
             .padding(
                 getCardPadding(cardsPerLine)
             )
