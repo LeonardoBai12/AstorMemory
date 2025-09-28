@@ -39,13 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.common.data.model.AstorCard
@@ -382,13 +380,11 @@ internal fun GameScreenPreviewWrapper(
     isDarkMode: Boolean = false,
     gameState: GameState
 ) {
-    val lastSelectedCard = remember { mutableStateOf("") }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBarPreview(gameState, lastSelectedCard, isDarkMode)
+            GameTopBarPreview(gameState, isDarkMode)
         }
     ) { padding ->
         if (gameState.isLoading) {
@@ -450,7 +446,6 @@ private fun ErrorMessagePreview(
 @Composable
 private fun GameTopBarPreview(
     state: GameState,
-    lastSelectedCard: MutableState<String>,
     isDarkMode: Boolean
 ) {
     TopAppBar(

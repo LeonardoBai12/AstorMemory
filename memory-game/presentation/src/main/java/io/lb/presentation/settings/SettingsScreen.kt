@@ -626,7 +626,13 @@ internal fun SettingsScreenSmallPreview() {
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
-@Preview(name = "Settings - Small Screen Large Font", showBackground = true, widthDp = 320, heightDp = 480, fontScale = 1.3f)
+@Preview(
+    name = "Settings - Small Screen Large Font",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480,
+    fontScale = 1.3f
+)
 @Composable
 internal fun SettingsScreenSmallLargeFontPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {

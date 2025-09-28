@@ -31,8 +31,20 @@ class GetAstorPairsUseCaseTest {
     @Test
     fun `When get astor pairs, expect a list of astor pairs`() = runTest {
         val astorPairs = listOf(
-            AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
-            AstorCard(2, "Ivysaur.png", "Ivysaur")
+            AstorCard(
+                id = "1",
+                astorId = 1,
+                name = "Astor1",
+                imageUrl = "https://example.com/astor1.jpg",
+                imageData = byteArrayOf(1, 2, 3)
+            ),
+            AstorCard(
+                id = "2",
+                astorId = 2,
+                name = "Astor2",
+                imageUrl = "https://example.com/astor2.jpg",
+                imageData = byteArrayOf(4, 5, 6)
+            )
         )
         coEvery { repository.getAstorPairs(2) } returns astorPairs
         val states = mutableListOf<Resource<List<AstorCard>>>()

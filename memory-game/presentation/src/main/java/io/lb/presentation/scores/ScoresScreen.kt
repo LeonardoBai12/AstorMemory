@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -41,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.common.data.model.Score
@@ -213,7 +210,8 @@ private fun FilterMenu(
             onClick = { dropDownMenuExpanded.value = true },
         ) {
             Text(
-                text = if (selectedFilter.intValue == 0) stringResource(R.string.all) else "${selectedFilter.intValue} ${stringResource(R.string.cards)}",
+                text = if (selectedFilter.intValue == 0) stringResource(R.string.all)
+                else "${selectedFilter.intValue} ${stringResource(R.string.cards)}",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -226,7 +224,8 @@ private fun FilterMenu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = if (filter == 0) stringResource(R.string.all) else "$filter ${stringResource(R.string.cards)}",
+                            text = if (filter == 0) stringResource(R.string.all)
+                            else "$filter ${stringResource(R.string.cards)}",
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = if (selectedFilter.intValue == filter) FontWeight.Bold else FontWeight.Normal

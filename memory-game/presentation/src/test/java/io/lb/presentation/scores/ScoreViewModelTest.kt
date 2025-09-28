@@ -5,6 +5,7 @@ import io.lb.common.data.model.Score
 import io.lb.domain.repository.MemoryGameRepository
 import io.lb.domain.usecases.CalculateScoreUseCase
 import io.lb.domain.usecases.GetAstorPairsUseCase
+import io.lb.domain.usecases.GetScoresByAmountUseCase
 import io.lb.domain.usecases.GetScoresUseCase
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.domain.usecases.SaveScoreUseCase
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ScoreViewModelTest {
     private lateinit var repository: MemoryGameRepository
@@ -29,10 +31,11 @@ class ScoreViewModelTest {
     fun setUp() {
         repository = mockk()
         useCases = MemoryGameUseCases(
-            GetScoresUseCase(repository),
-            SaveScoreUseCase(repository),
-            GetAstorPairsUseCase(repository),
-            CalculateScoreUseCase(),
+            getScoresUseCase = GetScoresUseCase(repository),
+            saveScoreUseCase = SaveScoreUseCase(repository),
+            getMemoryGameUseCase = GetAstorPairsUseCase(repository),
+            calculateScoreUseCase = CalculateScoreUseCase(),
+            getScoresByAmountUseCase = GetScoresByAmountUseCase(repository)
         )
     }
 
@@ -44,8 +47,8 @@ class ScoreViewModelTest {
     @Test
     fun `When get scores, expect success`() = runTest {
         coEvery { repository.getScores() } returns listOf(
-            Score(1, 100),
-            Score(2, 200),
+            Score(1, 100, 1L),
+            Score(2, 200, 2L),
         )
 
         viewModel = ScoreViewModel(useCases)
@@ -53,11 +56,13 @@ class ScoreViewModelTest {
         delay(200)
 
         viewModel.state.test {
-            val emission = awaitItem()
-            assertFalse(emission.isLoading)
-            assertNull(emission.message)
-            assertEquals(2, emission.scores.size)
-            assertEquals(listOf(Score(1, 100), Score(2, 200)), emission.scores)
+            val emission1 = awaitItem()
+            assertTrue(emission1.isLoading)
+            val emission2 = awaitItem()
+            assertFalse(emission2.isLoading)
+            assertNull(emission2.message)
+            assertEquals(2, emission2.scores.size)
+            assertEquals(listOf(Score(1, 100, 1L), Score(2, 200, 2L)), emission2.scores)
         }
     }
 

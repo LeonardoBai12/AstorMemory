@@ -10,8 +10,8 @@ android {
     namespace = "io.lb.astormemory.app"
 
     defaultConfig {
-        versionCode = 3
-        versionName = "1.1.0"
+        versionCode = 4
+        versionName = "1.1.1"
     }
 
     packaging {

@@ -11,11 +11,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+
+private const val DEBOUNCE_DELAY = 300L
+private const val AMOUNT_TAKEN = 10
 
 /**
  * ViewModel for the scores screen.
@@ -75,7 +77,7 @@ internal class ScoreViewModel @Inject constructor(
                 is Resource.Success -> {
                     scores.clear()
                     scores.addAll(resource.data ?: emptyList())
-                    delay(300)
+                    delay(DEBOUNCE_DELAY)
                     _state.update {
                         it.copy(
                             scores = scores,
@@ -115,12 +117,12 @@ internal class ScoreViewModel @Inject constructor(
                 is Resource.Success -> {
                     scores.clear()
                     scores.addAll(resource.data ?: emptyList())
-                    delay(300)
+                    delay(DEBOUNCE_DELAY)
 
                     if (state.value.filters.isNotEmpty()) {
                         _state.update {
                             it.copy(
-                                scores = scores.take(10),
+                                scores = scores.take(AMOUNT_TAKEN),
                                 isLoading = false,
                                 message = null
                             )
