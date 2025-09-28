@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import io.lb.presentation.R
@@ -38,6 +35,7 @@ import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 
 @Composable
 fun GameOverScreen(
@@ -55,7 +53,7 @@ fun GameOverScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .padding(16.dp),
+                .padding(Dimens.padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(32.dp))
@@ -77,49 +75,55 @@ fun GameOverScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-
-            if (score == 0) {
-                Text(
-                    text = stringResource(R.string.score),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Image(
-                    modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .aspectRatio(1f)
-                        .sizeIn(minWidth = 120.dp, maxWidth = 200.dp, minHeight = 120.dp, maxHeight = 200.dp),
-                    painter = painterResource(id = R.drawable.missingno),
-                    contentDescription = "Missing Number reference",
-                    contentScale = ContentScale.Fit
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.score_result, score),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(R.string.with_card_pairs, amount),
-                    style = MaterialTheme.typography.titleLarge, // Scalable typography
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
-                )
-            }
-
+            GameOverContent(score, amount)
             Spacer(modifier = Modifier.weight(1f))
-
             GameOverButtons(navController, isDarkMode, amount)
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
         }
+    }
+}
+
+@Composable
+private fun GameOverContent(score: Int, amount: Int) {
+    if (score == 0) {
+        Text(
+            text = stringResource(R.string.score),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(Dimens.largePadding))
+        Image(
+            modifier = Modifier
+                .fillMaxWidth(0.6f)
+                .aspectRatio(1f)
+                .sizeIn(
+                    minWidth = 120.dp,
+                    maxWidth = 200.dp,
+                    minHeight = 120.dp,
+                    maxHeight = 200.dp
+                ),
+            painter = painterResource(id = R.drawable.missingno),
+            contentDescription = "Missing Number reference",
+            contentScale = ContentScale.Fit
+        )
+    } else {
+        Text(
+            text = stringResource(R.string.score_result, score),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(Dimens.padding))
+        Text(
+            text = stringResource(R.string.with_card_pairs, amount),
+            style = MaterialTheme.typography.titleLarge, // Scalable typography
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -132,7 +136,7 @@ private fun GameOverButtons(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimens.smallerPadding)
     ) {
         if (amount != 0) {
             MemoryGameRedButton(
@@ -155,7 +159,7 @@ private fun GameOverButtons(
             }
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(Dimens.smallerPadding))
         Narcisus()
     }
 }

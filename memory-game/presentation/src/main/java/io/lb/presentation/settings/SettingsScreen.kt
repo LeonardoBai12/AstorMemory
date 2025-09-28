@@ -1,5 +1,6 @@
 package io.lb.presentation.settings
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,6 +22,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import io.lb.common.data.model.AstorCard
 import io.lb.presentation.R
@@ -42,6 +43,7 @@ import io.lb.presentation.ui.components.IntSelector
 import io.lb.presentation.ui.components.MemoryGameBackButton
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -56,16 +58,9 @@ fun SettingsScreen(
     onChangeCardsPerColumn: (Int) -> Unit
 ) {
     val configuration = LocalConfiguration.current
-    val selectedCardsPerLine = remember {
-        mutableIntStateOf(cardsPerLine)
-    }
-    val selectedCardsPerColumn = remember {
-        mutableIntStateOf(cardsPerColumn)
-    }
-    val darkMode = remember {
-        mutableStateOf(isDarkMode)
-    }
-
+    val selectedCardsPerLine = remember { mutableIntStateOf(cardsPerLine) }
+    val selectedCardsPerColumn = remember { mutableIntStateOf(cardsPerColumn) }
+    val darkMode = remember { mutableStateOf(isDarkMode) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -76,236 +71,274 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                MemoryGameBackButton(
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 16.dp
-                    ),
-                ) {
-                    navController.navigateUp()
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.dark_mode),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Switch(
-                    checked = darkMode.value,
-                    onCheckedChange = {
-                        darkMode.value = it
-                        onChangeDarkMode(it)
-                    }
-                )
-            }
-
+            BackButton(navController)
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            DarkModeSwitch(darkMode, onChangeDarkMode)
             Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = stringResource(R.string.game_screen_layout),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            GameScreenLayoutText()
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
 
             val isSmallScreen = configuration.screenWidthDp < 400
-
             if (isSmallScreen) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cards_per_line),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerLine,
-                            minValue = 3,
-                            maxValue = 6,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = {
-                                onChangeCardsPerLine(it)
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cards_per_column),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerColumn,
-                            minValue = 5,
-                            maxValue = 9,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = {
-                                onChangeCardsPerColumn(it)
-                            }
-                        )
-                    }
-                }
+                SmallScreenContent(
+                    selectedCardsPerLine = selectedCardsPerLine,
+                    darkMode = darkMode,
+                    onChangeCardsPerLine = onChangeCardsPerLine,
+                    selectedCardsPerColumn = selectedCardsPerColumn,
+                    onChangeCardsPerColumn = onChangeCardsPerColumn
+                )
             } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cards_per_line),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerLine,
-                            minValue = 3,
-                            maxValue = 6,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = {
-                                onChangeCardsPerLine(it)
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.cards_per_column),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerColumn,
-                            minValue = 5,
-                            maxValue = 9,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = {
-                                onChangeCardsPerColumn(it)
-                            }
-                        )
-                    }
-                }
+                LargeScreenContent(
+                    selectedCardsPerLine = selectedCardsPerLine,
+                    darkMode = darkMode,
+                    onChangeCardsPerLine = onChangeCardsPerLine,
+                    selectedCardsPerColumn = selectedCardsPerColumn,
+                    onChangeCardsPerColumn = onChangeCardsPerColumn
+                )
             }
-
             Spacer(modifier = Modifier.height(32.dp))
-
             Text(
                 text = stringResource(R.string.preview),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.padding),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val screenHeight = configuration.screenHeightDp
-            val maxPreviewItems = minOf(16, selectedCardsPerLine.intValue * 4)
-
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .heightIn(max = (screenHeight * 0.6f).dp),
-                columns = GridCells.Fixed(selectedCardsPerLine.intValue),
-                userScrollEnabled = false,
-            ) {
-                items(maxPreviewItems) { index ->
-                    MemoryGameCard(
-                        card = GameCard(
-                            astorCard = AstorCard(
-                                id = index.toString(),
-                                astorId = index,
-                                name = "Preview $index",
-                                imageData = ByteArray(0),
-                                imageUrl = ""
-                            ),
-                            isFlipped = false,
-                            isMatched = false
-                        ),
-                        cardsPerLine = selectedCardsPerLine.intValue,
-                        cardsPerColumn = selectedCardsPerColumn.intValue
-                    ) {
-                        // No action in preview
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.padding))
+            CardsPreview(configuration, selectedCardsPerLine, selectedCardsPerColumn)
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
         }
     }
+}
+
+@Composable
+private fun GameScreenLayoutText() {
+    Text(
+        text = stringResource(R.string.game_screen_layout),
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
+
+@Composable
+private fun LargeScreenContent(
+    selectedCardsPerLine: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    onChangeCardsPerLine: (Int) -> Unit,
+    selectedCardsPerColumn: MutableIntState,
+    onChangeCardsPerColumn: (Int) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CardsPerLineContent(selectedCardsPerLine, darkMode, onChangeCardsPerLine)
+        }
+        Spacer(modifier = Modifier.width(Dimens.padding))
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CardsPerColumnContent(
+                selectedCardsPerColumn,
+                darkMode,
+                onChangeCardsPerColumn
+            )
+        }
+    }
+}
+
+@Composable
+private fun SmallScreenContent(
+    selectedCardsPerLine: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    onChangeCardsPerLine: (Int) -> Unit,
+    selectedCardsPerColumn: MutableIntState,
+    onChangeCardsPerColumn: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CardsPerLineContent(selectedCardsPerLine, darkMode, onChangeCardsPerLine)
+        }
+        Spacer(modifier = Modifier.height(Dimens.largePadding))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CardsPerColumnContent(
+                selectedCardsPerColumn,
+                darkMode,
+                onChangeCardsPerColumn
+            )
+        }
+    }
+}
+
+@Composable
+private fun DarkModeSwitch(
+    darkMode: MutableState<Boolean>,
+    onChangeDarkMode: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.dark_mode),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Switch(
+            checked = darkMode.value,
+            onCheckedChange = {
+                darkMode.value = it
+                onChangeDarkMode(it)
+            }
+        )
+    }
+}
+
+@Composable
+private fun BackButton(navController: NavController) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MemoryGameBackButton(
+            modifier = Modifier.padding(
+                top = Dimens.padding,
+                start = Dimens.padding
+            ),
+        ) {
+            navController.navigateUp()
+        }
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Composable
+private fun CardsPreview(
+    configuration: Configuration,
+    selectedCardsPerLine: MutableIntState,
+    selectedCardsPerColumn: MutableIntState
+) {
+    val screenHeight = configuration.screenHeightDp
+    val maxPreviewItems = minOf(16, selectedCardsPerLine.intValue * 4)
+
+    LazyVerticalGrid(
+        modifier = Modifier
+            .padding(horizontal = Dimens.padding)
+            .heightIn(max = (screenHeight * 0.6f).dp),
+        columns = GridCells.Fixed(selectedCardsPerLine.intValue),
+        userScrollEnabled = false,
+    ) {
+        items(maxPreviewItems) { index ->
+            MemoryGameCard(
+                card = GameCard(
+                    astorCard = AstorCard(
+                        id = index.toString(),
+                        astorId = index,
+                        name = "Preview $index",
+                        imageData = ByteArray(0),
+                        imageUrl = ""
+                    ),
+                    isFlipped = false,
+                    isMatched = false
+                ),
+                cardsPerLine = selectedCardsPerLine.intValue,
+                cardsPerColumn = selectedCardsPerColumn.intValue
+            ) {
+                // No action in preview
+            }
+        }
+    }
+}
+
+@Composable
+private fun CardsPerColumnContent(
+    selectedCardsPerColumn: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    onChangeCardsPerColumn: (Int) -> Unit
+) {
+    Text(
+        text = stringResource(R.string.cards_per_column),
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    IntSelector(
+        intState = selectedCardsPerColumn,
+        minValue = 5,
+        maxValue = 9,
+        spaceBetween = 12,
+        textSize = 48,
+        isDarkMode = darkMode.value,
+        onChangeAmount = {
+            onChangeCardsPerColumn(it)
+        }
+    )
+}
+
+@Composable
+private fun CardsPerLineContent(
+    selectedCardsPerLine: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    onChangeCardsPerLine: (Int) -> Unit
+) {
+    Text(
+        text = stringResource(R.string.cards_per_line),
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    IntSelector(
+        intState = selectedCardsPerLine,
+        minValue = 3,
+        maxValue = 6,
+        spaceBetween = 12,
+        textSize = 48,
+        isDarkMode = darkMode.value,
+        onChangeAmount = {
+            onChangeCardsPerLine(it)
+        }
+    )
 }
 
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 @Composable
+@Suppress("LongMethod", "MagicNumber")
 internal fun SettingsScreenPreviewWrapper(
     cardsPerLine: Int = 4,
     cardsPerColumn: Int = 6,
@@ -333,162 +366,33 @@ internal fun SettingsScreenPreviewWrapper(
             ) {
                 MemoryGameBackButton(
                     modifier = Modifier.padding(
-                        top = 16.dp,
-                        start = 16.dp
+                        top = Dimens.padding,
+                        start = Dimens.padding
                     ),
                 ) { }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Dark Mode",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Switch(
-                    checked = darkMode.value,
-                    onCheckedChange = {
-                        darkMode.value = it
-                    }
-                )
-            }
-
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            DarkModeSwitch(darkMode)
             Spacer(modifier = Modifier.height(32.dp))
-
             Text(
-                text = "Game Screen Layout",
+                text = stringResource(R.string.game_screen_layout_config),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.padding),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
 
             val isSmallScreen = configuration.screenWidthDp < 400
-
             if (isSmallScreen) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Cards Per Line",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerLine,
-                            minValue = 3,
-                            maxValue = 6,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = { }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Cards Per Column",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerColumn,
-                            minValue = 5,
-                            maxValue = 9,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = { }
-                        )
-                    }
-                }
+                ContentForSmallScreen(selectedCardsPerLine, darkMode, selectedCardsPerColumn)
             } else {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Cards Per Line",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerLine,
-                            minValue = 3,
-                            maxValue = 6,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = { }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Cards Per Column",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        IntSelector(
-                            intState = selectedCardsPerColumn,
-                            minValue = 5,
-                            maxValue = 9,
-                            spaceBetween = 12,
-                            textSize = 48,
-                            isDarkMode = darkMode.value,
-                            onChangeAmount = { }
-                        )
-                    }
-                }
+                ContentForLargeScreen(selectedCardsPerLine, darkMode, selectedCardsPerColumn)
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -499,19 +403,19 @@ internal fun SettingsScreenPreviewWrapper(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.padding),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.padding))
 
             val screenHeight = configuration.screenHeightDp
             val maxPreviewItems = minOf(16, selectedCardsPerLine.intValue * 4)
 
             LazyVerticalGrid(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = Dimens.padding)
                     .heightIn(max = (screenHeight * 0.4f).dp),
                 columns = GridCells.Fixed(selectedCardsPerLine.intValue),
                 userScrollEnabled = false,
@@ -535,8 +439,156 @@ internal fun SettingsScreenPreviewWrapper(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
         }
+    }
+}
+
+@Composable
+private fun ContentForLargeScreen(
+    selectedCardsPerLine: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    selectedCardsPerColumn: MutableIntState
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Cards Per Line",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IntSelector(
+                intState = selectedCardsPerLine,
+                minValue = 3,
+                maxValue = 6,
+                spaceBetween = 12,
+                textSize = 48,
+                isDarkMode = darkMode.value,
+                onChangeAmount = { }
+            )
+        }
+
+        Spacer(modifier = Modifier.width(Dimens.padding))
+
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Cards Per Column",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IntSelector(
+                intState = selectedCardsPerColumn,
+                minValue = 5,
+                maxValue = 9,
+                spaceBetween = 12,
+                textSize = 48,
+                isDarkMode = darkMode.value,
+                onChangeAmount = { }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ContentForSmallScreen(
+    selectedCardsPerLine: MutableIntState,
+    darkMode: MutableState<Boolean>,
+    selectedCardsPerColumn: MutableIntState
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Cards Per Line",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IntSelector(
+                intState = selectedCardsPerLine,
+                minValue = 3,
+                maxValue = 6,
+                spaceBetween = 12,
+                textSize = 48,
+                isDarkMode = darkMode.value,
+                onChangeAmount = { }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(Dimens.largePadding))
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Cards Per Column",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IntSelector(
+                intState = selectedCardsPerColumn,
+                minValue = 5,
+                maxValue = 9,
+                spaceBetween = 12,
+                textSize = 48,
+                isDarkMode = darkMode.value,
+                onChangeAmount = { }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DarkModeSwitch(darkMode: MutableState<Boolean>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Dark Mode",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Switch(
+            checked = darkMode.value,
+            onCheckedChange = {
+                darkMode.value = it
+            }
+        )
     }
 }
 
@@ -626,7 +678,13 @@ internal fun SettingsScreenSmallPreview() {
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
-@Preview(name = "Settings - Small Screen Large Font", showBackground = true, widthDp = 320, heightDp = 480, fontScale = 1.3f)
+@Preview(
+    name = "Settings - Small Screen Large Font",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480,
+    fontScale = 1.3f
+)
 @Composable
 internal fun SettingsScreenSmallLargeFontPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {

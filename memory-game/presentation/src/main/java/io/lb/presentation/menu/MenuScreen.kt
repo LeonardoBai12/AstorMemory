@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,14 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import io.lb.presentation.R
@@ -48,6 +46,7 @@ import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 
 @Composable
 internal fun MenuScreen(
@@ -65,7 +64,6 @@ internal fun MenuScreen(
     val amount = remember {
         mutableIntStateOf(initialAmount)
     }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background
@@ -76,87 +74,20 @@ internal fun MenuScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                val configuration = LocalConfiguration.current
-                val screenHeight = configuration.screenHeightDp
-                val buttonSize = (screenHeight.dp / 12).coerceIn(56.dp, 72.dp)
-                val iconSize = (buttonSize * 0.6f).coerceIn(28.dp, 40.dp)
-
-                IconButton(
-                    onClick = {
-                        onChangeMuted(muted.value.not())
-                        muted.value = muted.value.not()
-                    },
-                    modifier = Modifier.size(buttonSize)
-                ) {
-                    Icon(
-                        painter = if (muted.value) {
-                            painterResource(R.drawable.music_off)
-                        } else {
-                            painterResource(R.drawable.music_on)
-                        },
-                        contentDescription = "Muted or not",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(iconSize)
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        navController.navigate(MemoryGameScreens.Settings.name)
-                    },
-                    modifier = Modifier.size(buttonSize)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.settings),
-                        tint = Color.Gray,
-                        modifier = Modifier.size(iconSize)
-                    )
-                }
-            }
-
+            MenuTopIcons(onChangeMuted, muted, navController)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = Dimens.padding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
-
+                Spacer(modifier = Modifier.height(Dimens.largePadding))
                 MemoryGameLogo(
                     Modifier
                         .fillMaxWidth(0.9f)
                         .heightIn(min = 80.dp, max = 160.dp)
                 )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(
-                    text = stringResource(R.string.amount_of_card_pairs),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                IntSelector(
-                    intState = amount,
-                    minValue = 1,
-                    maxValue = 30,
-                    isDarkMode = isDarkMode,
-                    onChangeAmount = onChangeAmount
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+                PairsAmountSelector(amount, isDarkMode, onChangeAmount)
                 Text(
                     modifier = Modifier.fillMaxWidth(0.8f),
                     text = stringResource(R.string.the_more_cards_you_play_with),
@@ -165,18 +96,92 @@ internal fun MenuScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
                 ButtonsColumn(
-                    navController,
-                    isDarkMode,
-                    amount,
-                    onClickQuit
+                    navController = navController,
+                    isDarkMode = isDarkMode,
+                    amount = amount,
+                    onClickQuit = onClickQuit
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(Dimens.largePadding))
             }
+        }
+    }
+}
+
+@Composable
+private fun PairsAmountSelector(
+    amount: MutableIntState,
+    isDarkMode: Boolean,
+    onChangeAmount: (Int) -> Unit
+) {
+    Spacer(modifier = Modifier.height(32.dp))
+    Text(
+        text = stringResource(R.string.amount_of_card_pairs),
+        style = MaterialTheme.typography.headlineSmall,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+    Spacer(modifier = Modifier.height(Dimens.padding))
+    IntSelector(
+        intState = amount,
+        minValue = 1,
+        maxValue = 30,
+        isDarkMode = isDarkMode,
+        onChangeAmount = onChangeAmount
+    )
+    Spacer(modifier = Modifier.height(Dimens.padding))
+}
+
+@Composable
+private fun MenuTopIcons(
+    onChangeMuted: (Boolean) -> Unit,
+    muted: MutableState<Boolean>,
+    navController: NavController
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.padding)
+            .padding(top = Dimens.padding),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp
+        val buttonSize = (screenHeight.dp / 12).coerceIn(56.dp, 72.dp)
+        val iconSize = (buttonSize * 0.6f).coerceIn(28.dp, 40.dp)
+
+        IconButton(
+            onClick = {
+                onChangeMuted(muted.value.not())
+                muted.value = muted.value.not()
+            },
+            modifier = Modifier.size(buttonSize)
+        ) {
+            Icon(
+                painter = if (muted.value) {
+                    painterResource(R.drawable.music_off)
+                } else {
+                    painterResource(R.drawable.music_on)
+                },
+                contentDescription = "Muted or not",
+                tint = Color.Gray,
+                modifier = Modifier.size(iconSize)
+            )
+        }
+        IconButton(
+            onClick = {
+                navController.navigate(MemoryGameScreens.Settings.name)
+            },
+            modifier = Modifier.size(buttonSize)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = stringResource(R.string.settings),
+                tint = Color.Gray,
+                modifier = Modifier.size(iconSize)
+            )
         }
     }
 }
@@ -191,7 +196,7 @@ private fun ButtonsColumn(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(Dimens.padding)
     ) {
         MemoryGameRedButton(
             text = stringResource(R.string.start_game),

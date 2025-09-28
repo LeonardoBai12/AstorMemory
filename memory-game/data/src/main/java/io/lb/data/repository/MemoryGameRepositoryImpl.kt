@@ -12,6 +12,8 @@ import java.io.ByteArrayOutputStream
 import java.util.Locale
 import javax.inject.Inject
 
+private const val QUALITY = 50
+
 /**
  * Implementation of [MemoryGameRepository] that fetches data from the network.
  *
@@ -50,7 +52,7 @@ internal class MemoryGameRepositoryImpl @Inject constructor(
                 val imageData = context.resources.openRawResource(resourceId).use { inputStream ->
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     val outputStream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, QUALITY, outputStream)
                     outputStream.toByteArray()
                 }
 

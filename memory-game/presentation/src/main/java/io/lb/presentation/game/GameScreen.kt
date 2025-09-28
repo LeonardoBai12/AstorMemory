@@ -39,13 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.common.data.model.AstorCard
@@ -58,11 +56,14 @@ import io.lb.presentation.ui.components.MemoryGameRestartButton
 import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
+private const val CLICK_LOCK_DELAY = 100L
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -144,14 +145,14 @@ private fun GameTopBar(
     onRestart: () -> Unit
 ) {
     TopAppBar(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = Dimens.smallerPadding),
         title = {
             Column(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = Dimens.smallerPadding)
                         .fillMaxWidth(),
                     text = if (state.isLoading.not() && state.score > 0) {
                         "${state.score} pts"
@@ -162,24 +163,7 @@ private fun GameTopBar(
                     fontWeight = FontWeight.W600,
                     textAlign = TextAlign.End
                 )
-                if (state.currentCombo > 1) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.W600,
-                        textAlign = TextAlign.End,
-                        color = if (isDarkMode) {
-                            Color.Yellow
-                        } else {
-                            Color.DarkGray
-                        }
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
+                ComboContent(state, isDarkMode)
             }
         },
         navigationIcon = {
@@ -198,7 +182,8 @@ private fun GameTopBar(
                     }
                 }
                 if (state.isLoading.not() && state.message.isNullOrEmpty() &&
-                    state.cards.any { it.isMatched.not() }) {
+                    state.cards.any { it.isMatched.not() }
+                ) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
@@ -217,6 +202,24 @@ private fun GameTopBar(
 }
 
 @Composable
+private fun ComboContent(state: GameState, isDarkMode: Boolean) {
+    if (state.currentCombo > 1) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = Dimens.smallerPadding)
+                .fillMaxWidth(),
+            text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.W600,
+            textAlign = TextAlign.End,
+            color = topBarTextColor(isDarkMode)
+        )
+    } else {
+        Spacer(modifier = Modifier.height(Dimens.largePadding))
+    }
+}
+
+@Composable
 private fun ErrorMessage(
     padding: PaddingValues,
     state: GameState,
@@ -225,7 +228,7 @@ private fun ErrorMessage(
     Surface(
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp)
+            .padding(Dimens.padding)
     ) {
         Column(
             modifier = Modifier
@@ -243,7 +246,7 @@ private fun ErrorMessage(
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
             MemoryGameRedButton(
                 text = stringResource(R.string.try_again),
                 onClick = {
@@ -270,7 +273,6 @@ private fun CardGrid(
 ) {
     val clickLock = remember { mutableStateOf(false) }
     var isVisible by remember { mutableStateOf(false) }
-
     LaunchedEffect(state.cards.isNotEmpty(), restartTrigger) {
         if (state.cards.isNotEmpty()) {
             isVisible = false
@@ -278,15 +280,14 @@ private fun CardGrid(
             isVisible = true
         }
     }
-
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
-            .padding(top = 12.dp)
-            .padding(horizontal = 12.dp),
+            .padding(top = Dimens.smallerPadding)
+            .padding(horizontal = Dimens.smallerPadding),
         columns = GridCells.Fixed(cardsPerLine),
         userScrollEnabled = true,
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = Dimens.padding)
     ) {
         items(
             count = state.cards.size,
@@ -309,38 +310,63 @@ private fun CardGrid(
                 ),
                 modifier = Modifier.animateItem()
             ) {
-                MemoryGameCard(
-                    card = state.cards[index],
+                GameCard(
+                    state = state,
+                    index = index,
                     cardsPerLine = cardsPerLine,
-                    cardsPerColumn = cardsPerColumn
-                ) {
-                    if (clickLock.value) {
-                        return@MemoryGameCard
-                    }
-                    clickLock.value = true
-
-                    if (state.cards[index].isFlipped || state.cards[index].isMatched) {
-                        clickLock.value = false
-                        return@MemoryGameCard
-                    }
-                    if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
-                        clickLock.value = false
-                        return@MemoryGameCard
-                    }
-
-                    onCardFlipped()
-                    afterCardFlipped(
-                        lastSelectedCard = lastSelectedCard,
-                        state = state,
-                        index = index,
-                        viewModel = viewModel,
-                        onCardMatched = onCardMatched
-                    )
-
-                    resetClickLock(clickLock)
-                }
+                    cardsPerColumn = cardsPerColumn,
+                    clickLock = clickLock,
+                    onCardFlipped = onCardFlipped,
+                    lastSelectedCard = lastSelectedCard,
+                    viewModel = viewModel,
+                    onCardMatched = onCardMatched
+                )
             }
         }
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Composable
+private fun GameCard(
+    state: GameState,
+    index: Int,
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
+    clickLock: MutableState<Boolean>,
+    onCardFlipped: () -> Unit,
+    lastSelectedCard: MutableState<String>,
+    viewModel: GameViewModel,
+    onCardMatched: () -> Unit
+) {
+    MemoryGameCard(
+        card = state.cards[index],
+        cardsPerLine = cardsPerLine,
+        cardsPerColumn = cardsPerColumn
+    ) {
+        if (clickLock.value) {
+            return@MemoryGameCard
+        }
+        clickLock.value = true
+
+        if (state.cards[index].isFlipped || state.cards[index].isMatched) {
+            clickLock.value = false
+            return@MemoryGameCard
+        }
+        if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
+            clickLock.value = false
+            return@MemoryGameCard
+        }
+        onCardFlipped()
+        afterCardFlipped(
+            lastSelectedCard = lastSelectedCard,
+            state = state,
+            index = index,
+            viewModel = viewModel,
+            onCardMatched = onCardMatched
+        )
+        resetClickLock(clickLock)
     }
 }
 
@@ -370,7 +396,7 @@ private fun afterCardFlipped(
 
 private fun resetClickLock(clickLock: MutableState<Boolean>) {
     CoroutineScope(Dispatchers.Main).launch {
-        delay(100)
+        delay(CLICK_LOCK_DELAY)
         clickLock.value = false
     }
 }
@@ -382,13 +408,11 @@ internal fun GameScreenPreviewWrapper(
     isDarkMode: Boolean = false,
     gameState: GameState
 ) {
-    val lastSelectedCard = remember { mutableStateOf("") }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBarPreview(gameState, lastSelectedCard, isDarkMode)
+            GameTopBarPreview(gameState, isDarkMode)
         }
     ) { padding ->
         if (gameState.isLoading) {
@@ -419,7 +443,7 @@ private fun ErrorMessagePreview(
     Surface(
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp)
+            .padding(Dimens.padding)
     ) {
         Column(
             modifier = Modifier
@@ -437,7 +461,7 @@ private fun ErrorMessagePreview(
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
             MemoryGameRedButton(
                 text = "Try Again",
                 onClick = { }
@@ -450,18 +474,17 @@ private fun ErrorMessagePreview(
 @Composable
 private fun GameTopBarPreview(
     state: GameState,
-    lastSelectedCard: MutableState<String>,
     isDarkMode: Boolean
 ) {
     TopAppBar(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = Dimens.smallerPadding),
         title = {
             Column(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = Dimens.smallerPadding)
                         .fillMaxWidth(),
                     text = if (state.isLoading.not() && state.score > 0) {
                         "${state.score} pts"
@@ -475,20 +498,16 @@ private fun GameTopBarPreview(
                 if (state.currentCombo > 1) {
                     Text(
                         modifier = Modifier
-                            .padding(horizontal = 8.dp)
+                            .padding(horizontal = Dimens.smallerPadding)
                             .fillMaxWidth(),
                         text = "Combo +${(state.currentCombo) * 10}!",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.W600,
                         textAlign = TextAlign.End,
-                        color = if (isDarkMode) {
-                            Color.Yellow
-                        } else {
-                            Color.DarkGray
-                        }
+                        color = topBarTextColor(isDarkMode)
                     )
                 } else {
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(Dimens.largePadding))
                 }
             }
         },
@@ -502,18 +521,25 @@ private fun GameTopBarPreview(
                     MemoryGameStopButton { }
                 }
                 if (state.isLoading.not() && state.message.isNullOrEmpty() &&
-                    state.cards.any { it.isMatched.not() }) {
+                    state.cards.any { it.isMatched.not() }
+                ) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
-                            .widthIn(max = 48.dp)
-                    ) {
-                        MemoryGameRestartButton { }
-                    }
+                            .widthIn(max = 48.dp),
+                        content = { MemoryGameRestartButton { } }
+                    )
                 }
             }
         }
     )
+}
+
+@Composable
+private fun topBarTextColor(isDarkMode: Boolean) = if (isDarkMode) {
+    Color.Yellow
+} else {
+    Color.DarkGray
 }
 
 @ExperimentalFoundationApi
@@ -526,11 +552,11 @@ private fun CardGridPreview(
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
-            .padding(top = 12.dp)
-            .padding(horizontal = 12.dp),
+            .padding(top = Dimens.smallerPadding)
+            .padding(horizontal = Dimens.smallerPadding),
         columns = GridCells.Fixed(4),
         userScrollEnabled = true,
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = Dimens.padding)
     ) {
         items(gameState.cards.size) { index ->
             MemoryGameCard(

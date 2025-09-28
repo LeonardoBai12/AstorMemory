@@ -38,14 +38,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.lb.presentation.R
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 import io.lb.presentation.ui.theme.PrimaryRed
 
 @Composable
 internal fun MemoryGameButtonWithBackground(
+    modifier: Modifier = Modifier,
     @DrawableRes backgroundDrawable: Int,
     text: String? = null,
     textColor: Color? = null,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Box(
@@ -236,7 +237,7 @@ internal fun MemoryGameWhiteButton(
 internal fun RedButtonNormalPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -261,7 +262,7 @@ internal fun RedButtonNormalPreview() {
 internal fun RedButtonLongTextPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -286,7 +287,7 @@ internal fun RedButtonLongTextPreview() {
 internal fun BlueButtonPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -311,7 +312,7 @@ internal fun BlueButtonPreview() {
 internal fun WhiteButtonLightPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -344,7 +345,7 @@ internal fun WhiteButtonLightPreview() {
 internal fun WhiteButtonDarkPreview() {
     AstorMemoryChallengeTheme(darkTheme = true) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -372,8 +373,8 @@ internal fun WhiteButtonDarkPreview() {
 internal fun IconButtonsLightPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
+            verticalArrangement = Arrangement.spacedBy(Dimens.padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -382,7 +383,7 @@ internal fun IconButtonsLightPreview() {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
             ) {
                 MemoryGameStopButton(onClick = { })
                 MemoryGameRestartButton(onClick = { })
@@ -395,7 +396,7 @@ internal fun IconButtonsLightPreview() {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
             ) {
                 MemoryGameMinusButton(
                     isDarkMode = false,
@@ -420,8 +421,8 @@ internal fun IconButtonsLightPreview() {
 internal fun IconButtonsDarkPreview() {
     AstorMemoryChallengeTheme(darkTheme = true) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(Dimens.padding),
+            verticalArrangement = Arrangement.spacedBy(Dimens.padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -430,7 +431,7 @@ internal fun IconButtonsDarkPreview() {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
             ) {
                 MemoryGameStopButton(onClick = { })
                 MemoryGameRestartButton(onClick = { })
@@ -443,7 +444,7 @@ internal fun IconButtonsDarkPreview() {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
             ) {
                 MemoryGameMinusButton(
                     isDarkMode = true,
@@ -469,7 +470,7 @@ internal fun ButtonsLargeFontPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(Dimens.padding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -501,7 +502,7 @@ internal fun ButtonsLargeFontPreview() {
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
             ) {
                 MemoryGameMinusButton(
                     isDarkMode = false,
@@ -527,7 +528,7 @@ internal fun ButtonsSmallScreenPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(Dimens.padding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -575,7 +576,7 @@ internal fun ButtonsExtremeTextPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(Dimens.padding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -591,7 +592,8 @@ internal fun ButtonsExtremeTextPreview() {
             )
 
             MemoryGameRedButton(
-                text = "This is an extremely long button text that should definitely test the overflow handling and ellipsis functionality",
+                text = "This is an extremely long button text that should definitely test the" +
+                    " overflow handling and ellipsis functionality",
                 onClick = { }
             )
 
@@ -619,8 +621,8 @@ internal fun ButtonsExtremeTextPreview() {
 internal fun ButtonStatesComparisonPreview() {
     AstorMemoryChallengeTheme(darkTheme = false) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(Dimens.padding),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.padding)
         ) {
             Column(
                 modifier = Modifier.weight(1f),
@@ -631,37 +633,31 @@ internal fun ButtonStatesComparisonPreview() {
                     text = "Light Theme",
                     style = MaterialTheme.typography.titleMedium
                 )
-
                 MemoryGameRedButton(
                     text = "Red Button",
                     onClick = { }
                 )
-
                 MemoryGameBlueButton(
                     text = "Blue Button",
                     onClick = { }
                 )
-
                 MemoryGameWhiteButton(
                     isDarkMode = false,
                     text = "White Button",
                     onClick = { }
                 )
-
                 Row {
                     MemoryGameMinusButton(isDarkMode = false, onClick = { })
                     Spacer(modifier = Modifier.width(8.dp))
                     MemoryGamePlusButton(isDarkMode = false, onClick = { })
                 }
             }
-
             Box(
                 modifier = Modifier
                     .width(1.dp)
                     .fillMaxHeight()
                     .background(Color.Gray)
             )
-
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -671,23 +667,19 @@ internal fun ButtonStatesComparisonPreview() {
                     text = "Dark Theme",
                     style = MaterialTheme.typography.titleMedium
                 )
-
                 MemoryGameRedButton(
                     text = "Red Button",
                     onClick = { }
                 )
-
                 MemoryGameBlueButton(
                     text = "Blue Button",
                     onClick = { }
                 )
-
                 MemoryGameWhiteButton(
                     isDarkMode = true,
                     text = "Black Button",
                     onClick = { }
                 )
-
                 Row {
                     MemoryGameMinusButton(isDarkMode = true, onClick = { })
                     Spacer(modifier = Modifier.width(8.dp))

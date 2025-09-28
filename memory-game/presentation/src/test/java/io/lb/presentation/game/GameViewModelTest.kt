@@ -6,6 +6,7 @@ import io.lb.common.data.model.AstorCard
 import io.lb.domain.repository.MemoryGameRepository
 import io.lb.domain.usecases.CalculateScoreUseCase
 import io.lb.domain.usecases.GetAstorPairsUseCase
+import io.lb.domain.usecases.GetScoresByAmountUseCase
 import io.lb.domain.usecases.GetScoresUseCase
 import io.lb.domain.usecases.MemoryGameUseCases
 import io.lb.domain.usecases.SaveScoreUseCase
@@ -24,6 +25,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -37,10 +39,11 @@ class GameViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
         repository = mockk()
         useCases = MemoryGameUseCases(
-            GetScoresUseCase(repository),
-            SaveScoreUseCase(repository),
-            GetAstorPairsUseCase(repository),
-            CalculateScoreUseCase(),
+            getScoresUseCase = GetScoresUseCase(repository),
+            saveScoreUseCase = SaveScoreUseCase(repository),
+            getMemoryGameUseCase = GetAstorPairsUseCase(repository),
+            calculateScoreUseCase = CalculateScoreUseCase(),
+            getScoresByAmountUseCase = GetScoresByAmountUseCase(repository)
         )
     }
 
@@ -80,7 +83,7 @@ class GameViewModelTest {
 
         viewModel.state.test {
             val emission = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards(),
                 emission.cards
             )
@@ -89,9 +92,9 @@ class GameViewModelTest {
             viewModel.onEvent(GameEvent.CardFlipped(0))
 
             val emission2 = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards().map {
-                    if (it.astorCard.id == 1) {
+                    if (it.astorCard.id == "1") {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -113,7 +116,7 @@ class GameViewModelTest {
 
         viewModel.state.test {
             val emission = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards(),
                 emission.cards
             )
@@ -122,9 +125,9 @@ class GameViewModelTest {
             viewModel.onEvent(GameEvent.CardMatched(1))
 
             val emission2 = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards().map {
-                    if (it.astorCard.id == 1) {
+                    if (it.astorCard.id == "1") {
                         it.copy(isMatched = true)
                     } else {
                         it
@@ -146,7 +149,7 @@ class GameViewModelTest {
 
         viewModel.state.test {
             val emission = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards(),
                 emission.cards
             )
@@ -155,9 +158,9 @@ class GameViewModelTest {
             advanceUntilIdle()
 
             val emission2 = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards().map {
-                    if (it.astorCard.id == 3) {
+                    if (it.astorCard.id == "3") {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -170,9 +173,9 @@ class GameViewModelTest {
             advanceUntilIdle()
 
             val emission3 = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards().map {
-                    if (it.astorCard.id == 4 || it.astorCard.id == 3) {
+                    if (it.astorCard.id == "4" || it.astorCard.id == "3") {
                         it.copy(isFlipped = true)
                     } else {
                         it
@@ -185,7 +188,7 @@ class GameViewModelTest {
             advanceUntilIdle()
 
             val emission4 = awaitItem()
-            assertEquals(
+            assertContentEquals(
                 gameCards(),
                 emission4.cards
             )
@@ -193,11 +196,41 @@ class GameViewModelTest {
     }
 
     private fun astorCards(): List<AstorCard> = listOf(
-        AstorCard(1, "Bulbasaur", "https://pokeapi.co/api/v2/astor/1"),
-        AstorCard(2, "Ivysaur", "https://pokeapi.co/api/v2/astor/2"),
-        AstorCard(3, "Venusaur", "https://pokeapi.co/api/v2/astor/3"),
-        AstorCard(4, "Charmander", "https://pokeapi.co/api/v2/astor/4"),
-        AstorCard(5, "Charmeleon", "https://pokeapi.co/api/v2/astor/5"),
+        AstorCard(
+            "1",
+            1,
+            "https://astorapi.co/api/v2/astor/1",
+            ByteArray(0),
+            "Astorbasaur"
+        ),
+        AstorCard(
+            "2",
+            2,
+            "https://astorapi.co/api/v2/astor/2",
+            ByteArray(0),
+            "Astorsaur"
+        ),
+        AstorCard(
+            "3",
+            3,
+            "https://astorapi.co/api/v2/astor/3",
+            ByteArray(0),
+            "Astorusaur"
+        ),
+        AstorCard(
+            "4",
+            4,
+            "https://astorapi.co/api/v2/astor/4",
+            ByteArray(0),
+            "Astormander"
+        ),
+        AstorCard(
+            "5",
+            5,
+            "https://astorapi.co/api/v2/astor/5",
+            ByteArray(0),
+            "Astormeleon"
+        ),
     )
 
     private fun gameCards(): List<GameCard> = astorCards().map {

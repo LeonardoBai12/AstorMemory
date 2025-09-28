@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import io.lb.presentation.R
 
+private const val PLAY_MATCH_DIVIDER = 3
 private var pausedMediaPlayer: String? = null
 
 fun MediaPlayer.playMusic(volume: Float = MATCH_VOLUME) {
@@ -81,7 +82,7 @@ fun SoundPool.playInitialMatchEffect(isMuted: Boolean) {
 
 fun SoundPool.playMatchEffect(isMuted: Boolean) {
     if (isMuted) {
-        playEffect(matchEffectId, MATCH_VOLUME / 3)
+        playEffect(matchEffectId, MATCH_VOLUME / PLAY_MATCH_DIVIDER)
     } else {
         playEffect(matchEffectId, MATCH_VOLUME)
     }

@@ -20,7 +20,7 @@ class DatabaseServiceImplTest {
 
     @BeforeEach
     fun setUp() {
-        dao = mockk()
+        dao = mockk(relaxed = true)
         service = DatabaseServiceImpl(dao)
     }
 
@@ -32,9 +32,9 @@ class DatabaseServiceImplTest {
     @org.junit.jupiter.api.Test
     fun `When gets scores, expect a list of scores`() = runTest {
         coEvery { dao.getScores() } returns listOf(
-            ScoreEntity(score = 1, timeMillis = 1L),
-            ScoreEntity(score = 2, timeMillis = 2L),
-            ScoreEntity(score = 3, timeMillis = 3L)
+            ScoreEntity(score = 1, amount = 1, timeMillis = 1L),
+            ScoreEntity(score = 2, amount = 2, timeMillis = 2L),
+            ScoreEntity(score = 3, amount = 3, timeMillis = 3L)
         )
 
         val response = service.getScores()
@@ -42,9 +42,9 @@ class DatabaseServiceImplTest {
         assertEquals(3, response.size)
         assertEquals(
             listOf(
-                Score(1, 1L),
-                Score(2, 2L),
-                Score(3, 3L)
+                Score(1, amount = 1, 1L),
+                Score(2, amount = 2, 2L),
+                Score(3, amount = 3, 3L)
             ),
             response
         )
@@ -53,15 +53,15 @@ class DatabaseServiceImplTest {
     @org.junit.jupiter.api.Test
     fun `When inserts a score, expect the score to be inserted`() = runTest {
         coEvery { dao.getScores() } returns listOf(
-            ScoreEntity(score = 1, timeMillis = 1L),
-            ScoreEntity(score = 2, timeMillis = 2L),
-            ScoreEntity(score = 3, timeMillis = 3L)
+            ScoreEntity(score = 1, amount = 1, timeMillis = 1L),
+            ScoreEntity(score = 2, amount = 2, timeMillis = 2L),
+            ScoreEntity(score = 3, amount = 3, timeMillis = 3L)
         )
         coEvery { dao.insertScore(any()) } returns Unit
         var error = false
 
         runCatching {
-            service.insertScore(1)
+            service.insertScore(1, 1)
         }.onFailure {
             throw it
         }
@@ -72,15 +72,15 @@ class DatabaseServiceImplTest {
     @org.junit.jupiter.api.Test
     fun `When inserts a score, expect an exception`() = runTest {
         coEvery { dao.getScores() } returns listOf(
-            ScoreEntity(score = 1, timeMillis = 1L),
-            ScoreEntity(score = 2, timeMillis = 2L),
-            ScoreEntity(score = 3, timeMillis = 3L)
+            ScoreEntity(score = 1, amount = 1, timeMillis = 1L),
+            ScoreEntity(score = 2, amount = 2, timeMillis = 2L),
+            ScoreEntity(score = 3, amount = 3, timeMillis = 3L)
         )
         coEvery { dao.insertScore(any()) } throws Exception()
         var error = false
 
         runCatching {
-            service.insertScore(1)
+            service.insertScore(1, 1)
         }.onFailure {
             error = true
         }
@@ -90,22 +90,22 @@ class DatabaseServiceImplTest {
 
     @org.junit.jupiter.api.Test
     fun `When inserts a score, expect it to be ignored`() = runTest {
-        coEvery { dao.getScores() } returns listOf(
-            ScoreEntity(score = 100, timeMillis = 1L),
-            ScoreEntity(score = 200, timeMillis = 2L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
+        coEvery { dao.getScoresByAmount(3) } returns listOf(
+            ScoreEntity(score = 100, amount = 3, timeMillis = 1L),
+            ScoreEntity(score = 200, amount = 3, timeMillis = 2L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
         )
         coEvery { dao.insertScore(any()) } returns Unit
 
-        service.insertScore(90)
+        service.insertScore(90, 3)
 
         coVerify(exactly = 0) {
             dao.insertScore(any())
@@ -115,21 +115,21 @@ class DatabaseServiceImplTest {
     @org.junit.jupiter.api.Test
     fun `When inserts a score, expect it to be inserted`() = runTest {
         coEvery { dao.getScores() } returns listOf(
-            ScoreEntity(score = 100, timeMillis = 1L),
-            ScoreEntity(score = 200, timeMillis = 2L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
-            ScoreEntity(score = 300, timeMillis = 3L),
+            ScoreEntity(score = 100, amount = 1, timeMillis = 1L),
+            ScoreEntity(score = 200, amount = 2, timeMillis = 2L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
+            ScoreEntity(score = 300, amount = 3, timeMillis = 3L),
         )
         coEvery { dao.insertScore(any()) } returns Unit
 
-        service.insertScore(110)
+        service.insertScore(110, 1)
 
         coVerify {
             dao.insertScore(any())

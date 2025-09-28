@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -40,8 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.lb.common.data.model.Score
@@ -52,6 +50,7 @@ import io.lb.presentation.ui.components.MemoryGameWhiteButton
 import io.lb.presentation.ui.components.Narcisus
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
 import io.lb.presentation.ui.theme.DarkerRed
+import io.lb.presentation.ui.theme.Dimens
 
 @Composable
 internal fun ScoreScreen(
@@ -78,7 +77,7 @@ internal fun ScoreScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .padding(16.dp),
+                .padding(Dimens.padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(32.dp))
@@ -89,54 +88,10 @@ internal fun ScoreScreen(
                     .heightIn(min = 60.dp, max = 120.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.filter),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                FilterMenu(dropDownMenuExpanded, selectedFilter, state) { filter ->
-                    dropDownMenuExpanded.value = false
-                    selectedFilter.intValue = filter
-                    viewModel.onEvent(
-                        ScoresEvent.OnRequestScores(
-                            amount = filter
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            if (state.isLoading) {
-                LoadingIndicator(
-                    modifier = Modifier.size(120.dp),
-                    screenHeight = screenHeight
-                )
-            } else if (state.message.isNullOrEmpty().not()) {
-                Text(
-                    text = state.message.orEmpty(),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            } else {
-                ScoresColumn(
-                    state = state,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            Filter(dropDownMenuExpanded, selectedFilter, state, viewModel)
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            ScoreContent(state, screenHeight)
             Spacer(modifier = Modifier.weight(1f))
 
             MemoryGameWhiteButton(
@@ -147,9 +102,67 @@ internal fun ScoreScreen(
                 }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.padding))
             Narcisus()
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+        }
+    }
+}
+
+@Composable
+private fun ScoreContent(
+    state: ScoreState,
+    screenHeight: Dp
+) {
+    if (state.isLoading) {
+        LoadingIndicator(
+            modifier = Modifier.size(120.dp),
+            screenHeight = screenHeight
+        )
+    } else if (state.message.isNullOrEmpty().not()) {
+        Text(
+            text = state.message.orEmpty(),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = Dimens.padding)
+        )
+    } else {
+        ScoresColumn(
+            state = state,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun Filter(
+    dropDownMenuExpanded: MutableState<Boolean>,
+    selectedFilter: MutableIntState,
+    state: ScoreState,
+    viewModel: ScoreViewModel
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.filter),
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.width(Dimens.padding))
+        FilterMenu(dropDownMenuExpanded, selectedFilter, state) { filter ->
+            dropDownMenuExpanded.value = false
+            selectedFilter.intValue = filter
+            viewModel.onEvent(
+                ScoresEvent.OnRequestScores(
+                    amount = filter
+                )
+            )
         }
     }
 }
@@ -178,7 +191,7 @@ private fun ScoresColumn(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.widthIn(min = 32.dp)
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Dimens.padding))
                 Text(
                     text = score.score.toString(),
                     color = MaterialTheme.colorScheme.onBackground,
@@ -213,7 +226,11 @@ private fun FilterMenu(
             onClick = { dropDownMenuExpanded.value = true },
         ) {
             Text(
-                text = if (selectedFilter.intValue == 0) stringResource(R.string.all) else "${selectedFilter.intValue} ${stringResource(R.string.cards)}",
+                text = if (selectedFilter.intValue == 0) {
+                    stringResource(R.string.all)
+                } else {
+                    "${selectedFilter.intValue} ${stringResource(R.string.cards)}"
+                },
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -226,7 +243,11 @@ private fun FilterMenu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = if (filter == 0) stringResource(R.string.all) else "$filter ${stringResource(R.string.cards)}",
+                            text = if (filter == 0) {
+                                stringResource(R.string.all)
+                            } else {
+                                "$filter ${stringResource(R.string.cards)}"
+                            },
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = if (selectedFilter.intValue == filter) FontWeight.Bold else FontWeight.Normal
@@ -242,6 +263,7 @@ private fun FilterMenu(
 }
 
 @Composable
+@Suppress("LongMethod", "MagicNumber")
 internal fun ScoreScreenPreviewWrapper(
     isDarkMode: Boolean = false,
     state: ScoreState
@@ -258,7 +280,7 @@ internal fun ScoreScreenPreviewWrapper(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .padding(16.dp),
+                .padding(Dimens.padding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(32.dp))
@@ -269,7 +291,7 @@ internal fun ScoreScreenPreviewWrapper(
                     .heightIn(min = 60.dp, max = 120.dp)
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -282,11 +304,11 @@ internal fun ScoreScreenPreviewWrapper(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Dimens.padding))
                 FilterMenu(dropDownMenuExpanded, selectedFilter, state) { }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
 
             if (state.isLoading) {
                 Box(
@@ -304,7 +326,7 @@ internal fun ScoreScreenPreviewWrapper(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = Dimens.padding)
                 )
             } else {
                 ScoresColumn(
@@ -321,9 +343,9 @@ internal fun ScoreScreenPreviewWrapper(
                 onClick = { }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(Dimens.padding))
             Narcisus()
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
         }
     }
 }
