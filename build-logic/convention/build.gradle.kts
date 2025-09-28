@@ -1,3 +1,5 @@
+import org.gradle.initialization.DependenciesAccessors
+import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -21,6 +23,10 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.dokka.gradlePlugin)
+    // The line below allows us to access the libs from version catalog directly in the plugins
+    gradle.serviceOf<DependenciesAccessors>().classes.asFiles.forEach {
+        compileOnly(files(it.absolutePath))
+    }
 }
 
 gradlePlugin {
@@ -33,9 +39,9 @@ gradlePlugin {
             id = "io.lb.detekt"
             implementationClass = "DetektConventionPlugin"
         }
-        register("DokkaModuleConventionPlugin") {
+        register("DokkaConventionPlugin") {
             id = "io.lb.dokka"
-            implementationClass = "DokkaModuleConventionPlugin"
+            implementationClass = "DokkaConventionPlugin"
         }
         register("JacocoJvmConventionPlugin") {
             id = "io.lb.jacoco.jvm.module"

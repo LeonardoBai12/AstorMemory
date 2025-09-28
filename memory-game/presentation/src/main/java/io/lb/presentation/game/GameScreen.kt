@@ -1,5 +1,10 @@
 package io.lb.presentation.game
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseOutBounce
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +16,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,31 +31,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import io.lb.common.data.model.AstorCard
 import io.lb.presentation.R
+import io.lb.presentation.game.model.GameCard
 import io.lb.presentation.ui.components.LoadingIndicator
 import io.lb.presentation.ui.components.MemoryGameCard
 import io.lb.presentation.ui.components.MemoryGameRedButton
 import io.lb.presentation.ui.components.MemoryGameRestartButton
 import io.lb.presentation.ui.components.MemoryGameStopButton
 import io.lb.presentation.ui.navigation.MemoryGameScreens
+import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
+import io.lb.presentation.ui.theme.Dimens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
+private const val CLICK_LOCK_DELAY = 100L
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -62,11 +78,8 @@ internal fun GameScreen(
     onCardMatched: (Int) -> Unit,
 ) {
     val state = viewModel.state.collectAsState().value
-    val lastSelectedCard = remember {
-        mutableStateOf("")
-    }
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenWidthDp.dp
+    val lastSelectedCard = remember { mutableStateOf("") }
+    var restartTrigger by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(key1 = "GameScreen") {
         viewModel.eventFlow.collectLatest { event ->
@@ -82,11 +95,22 @@ internal fun GameScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            GameTopBar(navController, state, viewModel, lastSelectedCard, isDarkMode)
+            GameTopBar(
+                navController = navController,
+                state = state,
+                viewModel = viewModel,
+                lastSelectedCard = lastSelectedCard,
+                isDarkMode = isDarkMode,
+                onRestart = { restartTrigger++ }
+            )
         }
     ) { padding ->
         if (state.isLoading) {
-            LoadingIndicator(screenHeight = screenHeight)
+            LoadingIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            )
         } else if (state.message.isNullOrEmpty().not() ||
             state.cards.isEmpty() ||
             state.message == "null"
@@ -103,9 +127,95 @@ internal fun GameScreen(
                 onCardFlipped = onCardFlipped,
                 onCardMatched = {
                     onCardMatched(state.cards.filter { it.isMatched }.size)
-                }
+                },
+                restartTrigger = restartTrigger
             )
         }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun GameTopBar(
+    navController: NavController,
+    state: GameState,
+    viewModel: GameViewModel,
+    lastSelectedCard: MutableState<String>,
+    isDarkMode: Boolean,
+    onRestart: () -> Unit
+) {
+    TopAppBar(
+        modifier = Modifier.padding(top = Dimens.smallerPadding),
+        title = {
+            Column(
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = Dimens.smallerPadding)
+                        .fillMaxWidth(),
+                    text = if (state.isLoading.not() && state.score > 0) {
+                        "${state.score} pts"
+                    } else {
+                        ""
+                    },
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.End
+                )
+                ComboContent(state, isDarkMode)
+            }
+        },
+        navigationIcon = {
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .widthIn(max = 48.dp)
+                ) {
+                    MemoryGameStopButton {
+                        navController.navigate(MemoryGameScreens.Menu.name) {
+                            popUpTo(MemoryGameScreens.Menu.name) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                }
+                if (state.isLoading.not() && state.message.isNullOrEmpty() &&
+                    state.cards.any { it.isMatched.not() }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .widthIn(max = 48.dp)
+                    ) {
+                        MemoryGameRestartButton {
+                            lastSelectedCard.value = ""
+                            viewModel.onEvent(GameEvent.GameRestarted)
+                            onRestart()
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun ComboContent(state: GameState, isDarkMode: Boolean) {
+    if (state.currentCombo > 1) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = Dimens.smallerPadding)
+                .fillMaxWidth(),
+            text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.W600,
+            textAlign = TextAlign.End,
+            color = topBarTextColor(isDarkMode)
+        )
+    } else {
+        Spacer(modifier = Modifier.height(Dimens.largePadding))
     }
 }
 
@@ -118,11 +228,12 @@ private fun ErrorMessage(
     Surface(
         modifier = Modifier
             .padding(padding)
-            .padding(16.dp)
+            .padding(Dimens.padding)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(32.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -132,95 +243,18 @@ private fun ErrorMessage(
                     it.isNullOrEmpty().not() && it != "null"
                 } ?: stringResource(R.string.ops_something_went_wrong),
                 fontWeight = FontWeight.W600,
-                fontSize = 24.sp
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            MemoryGameRedButton(stringResource(R.string.try_again)) {
-                viewModel.onEvent(GameEvent.OnRequestGames)
-            }
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            MemoryGameRedButton(
+                text = stringResource(R.string.try_again),
+                onClick = {
+                    viewModel.onEvent(GameEvent.OnRequestGames)
+                }
+            )
         }
     }
-}
-
-@ExperimentalMaterial3Api
-@Composable
-private fun GameTopBar(
-    navController: NavController,
-    state: GameState,
-    viewModel: GameViewModel,
-    lastSelectedCard: MutableState<String>,
-    isDarkMode: Boolean
-) {
-    TopAppBar(
-        modifier = Modifier.padding(top = 8.dp),
-        title = {
-            Column(
-                verticalArrangement = Arrangement.Top
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    text = if (state.isLoading.not() && state.score > 0) {
-                        "${state.score} pts"
-                    } else {
-                        ""
-                    },
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.W600,
-                    textAlign = TextAlign.End
-                )
-                if (state.currentCombo > 1) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .fillMaxWidth(),
-                        text = stringResource(R.string.combo_bonus, (state.currentCombo) * 10),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W600,
-                        textAlign = TextAlign.End,
-                        color = if (isDarkMode) {
-                            Color.Yellow
-                        } else {
-                            Color.DarkGray
-                        }
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-            }
-        },
-        navigationIcon = {
-            Row {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(0.2f)
-                ) {
-                    MemoryGameStopButton {
-                        navController.navigate(MemoryGameScreens.Menu.name) {
-                            popUpTo(MemoryGameScreens.Menu.name) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                }
-                if (state.isLoading.not() && state.message.isNullOrEmpty() &&
-                    state.cards.any { it.isMatched.not() }) {
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .fillMaxWidth(0.3f)
-                    ) {
-                        MemoryGameRestartButton {
-                            lastSelectedCard.value = ""
-                            viewModel.onEvent(GameEvent.GameRestarted)
-                        }
-                    }
-                }
-            }
-        }
-    )
 }
 
 @ExperimentalFoundationApi
@@ -235,49 +269,104 @@ private fun CardGrid(
     cardsPerColumn: Int,
     onCardFlipped: () -> Unit,
     onCardMatched: () -> Unit,
+    restartTrigger: Int = 0
 ) {
-    val clickLock = remember {
-        mutableStateOf(false)
+    val clickLock = remember { mutableStateOf(false) }
+    var isVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(state.cards.isNotEmpty(), restartTrigger) {
+        if (state.cards.isNotEmpty()) {
+            isVisible = false
+            delay(50)
+            isVisible = true
+        }
     }
     LazyVerticalGrid(
         modifier = Modifier
             .padding(padding)
-            .padding(top = 12.dp)
-            .padding(horizontal = 12.dp),
+            .padding(top = Dimens.smallerPadding)
+            .padding(horizontal = Dimens.smallerPadding),
         columns = GridCells.Fixed(cardsPerLine),
         userScrollEnabled = true,
+        contentPadding = PaddingValues(bottom = Dimens.padding)
     ) {
-        items(state.cards.size) { index ->
-            MemoryGameCard(
-                card = state.cards[index],
-                cardsPerLine = cardsPerLine,
-                cardsPerColumn = cardsPerColumn
+        items(
+            count = state.cards.size,
+            key = { index -> index }
+        ) { index ->
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        delayMillis = index * 50,
+                        easing = EaseOutBounce
+                    )
+                ) + fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        delayMillis = index * 50
+                    )
+                ),
+                modifier = Modifier.animateItem()
             ) {
-                if (clickLock.value) {
-                    return@MemoryGameCard
-                }
-                clickLock.value = true
-
-                if (state.cards[index].isFlipped || state.cards[index].isMatched) {
-                    return@MemoryGameCard
-                }
-                if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
-                    clickLock.value = false
-                    return@MemoryGameCard
-                }
-
-                onCardFlipped()
-                afterCardFlipped(
-                    lastSelectedCard = lastSelectedCard,
+                GameCard(
                     state = state,
                     index = index,
+                    cardsPerLine = cardsPerLine,
+                    cardsPerColumn = cardsPerColumn,
+                    clickLock = clickLock,
+                    onCardFlipped = onCardFlipped,
+                    lastSelectedCard = lastSelectedCard,
                     viewModel = viewModel,
                     onCardMatched = onCardMatched
                 )
-
-                resetClickLock(clickLock)
             }
         }
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Composable
+private fun GameCard(
+    state: GameState,
+    index: Int,
+    cardsPerLine: Int,
+    cardsPerColumn: Int,
+    clickLock: MutableState<Boolean>,
+    onCardFlipped: () -> Unit,
+    lastSelectedCard: MutableState<String>,
+    viewModel: GameViewModel,
+    onCardMatched: () -> Unit
+) {
+    MemoryGameCard(
+        card = state.cards[index],
+        cardsPerLine = cardsPerLine,
+        cardsPerColumn = cardsPerColumn
+    ) {
+        if (clickLock.value) {
+            return@MemoryGameCard
+        }
+        clickLock.value = true
+
+        if (state.cards[index].isFlipped || state.cards[index].isMatched) {
+            clickLock.value = false
+            return@MemoryGameCard
+        }
+        if (state.cards.filter { it.isFlipped && it.isMatched.not() }.size >= 2) {
+            clickLock.value = false
+            return@MemoryGameCard
+        }
+        onCardFlipped()
+        afterCardFlipped(
+            lastSelectedCard = lastSelectedCard,
+            state = state,
+            index = index,
+            viewModel = viewModel,
+            onCardMatched = onCardMatched
+        )
+        resetClickLock(clickLock)
     }
 }
 
@@ -307,7 +396,408 @@ private fun afterCardFlipped(
 
 private fun resetClickLock(clickLock: MutableState<Boolean>) {
     CoroutineScope(Dispatchers.Main).launch {
-        delay(100)
+        delay(CLICK_LOCK_DELAY)
         clickLock.value = false
+    }
+}
+
+@ExperimentalMaterial3Api
+@ExperimentalFoundationApi
+@Composable
+internal fun GameScreenPreviewWrapper(
+    isDarkMode: Boolean = false,
+    gameState: GameState
+) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            GameTopBarPreview(gameState, isDarkMode)
+        }
+    ) { padding ->
+        if (gameState.isLoading) {
+            LoadingIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            )
+        } else if (gameState.message.isNullOrEmpty().not() ||
+            gameState.cards.isEmpty() ||
+            gameState.message == "null"
+        ) {
+            ErrorMessagePreview(padding, gameState)
+        } else {
+            CardGridPreview(
+                padding = padding,
+                gameState = gameState
+            )
+        }
+    }
+}
+
+@Composable
+private fun ErrorMessagePreview(
+    padding: PaddingValues,
+    state: GameState
+) {
+    Surface(
+        modifier = Modifier
+            .padding(padding)
+            .padding(Dimens.padding)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = state.message.takeIf {
+                    it.isNullOrEmpty().not() && it != "null"
+                } ?: "Oops! Something went wrong",
+                fontWeight = FontWeight.W600,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(Dimens.largePadding))
+            MemoryGameRedButton(
+                text = "Try Again",
+                onClick = { }
+            )
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+private fun GameTopBarPreview(
+    state: GameState,
+    isDarkMode: Boolean
+) {
+    TopAppBar(
+        modifier = Modifier.padding(top = Dimens.smallerPadding),
+        title = {
+            Column(
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = Dimens.smallerPadding)
+                        .fillMaxWidth(),
+                    text = if (state.isLoading.not() && state.score > 0) {
+                        "${state.score} pts"
+                    } else {
+                        ""
+                    },
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.End
+                )
+                if (state.currentCombo > 1) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = Dimens.smallerPadding)
+                            .fillMaxWidth(),
+                        text = "Combo +${(state.currentCombo) * 10}!",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.W600,
+                        textAlign = TextAlign.End,
+                        color = topBarTextColor(isDarkMode)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(Dimens.largePadding))
+                }
+            }
+        },
+        navigationIcon = {
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .widthIn(max = 48.dp)
+                ) {
+                    MemoryGameStopButton { }
+                }
+                if (state.isLoading.not() && state.message.isNullOrEmpty() &&
+                    state.cards.any { it.isMatched.not() }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .widthIn(max = 48.dp),
+                        content = { MemoryGameRestartButton { } }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun topBarTextColor(isDarkMode: Boolean) = if (isDarkMode) {
+    Color.Yellow
+} else {
+    Color.DarkGray
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Composable
+private fun CardGridPreview(
+    padding: PaddingValues,
+    gameState: GameState
+) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .padding(padding)
+            .padding(top = Dimens.smallerPadding)
+            .padding(horizontal = Dimens.smallerPadding),
+        columns = GridCells.Fixed(4),
+        userScrollEnabled = true,
+        contentPadding = PaddingValues(bottom = Dimens.padding)
+    ) {
+        items(gameState.cards.size) { index ->
+            MemoryGameCard(
+                card = gameState.cards[index],
+                cardsPerLine = 4,
+                cardsPerColumn = 6
+            ) { }
+        }
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Loading State", showBackground = true)
+@Composable
+internal fun GameScreenLoadingPreview() {
+    val mockState = GameState(
+        cards = emptyList(),
+        currentCombo = 0,
+        message = null,
+        isLoading = true,
+        score = 0,
+        amount = 12
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Error State", showBackground = true)
+@Composable
+internal fun GameScreenErrorPreview() {
+    val mockState = GameState(
+        cards = emptyList(),
+        currentCombo = 0,
+        message = "Failed to load cards. Please check your connection.",
+        isLoading = false,
+        score = 0,
+        amount = 8
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Game Playing", showBackground = true)
+@Composable
+internal fun GameScreenPlayingPreview() {
+    val mockAstorCard = AstorCard(
+        id = "1",
+        astorId = 1,
+        imageUrl = "",
+        imageData = ByteArray(0),
+        name = "Sample Card"
+    )
+
+    val mockCards = (0..11).map { index ->
+        GameCard(
+            isFlipped = index < 4,
+            isMatched = index < 2,
+            astorCard = mockAstorCard.copy(id = index.toString(), name = "Card ${index + 1}")
+        )
+    }
+
+    val mockState = GameState(
+        cards = mockCards,
+        currentCombo = 0,
+        message = null,
+        isLoading = false,
+        score = 1450,
+        amount = 12
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Game with Combo", showBackground = true)
+@Composable
+internal fun GameScreenComboPreview() {
+    val mockAstorCard = AstorCard(
+        id = "1",
+        astorId = 1,
+        imageUrl = "",
+        imageData = ByteArray(0),
+        name = "Sample Card"
+    )
+
+    val mockCards = (0..15).map { index ->
+        GameCard(
+            isFlipped = index < 6,
+            isMatched = index < 4,
+            astorCard = mockAstorCard.copy(id = index.toString(), name = "Card ${index + 1}")
+        )
+    }
+
+    val mockState = GameState(
+        cards = mockCards,
+        currentCombo = 3,
+        message = null,
+        isLoading = false,
+        score = 2280,
+        amount = 16
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Dark Mode", showBackground = true)
+@Composable
+internal fun GameScreenDarkPreview() {
+    val mockAstorCard = AstorCard(
+        id = "1",
+        astorId = 1,
+        imageUrl = "",
+        imageData = ByteArray(0),
+        name = "Sample Card"
+    )
+
+    val mockCards = (0..9).map { index ->
+        GameCard(
+            isFlipped = index < 3,
+            isMatched = index < 1,
+            astorCard = mockAstorCard.copy(id = index.toString(), name = "Card ${index + 1}")
+        )
+    }
+
+    val mockState = GameState(
+        cards = mockCards,
+        currentCombo = 2,
+        message = null,
+        isLoading = false,
+        score = 890,
+        amount = 10
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = true) {
+        GameScreenPreviewWrapper(
+            isDarkMode = true,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Large Font", showBackground = true, fontScale = 1.5f)
+@Composable
+internal fun GameScreenLargeFontPreview() {
+    val mockAstorCard = AstorCard(
+        id = "1",
+        astorId = 1,
+        imageUrl = "",
+        imageData = ByteArray(0),
+        name = "Sample Card"
+    )
+
+    val mockCards = (0..7).map { index ->
+        GameCard(
+            isFlipped = index < 2,
+            isMatched = index < 1,
+            astorCard = mockAstorCard.copy(id = index.toString(), name = "Card ${index + 1}")
+        )
+    }
+
+    val mockState = GameState(
+        cards = mockCards,
+        currentCombo = 4,
+        message = null,
+        isLoading = false,
+        score = 3420,
+        amount = 8
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Preview(name = "Small Screen", showBackground = true, widthDp = 320, heightDp = 480)
+@Composable
+internal fun GameScreenSmallPreview() {
+    val mockAstorCard = AstorCard(
+        id = "1",
+        astorId = 1,
+        imageUrl = "",
+        imageData = ByteArray(0),
+        name = "Sample Card"
+    )
+
+    val mockCards = (0..11).map { index ->
+        GameCard(
+            isFlipped = index < 3,
+            isMatched = index < 1,
+            astorCard = mockAstorCard.copy(id = index.toString(), name = "Card ${index + 1}")
+        )
+    }
+
+    val mockState = GameState(
+        cards = mockCards,
+        currentCombo = 0,
+        message = null,
+        isLoading = false,
+        score = 720,
+        amount = 12
+    )
+
+    AstorMemoryChallengeTheme(darkTheme = false) {
+        GameScreenPreviewWrapper(
+            isDarkMode = false,
+            gameState = mockState
+        )
     }
 }

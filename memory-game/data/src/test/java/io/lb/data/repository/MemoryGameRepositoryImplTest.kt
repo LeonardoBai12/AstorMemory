@@ -1,9 +1,10 @@
 package io.lb.data.repository
 
-import io.lb.common.data.model.AstorCard
+import android.content.Context
 import io.lb.common.data.model.Score
 import io.lb.data.datasource.MemoryGameDataSource
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -14,12 +15,14 @@ import org.junit.jupiter.api.Test
 
 class MemoryGameRepositoryImplTest {
     private lateinit var dataSource: MemoryGameDataSource
+    private lateinit var context: Context
     private lateinit var repository: MemoryGameRepositoryImpl
 
     @BeforeEach
     fun setUp() {
         dataSource = mockk(relaxed = true)
-        repository = MemoryGameRepositoryImpl(dataSource)
+        context = mockk(relaxed = true)
+        repository = MemoryGameRepositoryImpl(context, dataSource)
     }
 
     @AfterEach
@@ -28,43 +31,39 @@ class MemoryGameRepositoryImplTest {
     }
 
     @Test
-    fun `When get astor pairs, expect a list of astor pairs`() = runTest {
-        coEvery { dataSource.getAstorPairs(2) } returns listOf(
-            AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
-            AstorCard(2, "Ivysaur.png", "Ivysaur")
+    fun `When get scores, expect a score list`() = runTest {
+        val scores = listOf(
+            Score(score = 1000, amount = 5, timeMillis = 123456789L),
+            Score(score = 2000, amount = 10, timeMillis = 987654321L)
         )
+        coEvery { dataSource.getScores() } returns scores
 
-        val astorPairs = repository.getAstorPairs(2)
+        val result = repository.getScores()
 
-        assertEquals(2, astorPairs.size)
-        assertEquals(
-            listOf(
-                AstorCard(1, "Bulbasaur.png", "Bulbasaur"),
-                AstorCard(2, "Ivysaur.png", "Ivysaur")
-            ),
-            astorPairs
-        )
+        assertEquals(2, result.size)
+        assertEquals(scores, result)
     }
 
     @Test
-    fun `When get scores, expect a score list`() = runTest {
-        coEvery { dataSource.getScores() } returns listOf(
-            Score(1, 1000),
-            Score(2, 2000)
+    fun `When get scores by amount, expect a score list for that amount`() = runTest {
+        val scores = listOf(
+            Score(score = 1000, amount = 5, timeMillis = 123456789L),
+            Score(score = 1500, amount = 5, timeMillis = 987654321L)
         )
+        coEvery { dataSource.getScoresByAmount(5) } returns scores
 
-        val scores = repository.getScores()
+        val result = repository.getScoresByAmount(5)
 
-        assertEquals(2, scores.size)
-        assertEquals(
-            listOf(Score(1, 1000), Score(2, 2000)),
-            scores
-        )
+        assertEquals(2, result.size)
+        assertEquals(scores, result)
     }
 
     @Test
     fun `When insert score, expect score to be inserted`() = runTest {
-        coEvery { dataSource.insertScore(1000) } returns Unit
-        repository.insertScore(1000)
+        coEvery { dataSource.insertScore(1000, 5) } returns Unit
+
+        repository.insertScore(1000, 5)
+
+        coVerify { dataSource.insertScore(1000, 5) }
     }
 }

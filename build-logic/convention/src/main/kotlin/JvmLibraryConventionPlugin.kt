@@ -23,8 +23,8 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.jvm")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("io.lb.jacoco.jvm.module")
-                apply("io.lb.detekt")
                 apply("io.lb.dokka")
+                apply("io.lb.detekt")
             }
 
             extensions.configure<KotlinJvmProjectExtension> {
@@ -33,13 +33,13 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
 
             dependencies {
                 with(libs) {
-                    implementation(findLibrary("kotlinx-coroutines-core").get())
-                    testImplementation(findLibrary("mockk").get())
-                    testImplementation(findLibrary("junit-jupiter-api").get())
-                    testImplementation(findLibrary("junit-jupiter-params").get())
-                    testImplementation(findLibrary("assertk").get())
-                    testImplementation(findLibrary("kotlinx-coroutines-test").get())
-                    testImplementation(findLibrary("kotlin-test-junit").get())
+                    implementation(kotlinx.coroutines.core)
+                    testImplementation(mockk)
+                    testImplementation(junit.jupiter.api)
+                    testImplementation(junit.jupiter.params)
+                    testImplementation(assertk)
+                    testImplementation(kotlinx.coroutines.test)
+                    testImplementation(kotlin.test.junit)
                 }
             }
         }

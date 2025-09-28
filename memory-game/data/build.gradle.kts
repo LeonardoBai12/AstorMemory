@@ -14,4 +14,5 @@ dependencies {
     implementation(project(":memory-game:domain"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    testImplementation(kotlin("test"))
 }

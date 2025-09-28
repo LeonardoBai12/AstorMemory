@@ -31,8 +31,8 @@ class GetScoresUseCaseTest {
     @Test
     fun `When get scores, expect a list of scores`() = runTest {
         val scores = listOf(
-            Score(1, 100),
-            Score(2, 200)
+            Score(score = 100, amount = 5, timeMillis = 123456789L),
+            Score(score = 200, amount = 10, timeMillis = 987654321L)
         )
         coEvery { repository.getScores() } returns scores
         val states = mutableListOf<Resource<List<Score>>>()

@@ -12,15 +12,15 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.core.content.edit
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import io.lb.presentation.game.GameScreen
 import io.lb.presentation.gameover.GameOverScreen
@@ -30,6 +30,8 @@ import io.lb.presentation.settings.SettingsScreen
 import io.lb.presentation.ui.navigation.MemoryGameScreens
 import io.lb.presentation.ui.theme.AstorMemoryChallengeTheme
 import io.lb.presentation.util.buildSoundPool
+import io.lb.presentation.util.gameOverArgs
+import io.lb.presentation.util.gameScreenArgs
 import io.lb.presentation.util.pauseMusic
 import io.lb.presentation.util.playFlipEffect
 import io.lb.presentation.util.playInitialMatchEffect
@@ -57,10 +59,65 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initVariables()
+        setContent {
+            val navController = rememberNavController()
+            val isDarkMode = localDarkMode()
+            val isDarkModeState = remember {
+                mutableStateOf(sharedPref.getBoolean("darkMode", isDarkMode))
+            }
+            AstorMemoryChallengeTheme(isDarkModeState.value) {
+                Surface {
+                    NavHost(
+                        navController = navController,
+                        startDestination = MemoryGameScreens.Menu.name
+                    ) {
+                        composable(MemoryGameScreens.Menu.name) {
+                            StartMenuScreen(
+                                navController = navController,
+                                isDarkMode = localDarkMode()
+                            )
+                        }
+                        composable(MemoryGameScreens.Settings.name) {
+                            SettingsScreenNav(navController, isDarkModeState)
+                        }
+                        composable(
+                            route = MemoryGameScreens.Game.name + "/{amount}",
+                            arguments = gameScreenArgs()
+                        ) { backStackEntry ->
+                            BackHandler(navController)
+                            StartGameScreen(
+                                backStackEntry,
+                                navController
+                            )
+                        }
+                        composable(
+                            route = MemoryGameScreens.HighScores.name,
+                        ) {
+                            StartScoreScreen(
+                                navController = navController,
+                                isDarkMode = localDarkMode(),
+                            )
+                        }
+                        composable(
+                            route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
+                            arguments = gameOverArgs()
+                        ) { backStackEntry ->
+                            StartGameOverScreen(
+                                backStackEntry = backStackEntry,
+                                navController = navController,
+                                isDarkMode = localDarkMode(),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    private fun initVariables() {
         soundPool = buildSoundPool(this)
         sharedPref = getSharedPreferences("memory_game", MODE_PRIVATE)
-
         titleMediaPlayer = MediaPlayer.create(this, R.raw.title_screen)
         wildMediaPlayer = MediaPlayer.create(this, R.raw.wild)
         trainerBattleMediaPlayer = MediaPlayer.create(this, R.raw.trainer)
@@ -71,102 +128,32 @@ class MainActivity : ComponentActivity() {
         victoryRoadMediaPlayer = MediaPlayer.create(this, R.raw.victory_road)
         lavenderMediaPlayer = MediaPlayer.create(this, R.raw.lavender)
         finalVictoryMediaPlayer = MediaPlayer.create(this, R.raw.victory_final)
+    }
 
-        setContent {
-            val navController = rememberNavController()
-            val isDarkMode = sharedPref.getBoolean("darkMode", isSystemInDarkTheme())
-            val isDarkModeState = remember {
-                mutableStateOf(sharedPref.getBoolean("darkMode", isDarkMode))
-            }
-
-            AstorMemoryChallengeTheme(isDarkModeState.value) {
-                Surface {
-                    NavHost(
-                        navController = navController,
-                        startDestination = MemoryGameScreens.Menu.name
-                    ) {
-                        composable(MemoryGameScreens.Menu.name) {
-                            StartMenuScreen(
-                                navController = navController,
-                                isDarkMode = sharedPref.getBoolean(
-                                    "darkMode",
-                                    isSystemInDarkTheme()
-                                )
-                            )
-                        }
-                        composable(MemoryGameScreens.Settings.name) {
-                            BackHandler(navController)
-                            SettingsScreen(
-                                navController = navController,
-                                cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
-                                cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
-                                isDarkMode = sharedPref.getBoolean(
-                                    "darkMode",
-                                    isSystemInDarkTheme()
-                                ),
-                                onChangeDarkMode = { darkMode ->
-                                    sharedPref.edit().putBoolean("darkMode", darkMode).apply()
-                                    isDarkModeState.value = darkMode
-                                },
-                                onChangeCardsPerLine = { cardsPerLine ->
-                                    sharedPref.edit().putInt("cardsPerLine", cardsPerLine).apply()
-                                },
-                                onChangeCardsPerColumn = { cardsPerColumn ->
-                                    sharedPref.edit().putInt("cardsPerColumn", cardsPerColumn)
-                                        .apply()
-                                }
-                            )
-                        }
-                        composable(
-                            route = MemoryGameScreens.Game.name + "/{amount}",
-                            arguments = listOf(
-                                navArgument(name = "amount") {
-                                    type = NavType.IntType
-                                }
-                            )
-                        ) { backStackEntry ->
-                            BackHandler(navController)
-                            StartGameScreen(
-                                backStackEntry, navController
-                            )
-                        }
-                        composable(
-                            route = MemoryGameScreens.HighScores.name,
-                        ) {
-                            BackHandler(navController)
-                            StartScoreScreen(
-                                navController = navController,
-                                isDarkMode = sharedPref.getBoolean(
-                                    "darkMode",
-                                    isSystemInDarkTheme()
-                                ),
-                            )
-                        }
-                        composable(
-                            route = MemoryGameScreens.GameOver.name + "/{score}/{amount}",
-                            arguments = listOf(
-                                navArgument(name = "score") {
-                                    type = NavType.IntType
-                                },
-                                navArgument(name = "amount") {
-                                    type = NavType.IntType
-                                }
-                            )
-                        ) { backStackEntry ->
-                            BackHandler(navController)
-                            StartGameOverScreen(
-                                backStackEntry = backStackEntry,
-                                navController = navController,
-                                isDarkMode = sharedPref.getBoolean(
-                                    "darkMode",
-                                    isSystemInDarkTheme()
-                                ),
-                            )
-                        }
-                    }
+    @Composable
+    private fun SettingsScreenNav(
+        navController: NavHostController,
+        isDarkModeState: MutableState<Boolean>
+    ) {
+        BackHandler(navController)
+        SettingsScreen(
+            navController = navController,
+            cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
+            cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
+            isDarkMode = localDarkMode(),
+            onChangeDarkMode = { darkMode ->
+                sharedPref.edit { putBoolean("darkMode", darkMode) }
+                isDarkModeState.value = darkMode
+            },
+            onChangeCardsPerLine = { cardsPerLine ->
+                sharedPref.edit { putInt("cardsPerLine", cardsPerLine) }
+            },
+            onChangeCardsPerColumn = { cardsPerColumn ->
+                sharedPref.edit {
+                    putInt("cardsPerColumn", cardsPerColumn)
                 }
             }
-        }
+        )
     }
 
     @Composable
@@ -203,11 +190,11 @@ class MainActivity : ComponentActivity() {
 
             initialAmount = sharedPref.getInt("amount", 6),
             onChangeAmount = {
-                sharedPref.edit().putInt("amount", it).apply()
+                sharedPref.edit { putInt("amount", it) }
             },
             isMuted = sharedPref.getBoolean("isMuted", false),
             onChangeMuted = {
-                sharedPref.edit().putBoolean("isMuted", it).apply()
+                sharedPref.edit { putBoolean("isMuted", it) }
                 if (it) {
                     pauseAll()
                 } else {
@@ -276,7 +263,7 @@ class MainActivity : ComponentActivity() {
         }
         GameScreen(
             navController = navController,
-            isDarkMode = sharedPref.getBoolean("darkMode", isSystemInDarkTheme()),
+            isDarkMode = localDarkMode(),
             cardsPerLine = sharedPref.getInt("cardsPerLine", 4),
             cardsPerColumn = sharedPref.getInt("cardsPerColumn", 6),
             onCardFlipped = {
@@ -293,10 +280,19 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
+    private fun localDarkMode(
+        isDarkMode: Boolean = isSystemInDarkTheme()
+    ): Boolean = sharedPref.getBoolean(
+        "darkMode",
+        isDarkMode
+    )
+
+    @Composable
     private fun StartScoreScreen(
         navController: NavHostController,
         isDarkMode: Boolean
     ) {
+        BackHandler(navController)
         if (sharedPref.getBoolean("isMuted", false).not()) {
             highScoresMediaPlayer.playMusic()
             lavenderMediaPlayer.pauseMusic()
@@ -321,6 +317,7 @@ class MainActivity : ComponentActivity() {
         isDarkMode: Boolean,
         navController: NavHostController
     ) {
+        BackHandler(navController)
         val score = backStackEntry.arguments?.getInt("score")
         val amount = backStackEntry.arguments?.getInt("amount") ?: 6
         if (sharedPref.getBoolean("isMuted", false).not()) {

@@ -10,8 +10,8 @@ android {
     namespace = "io.lb.astormemory.app"
 
     defaultConfig {
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.1.1"
     }
 
     packaging {
@@ -20,10 +20,10 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.android.play:integrity:1.4.0")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.integrity)
     implementation(project(":impl:room-database"))
     implementation(project(":memory-game:data"))
     implementation(project(":memory-game:domain"))

@@ -9,6 +9,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import provider.libs
+import provider.versionOf
 
 /**
  * Plugin to apply Android app conventions.
@@ -25,6 +26,7 @@ class AndroidAppConventionPlugin : Plugin<Project> {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlin.plugin.compose")
                 apply("io.lb.jacoco.android.module")
                 apply("io.lb.detekt")
                 apply("io.lb.dokka")
@@ -32,31 +34,28 @@ class AndroidAppConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = libs.findVersion("targetSdk")
-                    .get()
-                    .toString()
-                    .toInt()
+                defaultConfig.targetSdk = versionOf("targetSdk")
             }
 
             dependencies {
                 with(libs) {
-                    implementation(findLibrary("androidx-core-ktx").get())
-                    implementation(findLibrary("androidx-lifecycle-runtime-ktx").get())
-                    implementation(findLibrary("androidx-activity-compose").get())
-                    implementation(platform(findLibrary("androidx-compose-bom").get()))
-                    implementation(findLibrary("androidx-ui").get())
-                    implementation(findLibrary("androidx-ui-graphics").get())
-                    implementation(findLibrary("androidx-ui-tooling-preview").get())
-                    implementation(findLibrary("androidx-material3").get())
-                    implementation(findLibrary("kotlinx-coroutines-android").get())
-                    testImplementation(findLibrary("mockk").get())
-                    testImplementation(findLibrary("junit-jupiter-api").get())
-                    testImplementation(findLibrary("junit-jupiter-params").get())
-                    testImplementation(findLibrary("assertk").get())
-                    testImplementation(findLibrary("kotlinx-coroutines-test").get())
-                    testImplementation(findLibrary("kotlin-test-junit").get())
-                    androidTestImplementation(findLibrary("androidx-espresso-core").get())
-                    debugImplementation(findLibrary("androidx-ui-tooling").get())
+                    implementation(androidx.core.ktx)
+                    implementation(androidx.lifecycle.runtime.ktx)
+                    implementation(androidx.activity.compose)
+                    implementation(platform(androidx.compose.bom))
+                    implementation(androidx.ui.compose)
+                    implementation(androidx.ui.graphics)
+                    implementation(androidx.ui.tooling.preview)
+                    implementation(androidx.material3)
+                    implementation(kotlinx.coroutines.android)
+                    testImplementation(mockk)
+                    testImplementation(junit.jupiter.api)
+                    testImplementation(junit.jupiter.params)
+                    testImplementation(assertk)
+                    testImplementation(kotlinx.coroutines.test)
+                    testImplementation(kotlin.test.junit)
+                    androidTestImplementation(androidx.espresso.core)
+                    debugImplementation(androidx.ui.tooling.compose)
                 }
             }
         }
