@@ -134,7 +134,7 @@ internal class ScoreViewModel @Inject constructor(
 
                     _state.update {
                         it.copy(
-                            scores = scores.take(10),
+                            scores = scores.take(AMOUNT_TAKEN),
                             isLoading = false,
                             filters = availableAmounts.sorted(),
                             message = null

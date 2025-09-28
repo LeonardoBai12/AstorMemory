@@ -24,4 +24,5 @@
     <string name="with_card_pairs">with %1$s card pairs</string>
     <string name="play_again">PLAY AGAIN</string>
     <string name="score_result">Score: %1$s</string>
+    <string name="game_screen_layout_config">Game Screen Layout</string>
 </resources>

@@ -99,22 +99,24 @@ internal class GameViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.Finish(state.value.score))
                 }
             }
-
             GameEvent.OnRequestGames -> {
                 getGames(amount)
             }
-
             GameEvent.GameRestarted -> {
-                viewModelScope.launch {
-                    mismatches = 0
-                    _state.update {
-                        it.copy(
-                            cards = games.map { game -> GameCard(astorCard = game) }.shuffled(),
-                            score = amount * 100,
-                            amount = amount
-                        )
-                    }
-                }
+                onGameRestarted()
+            }
+        }
+    }
+
+    private fun onGameRestarted() {
+        viewModelScope.launch {
+            mismatches = 0
+            _state.update {
+                it.copy(
+                    cards = games.map { game -> GameCard(astorCard = game) }.shuffled(),
+                    score = amount * 100,
+                    amount = amount
+                )
             }
         }
     }

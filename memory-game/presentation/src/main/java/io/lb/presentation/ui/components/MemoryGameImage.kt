@@ -2,14 +2,12 @@ package io.lb.presentation.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,7 +15,7 @@ import io.lb.presentation.R
 
 @Composable
 fun MemoryGameLogo(
-    modifier: Modifier = Modifier.fillMaxWidth(0.9f),
+    modifier: Modifier = Modifier,
 ) {
     Image(
         modifier = modifier

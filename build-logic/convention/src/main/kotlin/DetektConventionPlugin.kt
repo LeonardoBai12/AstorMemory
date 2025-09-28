@@ -18,7 +18,7 @@ class DetektConventionPlugin : Plugin<Project> {
             pluginManager.apply("io.gitlab.arturbosch.detekt")
 
             dependencies {
-                detektPlugins(libs.findLibrary("detekt-formatting").get())
+                detektPlugins(libs.detekt.formatting)
             }
         }
     }

@@ -13,7 +13,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -37,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import io.lb.presentation.R
 import io.lb.presentation.game.model.GameCard
+import io.lb.presentation.ui.theme.Dimens
 import io.lb.presentation.ui.theme.PrimaryRed
 
 @ExperimentalFoundationApi
@@ -104,8 +104,8 @@ private fun NotFlippedCard(
             containerColor = MaterialTheme.colorScheme.secondary
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp,
-            pressedElevation = 16.dp
+            defaultElevation = Dimens.defaultElevation,
+            pressedElevation = Dimens.pressedElevation
         ),
         onClick = {
             onClick()

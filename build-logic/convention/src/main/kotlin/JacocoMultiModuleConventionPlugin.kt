@@ -24,7 +24,7 @@ class JacocoMultiModuleConventionPlugin : Plugin<Project> {
                 tasks.register("jacocoProjectCoverageReport", JacocoReport::class.java) {
                     setupJacocoCoverageReport()
                     subprojects.forEach { subproject ->
-                        if (isJvm()) {
+                        if (subproject.isJvm()) {
                             dependsOn(subproject.tasks.matching { it.name == "test" })
                         } else {
                             dependsOn(subproject.tasks.matching { it.name == "testDebugUnitTest" })

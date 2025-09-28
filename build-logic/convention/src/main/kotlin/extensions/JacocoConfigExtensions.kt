@@ -55,6 +55,9 @@ internal fun Project.setDirectories(
                 fileTree(layout.buildDirectory.dir("intermediates/javac/")) {
                     exclude(EXCLUSION_LIST)
                 },
+                fileTree(layout.buildDirectory.dir("classes/kotlin/main/")) {
+                    exclude(EXCLUSION_LIST)
+                },
                 fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/")) {
                     exclude(EXCLUSION_LIST)
                 }
@@ -73,6 +76,9 @@ internal fun Project.setProjectDirectories(jacocoReport: JacocoReportBase) {
     jacocoReport.executionData.setFrom(project.files(allExecutionData))
     val allClassDirs = project.subprojects.map { subproject ->
         project.files(
+            project.fileTree(subproject.layout.buildDirectory.dir("classes/kotlin/main/")) {
+                exclude(EXCLUSION_LIST)
+            },
             project.fileTree(subproject.layout.buildDirectory.dir("intermediates/javac/")) {
                 exclude(EXCLUSION_LIST)
             },
