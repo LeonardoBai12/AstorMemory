@@ -27,5 +27,5 @@ jobs:
       - name: Upload documentation
         uses: actions/upload-artifact@v4
         with:
-          name: ProjectMiddleware-KDoc-Documentation
+          name: ProjectAstorMemory-KDoc-Documentation
           path: 'build/dokka/htmlMultiModule'

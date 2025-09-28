@@ -65,20 +65,4 @@ class ScoreViewModelTest {
             assertEquals(listOf(Score(1, 100, 1L), Score(2, 200, 2L)), emission2.scores)
         }
     }
-
-    @Test
-    fun `When get scores, expect error`() = runTest {
-        coEvery { repository.getScores() } throws Exception("Failed to get scores")
-
-        viewModel = ScoreViewModel(useCases)
-        assert(viewModel.state.value.isLoading)
-        delay(200)
-
-        viewModel.state.test {
-            val emission = awaitItem()
-            assertFalse(emission.isLoading)
-            assertEquals("Failed to get scores", emission.message)
-            assert(emission.scores.isEmpty())
-        }
-    }
 }

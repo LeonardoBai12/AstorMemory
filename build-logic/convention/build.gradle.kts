@@ -39,9 +39,9 @@ gradlePlugin {
             id = "io.lb.detekt"
             implementationClass = "DetektConventionPlugin"
         }
-        register("DokkaModuleConventionPlugin") {
+        register("DokkaConventionPlugin") {
             id = "io.lb.dokka"
-            implementationClass = "DokkaModuleConventionPlugin"
+            implementationClass = "DokkaConventionPlugin"
         }
         register("JacocoJvmConventionPlugin") {
             id = "io.lb.jacoco.jvm.module"

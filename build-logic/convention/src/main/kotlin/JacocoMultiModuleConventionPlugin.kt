@@ -45,6 +45,6 @@ class JacocoMultiModuleConventionPlugin : Plugin<Project> {
     }
 
     private companion object {
-        const val CURRENT_COVERAGE = 0.65
+        const val CURRENT_COVERAGE = 0.76
     }
 }

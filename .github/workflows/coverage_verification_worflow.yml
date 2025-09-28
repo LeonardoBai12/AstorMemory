@@ -20,18 +20,18 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Validate coverage
-        run: ./gradlew jacocoProjectMiddleWareCoverageVerification
+        run: ./gradlew jacocoProjectCoverageVerification
 
       - name: Generate Tests Report (If JUnit finds violations)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: Middleware-Test-Report
+          name: AstorMemory-Test-Report
           path: 'build/reports/tests/test/'
 
       - name: Upload Unit Tests Coverage Report (If JaCoCo finds violations)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: Middleware-Coverage-Report
+          name: AstorMemory-Coverage-Report
           path: 'build/reports/jacoco/test/html/'
